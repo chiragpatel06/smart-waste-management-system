@@ -1,0 +1,60 @@
+.add-btn {
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  background: #0072ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #005ce6;
+}
+
+.status-available {
+  color: green;
+  font-weight: 600;
+}
+
+.status-busy {
+  color: orange;
+  font-weight: 600;
+}
+
+.delete-btn {
+  background: red;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: darkred;
+}
+.add-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.25);
+}
+
+/* Hover Effect */
+.add-btn:hover {
+  background: linear-gradient(135deg, #0072ff, #003cff);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0, 114, 255, 0.35);
+}
+
+/* Click Effect */
+.add-btn:active {
+  transform: scale(0.95);
+}

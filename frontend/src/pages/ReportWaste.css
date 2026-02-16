@@ -1,0 +1,87 @@
+.report-page {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+  background: linear-gradient(
+    180deg,
+    #f4f8fb 0%,
+    #eaf2ff 100%
+  );
+}
+
+.report-card {
+  background: #ffffff;
+  max-width: 520px;
+  width: 100%;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+}
+
+.report-card h1 {
+  color: #0072ff;
+  margin-bottom: 8px;
+}
+
+.report-card p {
+  color: #4b5563;
+  margin-bottom: 25px;
+  font-size: 14.5px;
+}
+
+.report-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.report-card input,
+.report-card select,
+.report-card textarea {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.report-card input:focus,
+.report-card select:focus,
+.report-card textarea:focus {
+  outline: none;
+  border-color: #0072ff;
+  box-shadow: 0 0 0 2px rgba(0, 114, 255, 0.15);
+}
+
+.report-card button {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #ffffff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.report-card button:hover {
+  background: linear-gradient(135deg, #0072ff, #003cff);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.35);
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.photo-preview {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  margin-top: 5px;
+}

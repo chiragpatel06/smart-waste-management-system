@@ -1,0 +1,40 @@
+.add-collector-page {
+  padding: 40px;
+}
+
+.add-collector-card {
+  max-width: 500px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.add-collector-card h1 {
+  margin-bottom: 20px;
+}
+
+.add-collector-card input,
+.add-collector-card select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.add-collector-card button {
+  width: 100%;
+  padding: 12px;
+  background: #0072ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+}

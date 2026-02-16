@@ -1,0 +1,135 @@
+.admin-content {
+  padding: 30px;
+}
+
+.admin-content h1 {
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+/* FILTER */
+.filter-bar {
+  margin-bottom: 15px;
+}
+
+.filter-bar select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* TABLE */
+.table-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background: #f4f8fb;
+}
+
+/* STATUS */
+.pending {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.collected {
+  color: #2ecc71;
+  font-weight: 600;
+}
+
+/* BUTTON */
+.assign-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #0072ff;
+  color: white;
+  cursor: pointer;
+}
+
+.assign-btn:hover {
+  background: #005bd1;
+}
+
+
+.report-image:hover {
+  transform: scale(1.1);
+}
+
+/* Thumbnail */
+.report-image {
+  width: 70px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.report-image:hover {
+  transform: scale(1.1);
+}
+
+/* Modal Background */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Big Image */
+.modal-image {
+  width: 95vw;
+  height: 90vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+  animation: zoomIn 0.3s ease;
+}
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  color: #00c6ff;
+}
+

@@ -1,0 +1,124 @@
+:root {
+  --nav-gradient: linear-gradient(135deg, #00c6ff, #0072ff);
+  --nav-gradient-hover: linear-gradient(135deg, #0072ff, #003cff);
+}
+
+
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 12px 20px;
+  height: 70px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-logo {
+  background: var(--nav-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* NAV LINKS */
+.navbar-links {
+  font-size: 1.2rem;
+  list-style: none;
+  display: flex;
+  gap: 50px;
+  margin-right: 50px;
+  align-items: center;
+}
+
+.navbar-links li {
+  position: relative; /* IMPORTANT for dropdown */
+  color: #53acdcd0;
+}
+
+.navbar-links li a,
+.dropdown-title {
+  background: var(--nav-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.navbar-links li > a,
+.dropdown-title {
+  position: relative;
+  transition: color  ease;
+}
+
+.navbar-links li:hover > a,
+.navbar-links li:hover > .dropdown-title {
+  background: var(--nav-gradient-hover);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.navbar-links li > a::after,
+.dropdown-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background-color: #00a7ff;
+  transition: width 0.25s ease;
+}
+
+.navbar-links li:hover > a::after,
+.navbar-links li:hover > .dropdown-title::after {
+  background: var(--nav-gradient);
+  width: 100%;
+}
+
+/* =========================
+   DROPDOWN STYLES
+   ========================= */
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  min-width: 200px;
+  list-style: none;
+  padding: 8px 0;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 1000;
+}
+
+.dropdown-menu li {
+  padding: 0;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 18px;
+  font-size: 1rem;
+  color: #333;
+  text-decoration: none;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #f0f8ff;
+  color: #00a7ff;
+}
+
+/* SHOW DROPDOWN ON HOVER */
+.dropdown:hover .dropdown-menu, 
+.dropdown:focus-within .dropdown-menu{
+  display: block;
+}
+
+

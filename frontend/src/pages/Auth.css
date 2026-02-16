@@ -1,0 +1,140 @@
+.auth-page {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  background-color: #f8fafc;
+}
+
+
+.auth-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 14px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.auth-card h1 {
+  margin-bottom: 20px;
+  color: #0072ff;
+}
+
+/* ROLE SWITCH */
+/* ROLE SWITCH */
+.role-switch {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+/* BASE ROLE BUTTON */
+.role-switch button {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 30px;
+  border: 2px solid #0072ff;
+  background: #f1f5f9;
+  color: #0072ff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+
+  position: relative;
+  overflow: hidden;
+
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    transform 0.25s ease,
+    box-shadow 0.35s ease;
+}
+
+/* HOVER EFFECT */
+.role-switch button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.25);
+}
+
+/* ACTIVE ROLE (USER / ADMIN SELECTED) */
+.role-switch .active {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 114, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+/* SOFT GLOW PULSE (SUBTLE & PROFESSIONAL) */
+.role-switch .active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  animation: rolePulse 1.6s infinite;
+}
+
+@keyframes rolePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0,114,255,0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0,114,255,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0,114,255,0);
+  }
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-card input {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.auth-card input:focus {
+  outline: none;
+  border-color: #0072ff;
+}
+
+.auth-card button {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.auth-card button:hover {
+  background: linear-gradient(135deg, #0072ff, #003cff);
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  text-align: left;
+}
+
+.switch-text {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.switch-text a {
+  color: #0072ff;
+  text-decoration: none;
+  font-weight: 500;
+}

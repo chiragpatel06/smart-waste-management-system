@@ -1,0 +1,208 @@
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  background: #f5f7fb;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.tracking-container {
+  display: flex;
+  gap: 30px;
+  padding: 40px;
+}
+
+/* ================= LEFT PANEL ================= */
+.report-list {
+  width: 30%;
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.report-list h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.report-card {
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+}
+
+.report-card:hover {
+  background: #f0f4ff;
+}
+
+.report-card.active {
+  border-color: #2962ff;
+  background: #eef2ff;
+}
+
+.report-card h4 {
+  margin: 0 0 4px;
+}
+
+.status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+.status.Assigned {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.OutforCollection {
+  background: #e3f2fd;
+  color: #0d47a1;
+}
+
+.status.Collected {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* ================= RIGHT PANEL ================= */
+.report-details {
+  width: 70%;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.report-details h1 {
+  margin-top: 0;
+}
+
+.subtitle {
+  color: #777;
+  margin-bottom: 25px;
+}
+
+/* IMAGE */
+.tracking-image {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 18px;
+  margin-bottom: 40px;
+}
+
+/* ================= STEPS SECTION ================= */
+
+/* Wrapper */
+.steps-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 50px 0;
+}
+
+/* Each step */
+.step-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Circle */
+.circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.circle.active {
+  background: #2962ff;
+  color: #fff;
+  box-shadow: 0 0 0 6px rgba(41, 98, 255, 0.2);
+}
+
+/* Line between steps */
+.line {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  width: 100%;
+  height: 4px;
+  background: #e0e0e0;
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.line.active {
+  background: #2962ff;
+}
+
+/* Label */
+.step-box span {
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  color: #111;
+}
+
+/* ================= INFO BOX ================= */
+.info-box {
+  display: flex;
+  justify-content: space-between;
+  background: #f9fafc;
+  padding: 22px 26px;
+  border-radius: 16px;
+  margin-top: 30px;
+}
+
+.info-box label {
+  font-size: 12px;
+  color: #777;
+}
+
+.info-box p {
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.highlight {
+  color: #2962ff;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .tracking-container {
+    flex-direction: column;
+  }
+
+  .report-list,
+  .report-details {
+    width: 100%;
+  }
+
+  .steps-wrapper {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .line {
+    display: none;
+  }
+}
