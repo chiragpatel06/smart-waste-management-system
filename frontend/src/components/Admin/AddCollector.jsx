@@ -29,9 +29,26 @@ function AddCollector() {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log("Collector Added:", form);
+    // 🔥 Get existing collectors from localStorage
+    const existingCollectors =
+      JSON.parse(localStorage.getItem("collectors")) || [];
 
-    // Later backend call yaha hoga
+    // 🔥 Create new collector with unique ID
+    const newCollector = {
+      id:
+        existingCollectors.length > 0
+          ? existingCollectors[existingCollectors.length - 1].id + 1
+          : 1,
+      ...form,
+    };
+
+    const updatedCollectors = [...existingCollectors, newCollector];
+
+    // 🔥 Save back to localStorage
+    localStorage.setItem(
+      "collectors",
+      JSON.stringify(updatedCollectors)
+    );
 
     navigate("/admin/collectors");
   };

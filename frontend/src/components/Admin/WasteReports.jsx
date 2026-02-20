@@ -1,96 +1,244 @@
 import "./WasteReports.css";
 import p2 from "../../assets/p2.jpg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 function WasteReports() {
-    const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [filter, setFilter] = useState("All");
+  const [assigningId, setAssigningId] = useState(null);
+  const [reports, setReports] = useState([]);
+  const [collectors, setCollectors] = useState([]);
 
-    return (
-        <div className="admin-content">
-            <h1>Waste Reports</h1>
+  // ================= LOAD DATA =================
+  useEffect(() => {
+    const savedReports = JSON.parse(localStorage.getItem("reports"));
+    const savedCollectors =
+      JSON.parse(localStorage.getItem("collectors")) || [];
 
-            {/* FILTER */}
-            <div className="filter-bar">
-                <select>
-                    <option>All</option>
-                    <option>Pending</option>
-                    <option>Collected</option>
-                </select>
-            </div>
+    // If no reports in storage, set default
+    if (!savedReports || savedReports.length === 0) {
+      const defaultReports = [
+        {
+          id: 101,
+          location: "Smart City Area",
+          type: "Plastic",
+          status: "Pending",
+          collector: null,
+          photo: p2,
+        },
+        {
+          id: 102,
+          location: "Main Road",
+          type: "Other",
+          status: "Pending",
+          collector: null,
+          photo: p2,
+        },
+        {
+          id: 103,
+          location: "River Side",
+          type: "Organic",
+          status: "Pending",
+          collector: null,
+          photo: p2,
+        },
+      ];
 
-            {/* TABLE */}
-            <div className="table-card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Location</th>
-                            <th>Type</th>
-                            <th>Photo</th>
-                            <th>Status</th>
-                            <th>Collector</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+      setReports(defaultReports);
+      localStorage.setItem(
+        "reports",
+        JSON.stringify(defaultReports)
+      );
+    } else {
+      setReports(savedReports);
+    }
 
-                    <tbody>
-                        <tr>
-                            <td>#101</td>
-                            <td>Smart City Area</td>
-                            <td>Plastic</td>
-                            <td>
-                                <img
-                                    src={p2}
-                                    alt="Waste"
-                                    className="report-image"
-                                    onClick={() => setSelectedImage(p2)}
-                                />
-                            </td>
+    setCollectors(savedCollectors);
+  }, []);
 
-                            <td className="pending">Pending</td>
-                            <td>-</td>
-                            <td>
-                                <button className="assign-btn">Assign</button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>#102</td>
-                            <td>Main Road</td>
-                            <td>Garbage</td>
-                            <td>
-                                <img
-                                    src={p2}
-                                    alt="Waste"
-                                    className="report-image"
-                                    onClick={() => setSelectedImage(p2)}
-                                />
-                            </td>
-                            <td className="collected">Collected</td>
-                            <td>Rahul</td>
-                            <td>-</td>
-                        </tr>
-                    </tbody>
-                </table>
-                {selectedImage && (
-                    <div className="image-modal">
-                        <span
-                            className="close-btn"
-                            onClick={() => setSelectedImage(null)}
-                        >
-                            ✖
-                        </span>
-
-                        <img
-                            src={selectedImage}
-                            alt="Full View"
-                            className="modal-image"
-                        />
-                    </div>
-                )}
-
-            </div>
-        </div>
+  // ================= ASSIGN COLLECTOR =================
+  const handleAssign = (reportId, collectorName) => {
+    const updatedReports = reports.map((report) =>
+      report.id === reportId
+        ? {
+            ...report,
+            status: "Assigned",
+            collector: collectorName,
+          }
+        : report
     );
+
+    setReports(updatedReports);
+    localStorage.setItem(
+      "reports",
+      JSON.stringify(updatedReports)
+    );
+
+    // Make collector Busy
+    const updatedCollectors = collectors.map((col) =>
+      col.name === collectorName
+        ? { ...col, status: "Busy" }
+        : col
+    );
+
+    setCollectors(updatedCollectors);
+    localStorage.setItem(
+      "collectors",
+      JSON.stringify(updatedCollectors)
+    );
+
+    setAssigningId(null);
+  };
+
+  // ================= FILTER =================
+  const filteredReports =
+    filter === "All"
+      ? reports
+      : reports.filter((r) => r.status === filter);
+
+  return (
+    <div className="admin-content">
+      <h1>Waste Reports</h1>
+
+      {/* FILTER */}
+      <div className="filter-bar">
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Pending">Pending</option>
+          <option value="Assigned">Assigned</option>
+          <option value="Collected">Collected</option>
+        </select>
+      </div>
+
+      <div className="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Location</th>
+              <th>Type</th>
+              <th>Photo</th>
+              <th>Status</th>
+              <th>Collector</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {filteredReports.map((report) => (
+              <tr key={report.id}>
+                <td>#{report.id}</td>
+                <td>{report.location}</td>
+                <td>{report.type}</td>
+
+                <td>
+                  <img
+                    src={report.photo}
+                    alt="Waste"
+                    className="report-image"
+                    onClick={() =>
+                      setSelectedImage(report.photo)
+                    }
+                  />
+                </td>
+
+                <td
+                  className={
+                    report.status === "Pending"
+                      ? "pending"
+                      : report.status === "Assigned"
+                      ? "assigned"
+                      : "collected"
+                  }
+                >
+                  {report.status}
+                </td>
+
+                <td>{report.collector || "-"}</td>
+
+                <td>
+                  {report.status === "Pending" ? (
+                    assigningId === report.id ? (
+                      <select
+                        onChange={(e) =>
+                          handleAssign(
+                            report.id,
+                            e.target.value
+                          )
+                        }
+                        defaultValue=""
+                      >
+                        <option value="" disabled>
+                          Select Collector
+                        </option>
+
+                        {collectors
+                          .filter(
+                            (col) =>
+                              col.status === "Available"
+                          )
+                          .map((col) => (
+                            <option
+                              key={col.id}
+                              value={col.name}
+                            >
+                              {col.name}
+                            </option>
+                          ))}
+                      </select>
+                    ) : (
+                      <button
+                        className="assign-btn"
+                        onClick={() =>
+                          setAssigningId(report.id)
+                        }
+                      >
+                        Assign
+                      </button>
+                    )
+                  ) : report.status === "Assigned" ? (
+                    <span
+                      style={{
+                        color: "orange",
+                        fontWeight: "600",
+                      }}
+                    >
+                      In Progress
+                    </span>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* IMAGE MODAL */}
+        {selectedImage && (
+          <div className="image-modal">
+            <span
+              className="close-btn"
+              onClick={() =>
+                setSelectedImage(null)
+              }
+            >
+              ✖
+            </span>
+
+            <img
+              src={selectedImage}
+              alt="Full View"
+              className="modal-image"
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default WasteReports;

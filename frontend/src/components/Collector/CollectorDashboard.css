@@ -1,0 +1,87 @@
+/* ================= PAGE ================= */
+
+.collector-page {
+  padding: 40px;
+}
+
+.collector-page h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* ================= TABLE CARD ================= */
+
+.collector-table-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* ================= TABLE ================= */
+
+.collector-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.collector-table th,
+.collector-table td {
+  padding: 10px 12px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.collector-table th {
+  text-align: left;
+  background-color: #f5f7fa;
+  font-weight: 600;
+}
+
+.collector-table tbody tr {
+  transition: 0.2s ease;
+}
+
+.collector-table tbody tr:hover {
+  background-color: #f9fbff;
+}
+
+/* ================= STATUS BADGE ================= */
+
+.status-assigned {
+  background: #facc15;
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ================= COMPLETE BUTTON ================= */
+
+.complete-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.complete-btn:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+/* ================= EMPTY STATE ================= */
+
+.no-report {
+  padding: 20px;
+  text-align: center;
+  color: gray;
+  font-size: 14px;
+}

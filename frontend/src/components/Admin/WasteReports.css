@@ -9,13 +9,30 @@
 
 /* FILTER */
 .filter-bar {
-  margin-bottom: 15px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .filter-bar select {
+  width: 180px;        /* 👈 Chhota width */
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.filter-bar select {
+  width: 160px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.filter-bar select:focus {
+  outline: none;
+  border-color: #007bff;
 }
 
 /* TABLE */

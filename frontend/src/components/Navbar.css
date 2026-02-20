@@ -1,8 +1,7 @@
 :root {
-  --nav-gradient: linear-gradient(135deg, #00c6ff, #0072ff);
-  --nav-gradient-hover: linear-gradient(135deg, #0072ff, #003cff);
+  --nav-gradient: linear-gradient(135deg, #38bdf8, #2563eb);
+  --nav-gradient-hover: linear-gradient(135deg, #2563eb, #1e3a8a);
 }
-
 
 
 .navbar {

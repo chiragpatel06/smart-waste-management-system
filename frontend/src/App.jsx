@@ -19,14 +19,15 @@ import Collectors from "./components/Admin/Collectors";
 import AddCollector from "./components/Admin/AddCollector";
 import Analytics from "./components/Admin/Analytics";
 
-
+import CollectorDashboard from "./components/Collector/CollectorDashboard";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* PUBLIC PAGES */}
+        {/* ================= PUBLIC PAGES ================= */}
+
         <Route
           path="/"
           element={
@@ -115,14 +116,19 @@ function App() {
           }
         />
 
-        {/* ADMIN ROUTES (NO NAVBAR / FOOTER) */}
+        {/* ================= ADMIN ROUTES ================= */}
+
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="waste-reports" element={<WasteReports />} />
           <Route path="collectors" element={<Collectors />} />
-          <Route path="/admin/add-collector" element={<AddCollector />} />
-          <Route path="/admin/analytics" element={<Analytics />} />
+          <Route path="add-collector" element={<AddCollector />} />
+          <Route path="analytics" element={<Analytics />} />
         </Route>
+
+        {/* ================= COLLECTOR ROUTE ================= */}
+
+        <Route path="/collector" element={<CollectorDashboard />} />
 
       </Routes>
     </BrowserRouter>

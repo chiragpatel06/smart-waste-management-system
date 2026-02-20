@@ -1,119 +1,164 @@
-.about-wrapper {
-  background: #f4f8fb;
-  padding-bottom: 80px;
-}
-
-/* HERO */
-/* .about-hero {
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  color: #ffffff;
-  text-align: center;
-  padding: 90px 20px;
-}
-
-.about-hero h1 {
-  font-size: 42px;
-  margin-bottom: 15px;
-}
-
-.about-hero p {
-  font-size: 18px;
-  max-width: 750px;
-  margin: auto;
-  opacity: 0.95;
-  line-height: 1.7;
-} */
+/* ================= HERO SECTION ================= */
 
 .about-hero {
-  /* BACKGROUND IMAGE + OVERLAY */
+  height: 40vh;
   background-image:
-    linear-gradient(
-      rgba(0, 114, 255, 0.75),
-      rgba(0, 198, 255, 0.75)
-    ),
-    url("../assets/p6.png");
+    linear-gradient(rgba(0, 60, 150, 0.65), rgba(0, 120, 255, 0.6)),
+    url("/about-hero.jpg");
 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
-  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 100px 20px;
+  color: white;
+  padding: 0 20px;
 }
 
-.about-hero h1,
-.about-hero p {
-  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-}
-
-
-/* CONTENT CARD */
-.about-content {
-  max-width: 1100px;
-  margin: -70px auto 0;
-  background: #ffffff;
-  padding: 55px;
-  border-radius: 18px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
-}
-
-/* TEXT */
-.about-text h2 {
-  font-size: 28px;
-  color: #0072ff;
+.about-hero h1 {
+  font-size: 46px;
   margin-bottom: 15px;
+}
+
+.about-hero p {
+  font-size: 18px;
+}
+
+
+/* ================= MAIN SECTION ================= */
+
+.about-section {
+  position: relative;
+  margin-top: -120px;   /* 👈 overlap control */
+  padding: 60px 8%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ================================================= */
+.about-board {
+  width: 100%;
+  max-width: 1200px;
+  background: #ffffff;
+  border-radius: 25px;
+  padding: 70px 80px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.18);
+}
+
+
+/* ================= ROW LAYOUT ================= */
+
+.about-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 80px;
+  margin-bottom: 100px;
+}
+
+.about-text {
+  flex: 1;
+  max-width: 520px;
+}
+
+
+.about-row.reverse {
+  flex-direction: row-reverse;
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-text h2,
+.about-text h3 {
+  font-size: 30px;
+  color: #0072ff;
+  margin-bottom: 20px;
 }
 
 .about-text p {
   font-size: 16px;
+  color: #444;
   line-height: 1.8;
-  color: #4b5563;
   margin-bottom: 15px;
 }
 
-/* FEATURES */
+/* ================= IMAGE SIDE ================= */
+
+.about-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.about-image img {
+  width: 100%;
+  max-width: 380px;
+  
+  
+  
+}
+
+
+
+/* ================= FEATURES SECTION ================= */
+
 .features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 22px;
-  margin-top: 45px;
+  display: flex;
+  gap: 30px;
+  margin-top: 60px;
 }
 
 .feature-card {
-  background: #f9fbff;
-  padding: 28px;
-  border-radius: 16px;
+  flex: 1;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
-  border: 1px solid #e5edff;
+  text-align: left;
 }
 
 .feature-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 15px 30px rgba(0, 114, 255, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.12);
 }
 
-/* CARD TEXT */
-.feature-card h3 {
+.feature-card h4 {
   font-size: 18px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: #0072ff;
 }
 
 .feature-card p {
-  font-size: 14.5px;
-  color: #374151;
+  font-size: 14px;
+  color: #555;
   line-height: 1.6;
 }
 
+/* ================= RESPONSIVE ================= */
 
+@media (max-width: 1000px) {
+  .about-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
 
+  .about-row.reverse {
+    flex-direction: column;
+  }
 
+  .features {
+    flex-direction: column;
+  }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .about-content {
-    padding: 35px 25px;
+  .feature-card {
+    text-align: center;
   }
 
   .about-hero h1 {

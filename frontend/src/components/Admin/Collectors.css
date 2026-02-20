@@ -1,39 +1,44 @@
-.add-btn {
-  margin-bottom: 20px;
-  padding: 8px 16px;
-  background: #0072ff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+/* ================= TABLE FIX ================= */
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto; 
 }
 
-.add-btn:hover {
-  background: #005ce6;
+.admin-table th {
+  padding: 12px 14px;
+  font-size: 14px;
+  text-align: left;
+  vertical-align: middle;   /* 🔥 Important */
 }
 
-.status-available {
-  color: green;
+.admin-table td{
+  text-align: left;
+  font-size: 14px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* Header styling */
+.admin-table th {
   font-weight: 600;
+  background-color: #f5f7fa;
 }
 
-.status-busy {
-  color: orange;
-  font-weight: 600;
+/* Row spacing */
+.admin-table tbody tr {
+  background: #ffffff;
+  transition: 0.2s ease;
 }
 
-.delete-btn {
-  background: red;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 5px;
-  cursor: pointer;
+.admin-table tbody tr:hover {
+  background: #f9fbff;
 }
 
-.delete-btn:hover {
-  background: darkred;
-}
+
+/* ================= ADD BUTTON ================= */
+
 .add-btn {
   display: inline-block;
   background: linear-gradient(135deg, #00c6ff, #0072ff);
@@ -47,14 +52,157 @@
   box-shadow: 0 8px 20px rgba(0, 114, 255, 0.25);
 }
 
-/* Hover Effect */
 .add-btn:hover {
   background: linear-gradient(135deg, #0072ff, #003cff);
   transform: translateY(-3px);
   box-shadow: 0 12px 25px rgba(0, 114, 255, 0.35);
 }
 
-/* Click Effect */
 .add-btn:active {
   transform: scale(0.95);
+}
+
+
+/* ================= STATUS ================= */
+
+.status-available {
+  color: green;
+  font-weight: 600;
+}
+
+.status-busy {
+  color: orange;
+  font-weight: 600;
+}
+
+
+/* ================= ACTION BUTTONS ================= */
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* 🔥 center icons */
+  gap: 8px;
+  width: 100%;
+}
+
+/* Center Action column header */
+
+
+/* Compact Status Column */
+.admin-table th:nth-child(1),
+.admin-table td:nth-child(1) {
+  width: 50px;   /* ID small */
+}
+
+.admin-table th:nth-child(2),
+.admin-table td:nth-child(2) {
+  width: 140px;  /* Name */
+}
+
+.admin-table th:nth-child(3),
+.admin-table td:nth-child(3) {
+  width: 140px;  /* Phone */
+}
+
+.admin-table th:nth-child(4),
+.admin-table td:nth-child(4) {
+  width: 120px;  /* Area */
+}
+
+.admin-table th:nth-child(5),
+.admin-table td:nth-child(5) {
+  width: 100px;  /* Status */
+}
+
+.admin-table th:nth-child(6),
+.admin-table td:nth-child(6) {
+  width: 80px;   /* Action */
+}
+
+/* Compact Action Column */
+
+/* Remove extra stretching */
+
+
+
+
+
+
+/* Icon Button Base */
+.icon-btn {
+  border: none;
+  background: transparent;
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Edit Icon */
+.edit-icon {
+  color: #007bff;
+}
+
+.edit-icon:hover {
+  background: rgba(0, 123, 255, 0.1);
+  transform: scale(1.15);
+}
+
+/* Delete Icon */
+.delete-icon {
+  color: red;
+}
+
+.delete-icon:hover {
+  background: rgba(255, 0, 0, 0.1);
+  transform: scale(1.15);
+}
+
+
+/* ================= SAVE / CANCEL ================= */
+
+.save-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 3px 6px;
+  font-size: 11px;
+  min-width: 45px;
+  border-radius: 5px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 3px 6px;
+  font-size: 11px;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 45px;
+  border-radius: 5px;
+  height: 30px;
+}
+.edit-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Make dropdown compact */
+.admin-table select {
+  padding: 4px 6px;
+  font-size: 13px;
+}
+
+.add-collector-card select,
+.add-collector-card textarea {
+  width: 90%;
 }

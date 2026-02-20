@@ -1,5 +1,13 @@
 import { useState } from "react";
 import "./ReportWaste.css";
+import {
+  User,
+  Mail,
+  MapPin,
+  Image as ImageIcon,
+  Eye,
+  X
+} from "lucide-react";
 
 function ReportWaste() {
   const [form, setForm] = useState({
@@ -12,146 +20,143 @@ function ReportWaste() {
     photoPreview: null,
   });
 
-  const [errors, setErrors] = useState({});
+  const [showPreview, setShowPreview] = useState(false);
 
-  const validate = () => {
-    let newErrors = {};
-
-    if (!form.name.trim()) newErrors.name = "Name is required";
-
-    if (!form.email.trim())
-      newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(form.email))
-      newErrors.email = "Invalid email format";
-
-    if (!form.location.trim())
-      newErrors.location = "Location is required";
-
-    if (!form.wasteType)
-      newErrors.wasteType = "Please select waste type";
-
-    if (!form.description.trim())
-      newErrors.description = "Description is required";
-
-    if (!form.photo)
-      newErrors.photo = "Please upload a waste photo";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      setErrors({ ...errors, photo: "Only image files allowed" });
-      return;
-    }
-
     setForm({
       ...form,
       photo: file,
       photoPreview: URL.createObjectURL(file),
     });
-
-    setErrors({ ...errors, photo: null });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) return;
-
-    alert("Waste reported successfully!");
-
-    setForm({
-      name: "",
-      email: "",
-      location: "",
-      wasteType: "",
-      description: "",
-      photo: null,
-      photoPreview: null,
-    });
+    console.log(form);
+    alert("Report Submitted Successfully!");
   };
 
   return (
-    <div className="report-page">
-      <div className="report-card">
+    <div className="report-wrapper">
+      <div className="report-container">
         <h1>Report Waste</h1>
-        <p>Upload waste details with a photo to help faster resolution.</p>
+        <p>Upload waste details with a photo for faster resolution.</p>
 
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-          {errors.name && <span className="error">{errors.name}</span>}
+          <div className="input-group">
+            <User size={18} />
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          <input
-            type="email"
-            placeholder="Your Email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
-          {errors.email && <span className="error">{errors.email}</span>}
+          <div className="input-group">
+            <Mail size={18} />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          <input
-            type="text"
-            placeholder="Waste Location (Area / Landmark)"
-            value={form.location}
-            onChange={(e) => setForm({ ...form, location: e.target.value })}
-          />
-          {errors.location && <span className="error">{errors.location}</span>}
+          <div className="input-group">
+            <MapPin size={18} />
+            <input
+              type="text"
+              name="location"
+              placeholder="Waste Location"
+              value={form.location}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
           <select
+            name="wasteType"
             value={form.wasteType}
-            onChange={(e) =>
-              setForm({ ...form, wasteType: e.target.value })
-            }
+            onChange={handleChange}
+            required
           >
             <option value="">Select Waste Type</option>
-            <option value="Garbage">Garbage</option>
-            <option value="Plastic">Plastic</option>
-            <option value="Organic">Organic</option>
-            <option value="Construction">Construction Waste</option>
+            <option>Garbage</option>
+            <option>Plastic</option>
+            <option>Organic</option>
+            <option>Others</option>
           </select>
-          {errors.wasteType && <span className="error">{errors.wasteType}</span>}
 
           <textarea
             rows="4"
-            placeholder="Describe the waste issue"
+            name="description"
+            placeholder="Describe the issue"
             value={form.description}
-            onChange={(e) =>
-              setForm({ ...form, description: e.target.value })
-            }
+            onChange={handleChange}
+            required
           />
-          {errors.description && (
-            <span className="error">{errors.description}</span>
-          )}
 
-          {/* PHOTO UPLOAD */}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoChange}
-          />
-          {errors.photo && <span className="error">{errors.photo}</span>}
+          <div className="file-upload">
+            <div
+              className="upload-btn"
+              onClick={() => document.getElementById("fileInput").click()}
+            >
+              <ImageIcon size={18} />
+              <span>
+                {form.photo ? form.photo.name : "Choose a photo"}
+              </span>
+            </div>
 
-          {/* PHOTO PREVIEW */}
-          {form.photoPreview && (
-            <img
-              src={form.photoPreview}
-              alt="Waste Preview"
-              className="photo-preview"
+            {form.photo && (
+              <Eye
+                size={18}
+                className="preview-icon"
+                onClick={() => setShowPreview(true)}
+              />
+            )}
+
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
             />
-          )}
+          </div>
 
           <button type="submit">Submit Report</button>
         </form>
       </div>
+
+      {showPreview && (
+        <div
+          className="modal"
+          onClick={() => setShowPreview(false)}
+        >
+          <div
+            className="modal-box"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <X
+              size={24}
+              className="close-btn"
+              onClick={() => setShowPreview(false)}
+            />
+            <img src={form.photoPreview} alt="Preview" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
