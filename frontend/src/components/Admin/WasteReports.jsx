@@ -1,6 +1,7 @@
 import "./WasteReports.css";
 import p2 from "../../assets/p2.jpg";
 import { useState, useEffect } from "react";
+import CloseButton from "../CloseButton"; // 👈 reusable button
 
 function WasteReports() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -15,7 +16,6 @@ function WasteReports() {
     const savedCollectors =
       JSON.parse(localStorage.getItem("collectors")) || [];
 
-    // If no reports in storage, set default
     if (!savedReports || savedReports.length === 0) {
       const defaultReports = [
         {
@@ -45,10 +45,7 @@ function WasteReports() {
       ];
 
       setReports(defaultReports);
-      localStorage.setItem(
-        "reports",
-        JSON.stringify(defaultReports)
-      );
+      localStorage.setItem("reports", JSON.stringify(defaultReports));
     } else {
       setReports(savedReports);
     }
@@ -61,20 +58,16 @@ function WasteReports() {
     const updatedReports = reports.map((report) =>
       report.id === reportId
         ? {
-            ...report,
-            status: "Assigned",
-            collector: collectorName,
-          }
+          ...report,
+          status: "Assigned",
+          collector: collectorName,
+        }
         : report
     );
 
     setReports(updatedReports);
-    localStorage.setItem(
-      "reports",
-      JSON.stringify(updatedReports)
-    );
+    localStorage.setItem("reports", JSON.stringify(updatedReports));
 
-    // Make collector Busy
     const updatedCollectors = collectors.map((col) =>
       col.name === collectorName
         ? { ...col, status: "Busy" }
@@ -150,8 +143,8 @@ function WasteReports() {
                     report.status === "Pending"
                       ? "pending"
                       : report.status === "Assigned"
-                      ? "assigned"
-                      : "collected"
+                        ? "assigned"
+                        : "collected"
                   }
                 >
                   {report.status}
@@ -218,22 +211,24 @@ function WasteReports() {
         </table>
 
         {/* IMAGE MODAL */}
+        {/* IMAGE MODAL */}
         {selectedImage && (
-          <div className="image-modal">
-            <span
-              className="close-btn"
-              onClick={() =>
-                setSelectedImage(null)
-              }
+          <div
+            className="image-modal"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div
+              className="image-box"
+              onClick={(e) => e.stopPropagation()}
             >
-              ✖
-            </span>
+              <CloseButton onClick={() => setSelectedImage(null)} />
 
-            <img
-              src={selectedImage}
-              alt="Full View"
-              className="modal-image"
-            />
+              <img
+                src={selectedImage}
+                alt="Full View"
+                className="modal-image"
+              />
+            </div>
           </div>
         )}
       </div>

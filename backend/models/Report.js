@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const reportSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -9,24 +9,28 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
     },
-    phone: {
+    location: {
       type: String,
       required: true,
     },
-    address: {
+    wasteType: {
       type: String,
       required: true,
     },
-    password: {
+    description: {
       type: String,
       required: true,
+    },
+    photo: {
+      type: String, // store image URL
+    },
+    status: {
+      type: String,
+      default: "Pending",
     },
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
-
-export default User;
+export default mongoose.model("Report", reportSchema);

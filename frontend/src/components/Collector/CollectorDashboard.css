@@ -1,87 +1,207 @@
-/* ================= PAGE ================= */
-
 .collector-page {
-  padding: 40px;
+  padding: 20px 30px;
+  background: #f4f7fc;
+  min-height: 100vh;
 }
 
-.collector-page h2 {
+/* HEADER */
+.collectordas-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 20px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
+  color: #1e293b;
 }
 
-/* ================= TABLE CARD ================= */
+.collectordas-header svg {
+  color: #2563eb;
+}
 
+/* STATS */
+.stats-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+.stat-card {
+  flex: 1;
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card.success {
+  border-left: 6px solid #16a34a;
+}
+
+/* TABLE */
 .collector-table-card {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+  background: #fff;
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
 }
-
-/* ================= TABLE ================= */
 
 .collector-table {
   width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
+  border-collapse: separate;
+  border-spacing: 0 12px;
 }
 
-.collector-table th,
-.collector-table td {
-  padding: 10px 12px;
-  font-size: 14px;
-  vertical-align: middle;
-}
-
-.collector-table th {
+.collector-table thead th {
   text-align: left;
-  background-color: #f5f7fa;
-  font-weight: 600;
+  font-size: 13px;
+  color: #64748b;
+  padding-bottom: 10px;
 }
 
 .collector-table tbody tr {
-  transition: 0.2s ease;
+  background: #f8fafc;
+  transition: 0.3s ease;
 }
 
 .collector-table tbody tr:hover {
-  background-color: #f9fbff;
+  background: #eef2ff;
+  transform: scale(1.01);
 }
 
-/* ================= STATUS BADGE ================= */
+.collector-table td {
+  padding: 14px;
+}
+
+/* STATUS */
+.status-assigned,
+.status-completed {
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+}
 
 .status-assigned {
   background: #facc15;
   color: #000;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
 }
 
-/* ================= COMPLETE BUTTON ================= */
-
-.complete-btn {
+.status-completed {
   background: #16a34a;
-  color: white;
+  color: #fff;
+}
+
+/* BUTTON */
+.complete-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
   border: none;
-  padding: 6px 12px;
-  font-size: 12px;
-  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 13px;
+  border-radius: 8px;
+  color: #fff;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.3s ease;
 }
 
 .complete-btn:hover {
-  background: #15803d;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
 }
 
-/* ================= EMPTY STATE ================= */
+/* IMAGE THUMB */
+.waste-img {
+  width: 65px;
+  height: 65px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
 
-.no-report {
+.waste-img:hover {
+  transform: scale(1.1);
+}
+
+/* MODAL */
+/* ================= COLLECTOR IMAGE MODAL ================= */
+
+.collector-image-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 3000;
   padding: 20px;
+}
+
+.collector-image-box {
+  position: relative;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 22px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  max-width: 95vw;
+  max-height: 90vh;
+
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  animation: collectorZoomIn 0.3s ease;
+}
+
+.collector-modal-image {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 18px;
+  object-fit: contain;
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes collectorZoomIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* EMPTY STATE */
+.empty-state {
   text-align: center;
-  color: gray;
-  font-size: 14px;
+  padding: 40px;
+  color: #64748b;
+}
+
+/* ANIMATIONS */
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

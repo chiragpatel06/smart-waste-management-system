@@ -1,81 +1,119 @@
 import "./AdminDashboard.css";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function AdminDashboard() {
+
+  const reportsData = [
+    { id: 101, location: "Smart City Area", type: "Plastic", status: "Pending" },
+    { id: 102, location: "Main Road", type: "Garbage", status: "Collected" },
+    { id: 103, location: "River Side", type: "E-Waste", status: "Pending" },
+    { id: 104, location: "Market Area", type: "Organic", status: "Collected" },
+  ];
+
+  const collectorsData = [
+    { id: 1, name: "Rahul", area: "Smart City Area" },
+    { id: 2, name: "Amit", area: "Main Road" },
+  ];
+
+  const [activeCard, setActiveCard] = useState("All");
+
+  // Filtering Logic
+  const filteredReports =
+    activeCard === "All"
+      ? reportsData
+      : reportsData.filter((r) => r.status === activeCard);
+
   return (
     <div className="admin-page">
-      {/* <aside className="admin-sidebar">
-        <h2>Admin Panel</h2>
-        <ul>
-          <li>
-            <Link to="/admin">Dashboard</Link>
-          </li>
-          <li>
-            <Link to="/admin/waste-reports">Waste Reports</Link>
-          </li>
-          <li>
-            <Link to="/admin/collectors">Collectors</Link>
-          </li>
-          <li>
-            <Link to="/admin/analytics">Analytics</Link>
-          </li>
-          <li>
-            <Link to="/">Logout</Link>
-          </li>
-        </ul>
-      </aside> */}
-
       <main className="admin-content">
         <h1>Dashboard Overview</h1>
 
+        {/* CARDS */}
         <div className="admin-cards">
-          <div className="admin-card">
+
+          <div
+            className={`admin-card ${activeCard === "All" ? "active" : ""}`}
+            onClick={() => setActiveCard("All")}
+          >
             <h3>Total Reports</h3>
-            <p>128</p>
+            <p>{reportsData.length}</p>
           </div>
 
-          <div className="admin-card">
+          <div
+            className={`admin-card ${activeCard === "Pending" ? "active" : ""}`}
+            onClick={() => setActiveCard("Pending")}
+          >
             <h3>Pending</h3>
-            <p>42</p>
+            <p>{reportsData.filter(r => r.status === "Pending").length}</p>
           </div>
 
-          <div className="admin-card">
+          <div
+            className={`admin-card ${activeCard === "Collected" ? "active" : ""}`}
+            onClick={() => setActiveCard("Collected")}
+          >
             <h3>Collected</h3>
-            <p>76</p>
+            <p>{reportsData.filter(r => r.status === "Collected").length}</p>
           </div>
 
-          <div className="admin-card">
+          <div
+            className={`admin-card ${activeCard === "Collectors" ? "active" : ""}`}
+            onClick={() => setActiveCard("Collectors")}
+          >
             <h3>Collectors</h3>
-            <p>10</p>
+            <p>{collectorsData.length}</p>
           </div>
+
         </div>
 
-        <h2>Recent Waste Reports</h2>
+        <h2>
+          {activeCard === "Collectors"
+            ? "Collectors List"
+            : "Recent Waste Reports"}
+        </h2>
 
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Location</th>
-              <th>Type</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#101</td>
-              <td>Smart City Area</td>
-              <td>Plastic</td>
-              <td>Pending</td>
-            </tr>
-            <tr>
-              <td>#102</td>
-              <td>Main Road</td>
-              <td>Garbage</td>
-              <td>Collected</td>
-            </tr>
-          </tbody>
-        </table>
+        {/* TABLE SWITCH */}
+        {activeCard === "Collectors" ? (
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Area</th>
+              </tr>
+            </thead>
+            <tbody>
+              {collectorsData.map((c) => (
+                <tr key={c.id}>
+                  <td>#{c.id}</td>
+                  <td>{c.name}</td>
+                  <td>{c.area}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredReports.map((report) => (
+                <tr key={report.id}>
+                  <td>#{report.id}</td>
+                  <td>{report.location}</td>
+                  <td>{report.type}</td>
+                  <td>{report.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
       </main>
     </div>
   );

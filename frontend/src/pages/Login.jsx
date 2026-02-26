@@ -37,7 +37,15 @@ function Login() {
 
       const res = await API.post("/users/login", form);
 
+      // ✅ Save token
       localStorage.setItem("token", res.data.token);
+
+      // ✅ Save user info
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      // ✅ Trigger storage event so Navbar updates instantly
+      window.dispatchEvent(new Event("storage"));
+
       alert(res.data.message);
 
       navigate("/");
@@ -75,7 +83,6 @@ function Login() {
           {errors.email && <span className="error">{errors.email}</span>}
 
           {/* PASSWORD */}
-          {/* PASSWORD */}
           <div className="input-group">
             <Lock size={18} />
             <input
@@ -85,15 +92,15 @@ function Login() {
               onFocus={() => setPasswordFocused(true)}
               onBlur={() => {
                 setPasswordFocused(false);
-                setShowPassword(false);   // 👈 auto hide password
+                setShowPassword(false);
               }}
               onChange={(e) =>
                 setForm({ ...form, password: e.target.value })
               }
             />
 
-            {passwordFocused && (
-              showPassword ? (
+            {passwordFocused &&
+              (showPassword ? (
                 <EyeOff
                   size={18}
                   className="eye-icon"
@@ -107,8 +114,7 @@ function Login() {
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => setShowPassword(true)}
                 />
-              )
-            )}
+              ))}
           </div>
 
           {errors.password && <span className="error">{errors.password}</span>}
@@ -119,7 +125,7 @@ function Login() {
         </form>
 
         <p className="switch-text">
-          Don’t have an account? <Link to="/register">Register</Link>
+          Don’t have an account? <Link to="/register">Create an Account</Link>
         </p>
       </div>
     </div>

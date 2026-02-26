@@ -26,7 +26,6 @@
 }
 
 .filter-bar select {
-  width: 160px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
 }
 
@@ -103,31 +102,56 @@ th {
 }
 
 /* Modal Background */
+/* Modal Background - FULL SCREEN */
+/* ================= MODAL BACKGROUND ================= */
+
+/* ================= MODAL BOX ================= */
+/* ================= IMAGE MODAL OVERLAY ================= */
 .image-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+
+  z-index: 3000;
+  padding: 20px;
 }
 
-/* Big Image */
-.modal-image {
-  width: 95vw;
-  height: 90vh;
-  object-fit: contain;
-  border-radius: 10px;
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
-  animation: zoomIn 0.3s ease;
+/* ================= IMAGE BOX ================= */
+.image-box {
+  position: relative;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 22px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  max-width: 95vw;
+  max-height: 90vh;
+
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  animation: scaleIn 0.3s ease;
 }
-@keyframes zoomIn {
+
+/* ================= IMAGE ================= */
+.modal-image {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 18px;
+  object-fit: contain;
+}
+
+/* ================= ANIMATION ================= */
+@keyframes scaleIn {
   from {
-    transform: scale(0.8);
+    transform: scale(0.9);
     opacity: 0;
   }
   to {
@@ -135,18 +159,3 @@ th {
     opacity: 1;
   }
 }
-/* Close Button */
-.close-btn {
-  position: absolute;
-  top: 30px;
-  right: 40px;
-  font-size: 28px;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.close-btn:hover {
-  color: #00c6ff;
-}
-

@@ -1,85 +1,111 @@
+import {
+  Camera,
+  Send,
+  CheckCircle,
+  ShieldCheck,
+  BarChart3,
+  Users
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import "./About.css";
 import aboutImg from "../assets/about-illustration.png";
 import dashboardImg from "../assets/dashboard.png";
 
 function About() {
+  const navigate = useNavigate();
   return (
     <div className="about-wrapper">
-
-      {/* HERO SECTION */}
+      {/* 1. HERO SECTION: Big & Clear Purpose */}
       <section className="about-hero">
-        <div className="hero-overlay">
-          <h1>Smart Waste Management System</h1>
-          <p>
-            A digital platform designed to improve waste reporting, monitoring,
-            and collection through transparency and efficiency.
-          </p>
+        <div className="hero-content">
+          <div className="logo-badge">SwachhSetu</div>
+          <h1>Clean City, Healthy Life</h1>
+          <p>We help you report waste and help the government clean it up faster.</p>
         </div>
       </section>
 
-      {/* MAIN CONTENT */}
-      <section className="about-section">
-        <div className="about-board">
-          <div className="about-row">
-          <div className="about-text">
-            <h2>About Us</h2>
+      {/* 2. HOW IT WORKS: Essential for uneducated users (Visual Process) */}
+      <section className="how-it-works">
+        <h2 className="section-title">How to use SwachhSetu?</h2>
+        <div className="step-grid">
+          <div className="step-card">
+            <div className="step-number">1</div>
+            <div className="step-icon-box"><Camera size={40} /></div>
+            <h3>Take a Photo</h3>
+            <p>Click a picture of the garbage you see.</p>
+          </div>
+          <div className="step-card">
+            <div className="step-number">2</div>
+            <div className="step-icon-box"><Send size={40} /></div>
+            <h3>Send Report</h3>
+            <p>Share the location and photo with us.</p>
+          </div>
+          <div className="step-card">
+            <div className="step-number">3</div>
+            <div className="step-icon-box"><CheckCircle size={40} /></div>
+            <h3>Get it Cleaned</h3>
+            <p>The waste team will come and clean it.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. MAIN CONTENT: Balanced for both groups */}
+      <section className="about-main-content">
+        <div className="about-row">
+          <div className="about-image-side">
+            <img src={aboutImg} alt="Helping hands" className="float-img" />
+          </div>
+          <div className="about-text-side">
+            <div className="label">Our Mission</div>
+            <h2>Connecting Citizens & Authorities</h2>
             <p>
-              The Smart Waste Management System is a modern web-based solution
-              that connects citizens and waste management authorities on a single platform.
-              It simplifies waste issue reporting and ensures timely action through
-              real-time tracking and updates.
+              SwachhSetu is more than just a website. It is a bridge. We believe that
+              <strong> transparency </strong> leads to action. By giving every citizen a voice,
+              we make our city cleaner together.
             </p>
+            <ul className="simple-list">
+              <li><ShieldCheck size={18} /> Verified by Local Authorities</li>
+              <li><Users size={18} /> Community Driven Project</li>
+            </ul>
+          </div>
+        </div>
 
+        {/* 4. DATA SECTION: For the Educated/Analytical User */}
+        <div className="about-row reverse">
+          <div className="about-image-side">
+            <img src={dashboardImg} alt="Data Dashboard" className="shadow-img" />
+          </div>
+          <div className="about-text-side">
+            <div className="label">For Administrators</div>
+            <h3>Smart Monitoring & Data</h3>
             <p>
-              This project emphasizes a streamlined, software-driven approach that enables
-              efficient waste reporting, monitoring, and coordination without operational
-              complexity.
+              For officials, we provide a <strong>Data Dashboard</strong>. This helps
+              the government see which areas have the most waste and manage trucks
+              efficiently.
             </p>
-          </div>
-
-          <div className="about-image">
-            <img src={aboutImg} alt="About Illustration" />
-          </div>
-        </div>
-
-        {/* DASHBOARD SECTION */}
-        <div className="about-row ">
-          <div className="about-image">
-            <img src={dashboardImg} alt="Dashboard" />
-          </div>
-
-          <div className="about-text">
-            <h3>Data-Driven Insights</h3>
-            <p>
-              Our platform provides comprehensive analytics and real-time dashboards
-              that help administrators monitor waste collection efficiency,
-              track complaint resolution, and make informed decisions.
-            </p>
+            <div className="mini-stats">
+              <div className="stat">
+                <BarChart3 size={24} />
+                <span>Live Analytics</span>
+              </div>
+              <div className="stat">
+                <CheckCircle size={24} />
+                <span>99% Resolution</span>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* FEATURES */}
-        <div className="features">
-          <div className="feature-card">
-            <h4>🧑‍🤝‍🧑 Citizen Reporting</h4>
-            <p>Report uncollected garbage or illegal dumping easily.</p>
-          </div>
-
-          <div className="feature-card">
-            <h4>📊 Real-Time Tracking</h4>
-            <p>Track complaint status and updates instantly.</p>
-          </div>
-
-          <div className="feature-card">
-            <h4>🌱 Clean & Sustainable</h4>
-            <p>Promotes cleaner surroundings and responsible disposal.</p>
-          </div>
-        </div>
-
-        </div>
-        {/* TEXT + IMAGE */}
-        
-
+      {/* 5. CALL TO ACTION */}
+      <section className="about-footer-cta">
+        <h2>Ready to make a difference?</h2>
+        <button
+          className="cta-button"
+          onClick={() => navigate("/report")}
+        >
+          Report Waste Now
+        </button>
       </section>
     </div>
   );

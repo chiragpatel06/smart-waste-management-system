@@ -1,0 +1,29 @@
+.app-close-btn {
+  position: absolute !important;
+  top: 15px !important;
+  right: 15px !important;
+
+  width: 45px !important;
+  height: 45px !important;
+
+  border-radius: 50% !important;
+  border: none !important;
+
+  background: #2563eb !important;
+  color: #fff !important;
+
+  font-size: 20px !important;
+  font-weight: bold !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  cursor: pointer !important;
+  z-index: 9999 !important;
+}
+
+.app-close-btn:hover {
+  transform: scale(1.15) rotate(90deg);
+  background: #1d4ed8;
+}

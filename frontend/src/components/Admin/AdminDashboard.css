@@ -1,17 +1,9 @@
+/* PAGE LAYOUT */
 .admin-page {
   display: flex;
-  min-height: calc(100vh - 70px);
+  min-height: 100vh;
   background: #f4f8fb;
-}
-
-.admin-page {
-  display: flex;
-  min-height: 100vh;   /* IMPORTANT */
-}
-
-.admin-sidebar {
-  width: 250px;
-  min-height: 100vh;   /* Sidebar full height */
+  font-family: "Segoe UI", sans-serif;
 }
 
 .admin-content {
@@ -19,13 +11,21 @@
   padding: 40px;
 }
 
+.admin-content h1 {
+  color: #1f2937;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
 
-/* SIDEBAR */
+/* ================= SIDEBAR ================= */
+
 .admin-sidebar {
   width: 240px;
   background: linear-gradient(135deg, #00c6ff, #0072ff);
   color: #fff;
   padding: 30px 20px;
+  min-height: 100vh;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.1);
 }
 
 .admin-sidebar h2 {
@@ -39,86 +39,181 @@
 
 .admin-sidebar li {
   margin-bottom: 15px;
-  cursor: pointer;
-  opacity: 0.9;
-}
-
-.admin-sidebar li.active,
-.admin-sidebar li:hover {
-  opacity: 1;
-  font-weight: bold;
 }
 
 .admin-sidebar ul li a {
   text-decoration: none;
   color: white;
   display: block;
-  padding: 8px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
 }
 
 .admin-sidebar ul li a:hover {
-  opacity: 0.8;
+  background: rgba(255,255,255,0.2);
 }
 
+/* ================= CARDS ================= */
 
-/* CONTENT */
-.admin-content {
-  flex: 1;
-  padding: 40px;
-}
-
-.admin-content h1 {
-  color: #1f2937;
-  margin-bottom: 20px;
-}
-
-/* CARDS */
 .admin-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
   margin-bottom: 40px;
 }
 
 .admin-card {
   background: #ffffff;
-  padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover Effect */
+.admin-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 114, 255, 0.2);
+}
+
+/* Click Press Effect */
+.admin-card:active {
+  transform: scale(0.97);
+}
+
+/* Active Selected Card */
+.admin-card.active {
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  color: white;
+  box-shadow: 0 15px 35px rgba(0, 114, 255, 0.4);
+}
+
+.admin-card.active p {
+  color: white;
 }
 
 .admin-card h3 {
   font-size: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  font-weight: 500;
 }
 
 .admin-card p {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
   color: #0072ff;
+  transition: 0.3s;
 }
 
-/* TABLE */
+/* ================= TABLE ================= */
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 .admin-table th,
 .admin-table td {
-  padding: 12px 15px;
+  padding: 14px 18px;
   text-align: left;
   font-size: 14px;
 }
 
 .admin-table th {
   background: #f1f5f9;
+  font-weight: 600;
+}
+
+.admin-table tbody tr {
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.admin-table tbody tr:hover {
+  background: #eef5ff;
 }
 
 .admin-table tr:not(:last-child) {
   border-bottom: 1px solid #e5e7eb;
+}
+
+/* ================= SEARCH + FILTER ================= */
+
+.table-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.table-controls input,
+.table-controls select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: 0.3s;
+}
+
+.table-controls input:focus,
+.table-controls select:focus {
+  border-color: #0072ff;
+  box-shadow: 0 0 0 3px rgba(0,114,255,0.2);
+}
+
+/* ================= MODAL ================= */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  width: 320px;
+  text-align: center;
+  animation: scaleIn 0.3s ease;
+}
+
+.modal-content button {
+  margin-top: 18px;
+  padding: 8px 18px;
+  border: none;
+  background: #0072ff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-content button:hover {
+  background: #005edc;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

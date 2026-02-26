@@ -1,167 +1,226 @@
-/* ================= HERO SECTION ================= */
+:root {
+  --primary: #0072ff;
+  --secondary: #00c6ff;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --white: #ffffff;
+}
 
+.about-wrapper {
+  background-color: #f8fafc;
+  color: var(--text-dark);
+}
+
+/* HERO SECTION */
 .about-hero {
-  height: 40vh;
-  background-image:
-    linear-gradient(rgba(0, 60, 150, 0.65), rgba(0, 120, 255, 0.6)),
-    url("/about-hero.jpg");
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
+  height: 60vh;
+  background: linear-gradient(rgba(0, 114, 255, 0.8), rgba(0, 70, 150, 0.9)), 
+              url('/about-hero.jpg') center/cover;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: white;
-  padding: 0 20px;
+  padding: 20px;
+}
+
+.logo-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 20px;
+  border-radius: 30px;
+  display: inline-block;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .about-hero h1 {
-  font-size: 46px;
+  font-size: clamp(32px, 5vw, 56px);
   margin-bottom: 15px;
 }
 
-.about-hero p {
-  font-size: 18px;
+/* HOW IT WORKS (The "Easy" Section) */
+.how-it-works {
+  padding: 80px 10%;
+  background: white;
+  margin-top: -60px;
+  border-radius: 40px 40px 0 0;
+  text-align: center;
 }
 
+.section-title {
+  font-size: 28px;
+  margin-bottom: 50px;
+  color: var(--text-dark);
+}
 
-/* ================= MAIN SECTION ================= */
+.step-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
 
-.about-section {
+.step-card {
+  padding: 40px;
+  background: #f1f5f9;
+  border-radius: 24px;
   position: relative;
-  margin-top: -120px;   /* 👈 overlap control */
-  padding: 60px 8%;
+  transition: 0.3s;
+  overflow: visible;
+}
+
+.step-card:hover { transform: translateY(-10px); }
+
+.step-number {
+  position: absolute;
+  top: -20px;          /* thoda aur upar */
+  left: -20px;         /* edge touch kare */
+  width: 55px;         /* bigger */
+  height: 55px;
+  background: #bfdbfe; /* light blue */
+  color: #1e40af;      /* dark blue text */
+  border-radius: 50%;
   display: flex;
+  align-items: center;
   justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+  transition: all 0.3s ease;
+  z-index: 2;
 }
 
-/* ================================================= */
-.about-board {
-  width: 100%;
-  max-width: 1200px;
-  background: #ffffff;
-  border-radius: 25px;
-  padding: 70px 80px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.18);
+.step-card:hover .step-number {
+  background: #2563eb; /* dark blue */
+  color: white;
+  transform: scale(1.1);
 }
 
+.step-icon-box {
+  color: var(--primary);
+  margin-bottom: 20px;
+}
 
-/* ================= ROW LAYOUT ================= */
+/* MAIN CONTENT ROWS */
+.about-main-content {
+  padding: 80px 10%;
+}
 
 .about-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 80px;
+  gap: 60px;
   margin-bottom: 100px;
 }
 
-.about-text {
-  flex: 1;
-  max-width: 520px;
+.about-row.reverse { flex-direction: row-reverse; }
+
+.about-text-side { flex: 1; }
+
+.label {
+  color: var(--primary);
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
-
-.about-row.reverse {
-  flex-direction: row-reverse;
-}
-
-.about-text {
-  flex: 1;
-}
-
-.about-text h2,
-.about-text h3 {
-  font-size: 30px;
-  color: #0072ff;
+.about-text-side h2, .about-text-side h3 {
+  font-size: clamp(24px, 3vw, 36px);
   margin-bottom: 20px;
 }
 
-.about-text p {
-  font-size: 16px;
-  color: #444;
-  line-height: 1.8;
-  margin-bottom: 15px;
+.about-text-side p {
+  line-height: 1.7;
+  color: var(--text-muted);
+  font-size: 17px;
 }
 
-/* ================= IMAGE SIDE ================= */
+.simple-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
 
-.about-image {
-  flex: 1;
+.simple-list li {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-weight: 500;
 }
 
-.about-image img {
-  width: 100%;
-  max-width: 380px;
-  
-  
-  
-}
-
-
-
-/* ================= FEATURES SECTION ================= */
-
-.features {
+.mini-stats {
   display: flex;
   gap: 30px;
-  margin-top: 60px;
+  margin-top: 30px;
 }
 
-.feature-card {
-  flex: 1;
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 18px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  text-align: left;
+.stat {
+  display: flex;
+  flex-direction: column;
+  color: var(--primary);
+  font-weight: bold;
 }
 
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.12);
+/* IMAGES */
+.about-image-side { flex: 1; }
+.about-image-side img { width: 100%; border-radius: 20px; }
+.shadow-img { box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+
+/* FOOTER CTA */
+.about-footer-cta {
+  background: var(--primary);
+  color: white;
+  padding: 100px 20px;
+  text-align: center;
+  margin-bottom: -2px;
 }
 
-.feature-card h4 {
+.cta-button {
+  margin-top: 30px;
+  padding: 18px 50px;
+  border-radius: 50px;
+  border: none;
+  background: white;
+  color: var(--primary);
+  font-weight: 700;
   font-size: 18px;
-  margin-bottom: 12px;
-  color: #0072ff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-.feature-card p {
-  font-size: 14px;
-  color: #555;
-  line-height: 1.6;
+/* Hover Effect */
+.cta-button:hover {
+
+  transform: translateY(-4px);
+  background: white;
+  color: #2563eb;
+  box-shadow: 0 0 20px rgba(255,255,255,0.6);
 }
 
-/* ================= RESPONSIVE ================= */
+/* Click Animation */
+.cta-button:active {
+  transform: scale(0.96);
+}
 
-@media (max-width: 1000px) {
-  .about-row {
+/* Responsive */
+@media (max-width: 600px) {
+  .cta-button {
+    width: 100%;
+    font-size: 16px;
+    padding: 16px;
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .about-row, .about-row.reverse {
     flex-direction: column;
     text-align: center;
-    gap: 40px;
   }
-
-  .about-row.reverse {
-    flex-direction: column;
-  }
-
-  .features {
-    flex-direction: column;
-  }
-
-  .feature-card {
-    text-align: center;
-  }
-
-  .about-hero h1 {
-    font-size: 34px;
-  }
+  .mini-stats { justify-content: center; }
+  .simple-list li { justify-content: center; }
 }
