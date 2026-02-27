@@ -3,13 +3,13 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import reportRoutes from "./routes/reportRoutes.js";
+import userRoutes from "./routes/userRoutes.js"; // ✅ ADD THIS
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-/* ✅ Proper CORS Config */
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -18,12 +18,11 @@ app.use(
   })
 );
 
-app.options("*", cors());
-
 app.use(express.json());
 
 app.use("/uploads", express.static("uploads"));
 app.use("/api/reports", reportRoutes);
+app.use("/api/users", userRoutes); // ✅ ADD THIS
 
 app.get("/", (req, res) => {
   res.send("API Running ✅");

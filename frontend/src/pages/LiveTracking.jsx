@@ -184,6 +184,7 @@ function LiveTracking() {
       </div>
 
       {/* RIGHT PANEL */}
+      {/* RIGHT PANEL */}
       <div className={`detail-panel ${isMobileDetailOpen ? "show-on-mobile" : ""}`}>
         {selectedReport ? (
           <>
@@ -203,6 +204,49 @@ function LiveTracking() {
 
             <div className="image-container">
               <img src={selectedReport.image} alt="Waste" />
+            </div>
+
+            {/* 🔥 STEPPER */}
+            <div className="stepper">
+              {[
+                { label: "Submitted", icon: <Trash2 size={18} /> },
+                { label: "Assigned", icon: <Clock size={18} /> },
+                { label: "On the Way", icon: <Truck size={18} /> },
+                { label: "Completed", icon: <CheckCircle size={18} /> }
+              ].map((step, idx) => (
+                <div
+                  key={idx}
+                  className={`step-item ${selectedReport.step >= idx + 1 ? "completed" : ""
+                    }`}
+                >
+                  <div className="step-node">
+                    {selectedReport.step >= idx + 1 ? (
+                      <CheckCircle size={18} />
+                    ) : (
+                      step.icon
+                    )}
+                  </div>
+                  <div className="step-label">{step.label}</div>
+                  {idx !== 3 && <div className="step-line"></div>}
+                </div>
+              ))}
+            </div>
+
+            {/* 🔥 INFO CARDS */}
+            <div className="info-grid">
+              <div className="info-card">
+                <label>
+                  <MapPin size={16} /> Location
+                </label>
+                <p>{selectedReport.location}</p>
+              </div>
+
+              <div className="info-card">
+                <label>
+                  <Trash2 size={16} /> Waste Type
+                </label>
+                <p>{selectedReport.wasteType}</p>
+              </div>
             </div>
           </>
         ) : (

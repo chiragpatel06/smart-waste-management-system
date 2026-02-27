@@ -75,24 +75,32 @@ function ReportWaste() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const formData = new FormData();
-      Object.keys(form).forEach(key => {
-        if (form[key]) formData.append(key, form[key]);
-      });
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-      const res = await API.post("/reports", formData);
-      alert("✅ " + res.data.message);
-      setStep(4);
-    } catch {
-      alert("❌ Error submitting report");
-    } finally {
-      setLoading(false);
-    }
-  };
+    const formData = new FormData();
+    formData.append("name", user?.name);
+    formData.append("email", user?.email);
+    formData.append("location", form.location);
+    formData.append("wasteType", form.wasteType);
+    formData.append("description", form.description || "No description");
+    formData.append("photo", form.photo);
+
+    const res = await API.post("/reports", formData);
+
+    alert("✅ " + res.data.message);
+    setStep(4);
+
+  } catch (err) {
+    console.log(err.response?.data);
+    alert("❌ Error submitting report");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <>

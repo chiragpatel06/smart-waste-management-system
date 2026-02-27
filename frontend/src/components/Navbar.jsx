@@ -69,11 +69,17 @@ function Navbar() {
         {/* Auth Section */}
         {user ? (
           <div className="user-profile">
-            <span className="user-name">Hi, {firstName}</span>
-            <button onClick={handleLogout} className="auth-btn login-btn">
-               <LogOut size={18} />
-            </button>
-          </div>
+  <div className="user-badge">
+    <div className="avatar">
+      {firstName?.charAt(0).toUpperCase()}
+    </div>
+    <span className="user-name">Hi, {firstName}</span>
+  </div>
+
+  <button onClick={handleLogout} className="logout-icon">
+    <LogOut size={18} />
+  </button>
+</div>
         ) : (
           <Link to="/login" className="auth-btn login-btn">
             Login
