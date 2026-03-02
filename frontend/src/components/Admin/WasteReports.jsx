@@ -25,6 +25,13 @@ function WasteReports() {
           status: "Pending",
           collector: null,
           photo: p2,
+        }, {
+          id: 101,
+          location: "Smart City Area",
+          type: "Plastic",
+          status: "Pending",
+          collector: null,
+          photo: p2,
         },
         {
           id: 102,
