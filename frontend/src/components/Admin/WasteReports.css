@@ -159,3 +159,221 @@ th {
     opacity: 1;
   }
 }
+
+/* ============================= */
+/* RESPONSIVE IMPROVEMENTS */
+/* ============================= */
+
+/* Tablet */
+@media (max-width:1024px){
+
+.admin-content{
+  padding:20px;
+}
+
+.admin-content h1{
+  font-size:22px;
+}
+
+.filter-bar select{
+  height:42px;
+}
+
+}
+
+
+/* ============================= */
+/* MOBILE CARD LAYOUT */
+/* ============================= */
+
+@media (max-width:768px){
+
+.admin-content{
+  padding:16px;
+}
+
+/* Filter */
+.filter-bar{
+  width:100%;
+  margin-bottom:22px;
+}
+
+.filter-bar select{
+  width:100%;
+  max-width: 100%;
+  height:46px;
+  font-size:15px;
+  border-radius:10px;
+}
+
+/* Remove table look */
+.table-card{
+  background:transparent;
+  box-shadow:none;
+}
+
+table,
+thead,
+tbody,
+th,
+td,
+tr{
+  display:block;
+}
+
+/* hide header */
+thead{
+  display:none;
+}
+
+/* Card */
+tr{
+  background:#ffffff;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.05);
+  border:1px solid #f1f5f9;
+}
+
+/* Row */
+td{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px dashed #e5e7eb;
+  font-size:15px;
+}
+
+td:last-child{
+  border-bottom:none;
+  margin-top:8px;
+}
+
+/* Labels */
+td::before{
+  font-weight:600;
+  font-size:12px;
+  color:#64748b;
+}
+
+/* Labels mapping */
+td:nth-child(1)::before{content:"Report ID";}
+td:nth-child(2)::before{content:"Location";}
+td:nth-child(3)::before{content:"Waste Type";}
+td:nth-child(4)::before{content:"Evidence";}
+td:nth-child(5)::before{content:"Status";}
+td:nth-child(6)::before{content:"Collector";}
+td:nth-child(7)::before{content:"Action";}
+
+/* Image */
+.report-image{
+  width:75px;
+  height:55px;
+  border-radius:8px;
+}
+
+/* Status badges */
+.pending,
+.assigned,
+.collected{
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:13px;
+}
+
+/* Assign button */
+.assign-btn{
+  width:100%;
+  height:45px;
+  font-size:15px;
+  font-weight:600;
+}
+
+/* Select collector */
+td select{
+  width:100%;
+  height:45px;
+  border-radius:10px;
+}
+
+/* Modal */
+.image-box{
+  width:94vw;
+  padding:12px;
+}
+
+.modal-image{
+  max-height:70vh;
+}
+
+}
+
+
+/* ============================= */
+/* SMALL PHONES */
+/* ============================= */
+
+@media (max-width:480px){
+
+.admin-content h1{
+  font-size:20px;
+  text-align:center;
+}
+
+td{
+  flex-direction:column;
+  align-items:flex-start;
+  gap:5px;
+}
+
+td::before{
+  font-size:11px;
+}
+
+.report-image{
+  width:65px;
+  height:48px;
+}
+
+.assign-btn{
+  height:44px;
+}
+
+}
+
+
+/* ============================= */
+/* SAFETY */
+/* ============================= */
+
+body{
+  overflow-x:hidden;
+}
+
+
+.filter-bar{
+  position:relative;
+  width:100%;
+  max-width:400px;
+}
+
+.filter-bar select{
+  width:100%;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+
+  padding:12px 40px 12px 14px;
+  border-radius:12px;
+  border:1px solid #d1d5db;
+
+  background:#fff;
+  font-size:15px;
+  cursor:pointer;
+
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2364748b' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+}

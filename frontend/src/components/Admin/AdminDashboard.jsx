@@ -31,7 +31,7 @@ function AdminDashboard() {
   return (
     <div className="dashboard-content">
       <header className="content-header">
-        <div>
+        <div className="header-title-box">
           <h1>Dashboard Overview</h1>
           <p className="subtitle">Welcome back, Admin</p>
         </div>
@@ -46,7 +46,7 @@ function AdminDashboard() {
             />
           </div>
           <button className="primary-btn">
-            <Plus size={18} /> New Report
+            <Plus size={18} /> <span>New Report</span>
           </button>
         </div>
       </header>
@@ -86,15 +86,16 @@ function AdminDashboard() {
         <div className="section-header">
           <h2>Recent Activity</h2>
           <div className="view-toggle">
-            <button className={activeCard === "All" ? "active" : ""}>
+            <button className={activeCard === "All" || activeCard === "Pending" || activeCard === "Collected" ? "active" : ""} onClick={() => setActiveCard("All")}>
               Reports
             </button>
-            <button className={activeCard === "Collectors" ? "active" : ""}>
+            <button className={activeCard === "Collectors" ? "active" : ""} onClick={() => setActiveCard("Collectors")}>
               Collectors
             </button>
           </div>
         </div>
 
+        {/* TABLE WRAPPER FOR SCROLL */}
         <div className="table-wrapper">
           <table className="modern-table">
             <thead>

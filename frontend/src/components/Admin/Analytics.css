@@ -93,12 +93,12 @@
 }
 
 .chart-container {
-  height: 350px;
+  height: 300px;
   display: flex;
+  justify-content: center;
   align-items: flex-end;
-  justify-content: space-evenly;
+  gap: 120px;
   margin-top: 60px;
-  padding: 30px 40px;
   position: relative;
 }
 
@@ -107,8 +107,8 @@
   content: "";
   position: absolute;
   left: 40px;
-  bottom: 30px;
   top: 20px;
+  bottom: 40px;
   width: 2px;
   background: #e5e7eb;
 }
@@ -117,11 +117,12 @@
   content: "";
   position: absolute;
   left: 40px;
-  right: 20px;
-  bottom: 30px;
+  right: 40px;
+  bottom: 40px;
   height: 2px;
   background: #e5e7eb;
 }
+
 
 .chart-item {
   height: 100%;
@@ -130,19 +131,19 @@
   justify-content: flex-end;
   align-items: center;
 }
-
 .chart-bar {
-  width: 100px;
+  width: 90px;
   border-radius: 12px 12px 0 0;
-  transition: 0.5s ease;
   display: flex;
-  align-items: flex-start;
   justify-content: center;
-  padding-top: 10px;
+  align-items: flex-start;
+  padding-top: 8px;
+  margin-bottom: 50px; /* axis se distance */
   font-weight: bold;
-  color: #fff;
-  font-size: 14px;
+  min-height: 30px;
+  color: white;
 }
+
 
 .pending-bar {
   background: linear-gradient(180deg, #ffb347, #f39c12);
@@ -155,10 +156,9 @@
 }
 
 .chart-item p {
-  margin-top: 15px;
+  position: absolute;
+  bottom: 10px;
   font-weight: 600;
-  font-size: 16px;
-  color: #1f2937;
 }
 
 
@@ -285,4 +285,177 @@ th {
   height: 100%;
   background: linear-gradient(90deg, #2563eb, #3b82f6);
   border-radius: 10px;
+}
+
+/* ========================================= 
+   MOBILE RESPONSIVE (MAX-WIDTH: 768px)
+========================================= */
+
+@media (max-width: 768px) {
+  .admin-content {
+    padding: 20px 15px;
+  }
+
+  .admin-content h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  /* Filters Stacking */
+  .filter-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filter-section input,
+  .filter-section select {
+    width: 100%;
+    height: 48px; /* Touch friendly height */
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+  }
+
+  .select-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* Analytics Cards Grid */
+  .analytics-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .analytics-card {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+
+  .analytics-card h3 {
+    margin-bottom: 0;
+    font-size: 15px;
+    color: #6b7280;
+  }
+
+  .analytics-card p {
+    font-size: 22px;
+  }
+
+  /* Toggle Buttons Full Width */
+  .toggle-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .toggle-buttons button {
+    width: 100%;
+    height: 48px;
+    padding: 0;
+  }
+
+  /* Chart Adjustments */
+  .overview-card {
+    padding: 25px 15px;
+    margin-top: 25px;
+  }
+
+  .chart-container {
+    height: 250px;
+    
+    margin-top: 30px;
+  }
+
+  .chart-container::before,
+  .chart-container::after {
+    left: 20px;
+  }
+
+  .chart-bar {
+    width: 60px; /* Thinner bars for mobile */
+    font-size: 12px;
+  }
+
+  /* Table to Card Layout */
+  .responsive-table, 
+  .responsive-table thead, 
+  .responsive-table tbody, 
+  .responsive-table th, 
+  .responsive-table td, 
+  .responsive-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .responsive-table thead {
+    display: none;
+  }
+
+  .responsive-table tr {
+    background: #fff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .responsive-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f9fafb;
+    text-align: right;
+  }
+
+  .responsive-table td:last-child {
+    border-bottom: none;
+  }
+
+  .responsive-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Collector Performance */
+  .collector-card {
+    padding: 20px 15px;
+  }
+
+  .collector-item-advanced {
+    padding: 15px;
+  }
+
+  .name-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .progress-bar {
+    height: 12px; /* Thicker for better visibility */
+  }
+
+  .collector-total {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-bar {
+    width: 45px;
+  }
+  
+  .select-group {
+    flex-direction: column;
+  }
 }

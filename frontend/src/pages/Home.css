@@ -316,18 +316,160 @@
 }
 
 /* RESPONSIVE DESIGN */
-@media (max-width: 992px) {
+/* ============================= */
+/* RESPONSIVE IMPROVEMENTS */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  .home {
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    height: auto;
+    padding: 90px 20px 70px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+  }
+
+  .hero-box {
+    padding: 30px 22px;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .hero-box h1 {
+    font-size: 2.1rem;
+    line-height: 1.2;
+  }
+
+  .hero-box p {
+    font-size: 1rem;
+  }
+
+  /* BUTTON STACK */
+  .cta-area {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 16px;
+    font-size: 1rem;
+  }
+
+  /* HOW IT WORKS */
+  .how-it-works {
+    padding: 60px 20px;
+  }
+
+  .flow-container {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .flow-arrow {
+    display: none;
+  }
+
+  .flow-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 30px 20px;
+  }
+
+  /* INFO SECTION */
+
   .info-content {
-    grid-template-columns: 1fr; /* Stack on mobile/tablets */
+    grid-template-columns: 1fr;
     gap: 50px;
   }
 
-  .info-image {
-    order: -1; /* Image appears above text on small screens */
+  .info-section {
+    padding: 60px 20px;
   }
 
   .section-heading {
-    font-size: 2.2rem;
     text-align: center;
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+  .info-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+   .feature {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto 35px auto;
+    padding: 22px;
+  }
+
+  .feature-details p {
+    font-size: 1rem;
+  }
+
+  .info-image img {
+    border-radius: 24px;
+  }
+   .icon-box {
+    margin-bottom: 15px;
+  }
+
+  /* TOP NAV */
+  .top-nav {
+    right: 20px;
+    top: 15px;
+  }
+}
+
+
+/* SMALL DEVICES */
+@media (max-width: 480px) {
+
+  .hero-box h1 {
+    font-size: 1.7rem;
+  }
+
+  .hero-box p {
+    font-size: 0.95rem;
+  }
+
+  .action-btn {
+    font-size: 0.95rem;
+    padding: 14px;
+  }
+
+  .flow-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .feature {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .feature-details h4 {
+    font-size: 1rem;
+  }
+
+  .feature-details p {
+    font-size: 0.9rem;
+  }
+
+  .live-badge {
+    font-size: 0.75rem;
+    padding: 5px 10px;
   }
 }

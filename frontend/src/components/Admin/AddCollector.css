@@ -38,3 +38,48 @@
   color: red;
   font-size: 13px;
 }
+
+
+/* ========================================= */
+/* MOBILE RESPONSIVE (MAX-WIDTH: 768px)      */
+/* ========================================= */
+
+@media (max-width: 768px) {
+  .add-collector-page {
+    padding: 15px;
+  }
+
+  .add-collector-card {
+    padding: 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .add-collector-card h1 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .add-collector-card input, 
+  .add-collector-card select {
+    height: 48px; /* Larger touch area */
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+    margin-bottom: 15px;
+    padding: 12px;
+  }
+
+  .add-collector-card button[type="submit"] {
+    height: 52px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #0072ff, #00c6ff);
+  }
+
+  .error {
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: block;
+  }
+}

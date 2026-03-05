@@ -5,62 +5,36 @@ import { Pencil, Trash2 } from "lucide-react";
 
 function Collectors() {
     const defaultCollectors = [
-        {
-            id: 1,
-            name: "Rahul Sharma",
-            phone: "9876543210",
-            area: "Smart City Area",
-            status: "Available",
-        },
-        {
-            id: 2,
-            name: "Amit Patel",
-            phone: "9123456780",
-            area: "Main Road",
-            status: "Busy",
-        },
+        { id: 1, name: "Rahul Sharma", phone: "9876543210", area: "Smart City Area", status: "Available" },
+        { id: 2, name: "Amit Patel", phone: "9123456780", area: "Main Road", status: "Busy" },
     ];
 
     const [collectors, setCollectors] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [editData, setEditData] = useState({});
 
-    // 🔥 Load collectors from localStorage
     useEffect(() => {
         const savedCollectors = JSON.parse(localStorage.getItem("collectors"));
-
         if (savedCollectors && savedCollectors.length > 0) {
             setCollectors(savedCollectors);
         } else {
             setCollectors(defaultCollectors);
-            localStorage.setItem(
-                "collectors",
-                JSON.stringify(defaultCollectors)
-            );
+            localStorage.setItem("collectors", JSON.stringify(defaultCollectors));
         }
     }, []);
 
-    // 🔥 Save collectors whenever updated
     const updateStorage = (updatedCollectors) => {
         setCollectors(updatedCollectors);
-        localStorage.setItem(
-            "collectors",
-            JSON.stringify(updatedCollectors)
-        );
+        localStorage.setItem("collectors", JSON.stringify(updatedCollectors));
     };
 
     const handleDelete = (id) => {
-        const updatedCollectors = collectors.filter(
-            (collector) => collector.id !== id
-        );
+        const updatedCollectors = collectors.filter(c => c.id !== id);
         updateStorage(updatedCollectors);
     };
 
     const handleUpdate = (id) => {
-        const updatedCollectors = collectors.map((collector) =>
-            collector.id === id ? editData : collector
-        );
-
+        const updatedCollectors = collectors.map(c => c.id === id ? editData : c);
         updateStorage(updatedCollectors);
         setEditingId(null);
     };
@@ -68,11 +42,12 @@ function Collectors() {
     return (
         <div className="admin-page">
             <main className="admin-content">
-                <h1>Collectors Management</h1>
-
-                <Link to="/admin/add-collector" className="add-btn">
-                    + Add Collector
-                </Link>
+                <header className="collectors-header">
+                    <h1>Collectors Management</h1>
+                    <Link to="/admin/add-collector" className="add-btn">
+                        + Add Collector
+                    </Link>
+                </header>
 
                 <table className="admin-table">
                     <thead>
@@ -85,133 +60,68 @@ function Collectors() {
                             <th>Action</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         {collectors.map((collector) => (
-                            <tr key={collector.id}>
-                                <td>{collector.id}</td>
-
-                                {/* NAME */}
-                                <td>
+                            <tr key={collector.id} className={editingId === collector.id ? "editing-row" : ""}>
+                                <td data-label="ID">{collector.id}</td>
+                                <td data-label="Name">
                                     {editingId === collector.id ? (
                                         <input
+                                            className="edit-input"
                                             value={editData.name}
-                                            onChange={(e) =>
-                                                setEditData({
-                                                    ...editData,
-                                                    name: e.target.value,
-                                                })
-                                            }
+                                            onChange={(e) => setEditData({ ...editData, name: e.target.value })}
                                         />
-                                    ) : (
-                                        collector.name
-                                    )}
+                                    ) : collector.name}
                                 </td>
-
-                                {/* PHONE */}
-                                <td>
+                                <td data-label="Phone">
                                     {editingId === collector.id ? (
                                         <input
+                                            className="edit-input"
                                             value={editData.phone}
-                                            onChange={(e) =>
-                                                setEditData({
-                                                    ...editData,
-                                                    phone: e.target.value,
-                                                })
-                                            }
+                                            onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
                                         />
-                                    ) : (
-                                        collector.phone
-                                    )}
+                                    ) : collector.phone}
                                 </td>
-
-                                {/* AREA */}
-                                <td>
+                                <td data-label="Area">
                                     {editingId === collector.id ? (
                                         <input
+                                            className="edit-input"
                                             value={editData.area}
-                                            onChange={(e) =>
-                                                setEditData({
-                                                    ...editData,
-                                                    area: e.target.value,
-                                                })
-                                            }
+                                            onChange={(e) => setEditData({ ...editData, area: e.target.value })}
                                         />
-                                    ) : (
-                                        collector.area
-                                    )}
+                                    ) : collector.area}
                                 </td>
-
-                                {/* STATUS */}
-                                <td>
+                                <td data-label="Status">
                                     {editingId === collector.id ? (
                                         <select
+                                            className="edit-input"
                                             value={editData.status}
-                                            onChange={(e) =>
-                                                setEditData({
-                                                    ...editData,
-                                                    status: e.target.value,
-                                                })
-                                            }
+                                            onChange={(e) => setEditData({ ...editData, status: e.target.value })}
                                         >
-                                            <option value="Available">
-                                                Available
-                                            </option>
-                                            <option value="Busy">
-                                                Busy
-                                            </option>
+                                            <option value="Available">Available</option>
+                                            <option value="Busy">Busy</option>
                                         </select>
                                     ) : (
-                                        <span
-                                            className={
-                                                collector.status === "Available"
-                                                    ? "status-available"
-                                                    : "status-busy"
-                                            }
-                                        >
+                                        <span className={collector.status === "Available" ? "status-available" : "status-busy"}>
                                             {collector.status}
                                         </span>
                                     )}
                                 </td>
-
-                                {/* ACTION */}
-                                {/* ACTION */}
-                                <td className="action-buttons">
+                                <td data-label="Action" className="action-buttons">
                                     {editingId === collector.id ? (
                                         <div className="edit-actions">
-                                            <button
-                                                className="save-btn"
-                                                onClick={() => handleUpdate(collector.id)}
-                                            >
-                                                Save
-                                            </button>
-
-                                            <button
-                                                className="cancel-btn"
-                                                onClick={() => setEditingId(null)}
-                                            >
-                                                Cancel
-                                            </button>
+                                            <button className="save-btn" onClick={() => handleUpdate(collector.id)}>Save</button>
+                                            <button className="cancel-btn" onClick={() => setEditingId(null)}>Cancel</button>
                                         </div>
                                     ) : (
-                                        <>
-                                            <button
-                                                className="icon-btn edit-icon"
-                                                onClick={() => {
-                                                    setEditingId(collector.id);
-                                                    setEditData(collector);
-                                                }}
-                                            >
-                                                <Pencil size={16} />
+                                        <div className="action-wrapper">
+                                            <button className="icon-btn edit-icon" onClick={() => { setEditingId(collector.id); setEditData(collector); }}>
+                                                <Pencil size={18} />
                                             </button>
-
-                                            <button
-                                                className="icon-btn delete-icon"
-                                                onClick={() => handleDelete(collector.id)}
-                                            >
-                                                <Trash2 size={16} />
+                                            <button className="icon-btn delete-icon" onClick={() => handleDelete(collector.id)}>
+                                                <Trash2 size={18} />
                                             </button>
-                                        </>
+                                        </div>
                                     )}
                                 </td>
                             </tr>

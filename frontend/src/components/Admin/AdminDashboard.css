@@ -29,6 +29,7 @@ body {
 
 .admin-sidebar {
   width: 270px;
+  height: 100vh; /* important */
   background: linear-gradient(180deg, #3C80F3, #2563eb);
   color: white;
   display: flex;
@@ -372,3 +373,284 @@ body {
   background: white;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
+
+
+
+/* ========================================= */
+/* MOBILE & TABLET RESPONSIVE (ADD TO BOTTOM) */
+/* ========================================= */
+
+/* Mobile Toggle Header (Desktop pe chhupa rahega) */
+.mobile-header-nav {
+  display: none;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.hamburger-btn {
+  background: white;
+  border: none;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.mobile-logo-text {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #2563eb;
+}
+
+.close-sidebar-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  
+
+  .admin-sidebar {
+    position: fixed;
+    left: -280px;
+    z-index: 1000;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .admin-sidebar.open {
+    left: 0;
+  }
+
+  .close-sidebar-btn {
+    display: block;
+    margin-left: auto;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .admin-main {
+    padding: 25px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .search-box {
+    width: 100% !important;
+  }
+
+  .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    background: white;
+    border-radius: 15px;
+    padding-bottom: 10px;
+  }
+
+  .modern-table {
+    min-width: 700px; /* Forces horizontal scroll */
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .view-toggle {
+    width: 100%;
+  }
+
+  .view-toggle button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+}
+
+
+/* ============================= */
+/* MOBILE FIXES */
+/* ============================= */
+
+@media (max-width: 1024px) {
+   .mobile-header-nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  .admin-container {
+    flex-direction: column;
+  }
+
+  /* Sidebar */
+ .admin-sidebar{
+  width:260px;
+  position:fixed;
+  top:0;
+  left:-260px;
+  height:100vh;
+  z-index:1200;
+  transition:0.3s;
+}
+
+  .admin-sidebar.open {
+    left: 0;
+  }
+
+  /* Overlay */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1100;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Main content */
+  .admin-main {
+    width: 100%;
+    padding: 20px;
+  }
+
+  /* Header fix */
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+}
+
+/* ============================= */
+/* SMALL MOBILE */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .stat-card {
+    width: 100%;
+    padding: 18px;
+  }
+
+  .content-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .data-section {
+    padding: 15px;
+  }
+
+  /* Table scroll fix */
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .modern-table {
+    min-width: 650px;
+  }
+
+}
+
+/* ============================= */
+/* EXTRA SMALL DEVICES */
+/* ============================= */
+
+@media (max-width: 480px) {
+
+  .admin-main {
+    padding: 15px;
+  }
+
+  .mobile-header-nav {
+    margin-bottom: 15px;
+  }
+
+  .mobile-logo-text {
+    font-size: 1.1rem;
+  }
+
+  .stat-number {
+    font-size: 1.4rem;
+  }
+
+}
+
