@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   MapPin, Image as ImageIcon, 
   Trash2, Recycle, Leaf, Box, ChevronRight, ChevronLeft, CheckCircle 
@@ -21,7 +22,14 @@ function ReportWaste() {
   });
 
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+useEffect(() => {
+  const token = localStorage.getItem("token");
 
+  if (!token) {
+    navigate("/login", { state: { from: "/report" } });
+  }
+}, []);
   const getMyLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation not supported");
@@ -122,7 +130,7 @@ function ReportWaste() {
               {/* ✅ Upload Box */}
               <div 
                 className="huge-upload-area"
-                onClick={() => setShowOptions(true)}
+                onClick={() => document.getElementById("cameraInput").click()}
               >
                 {form.photoPreview ? (
                   <img src={form.photoPreview} alt="Preview" className="img-filled" />
@@ -233,40 +241,7 @@ function ReportWaste() {
         </div>
       </div>
 
-      {/* ✅ Upload Popup */}
-      {showOptions && (
-        <div className="upload-modal">
-          <div className="upload-popup">
-            <button
-              type="button"
-              onClick={() => {
-                document.getElementById("cameraInput").click();
-                setShowOptions(false);
-              }}
-            >
-              📷 Open Camera
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                document.getElementById("galleryInput").click();
-                setShowOptions(false);
-              }}
-            >
-              🖼 Choose from Gallery
-            </button>
-
-            <button
-              type="button"
-              className="cancel-btn"
-              onClick={() => setShowOptions(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+  
 
       {/* Hidden Inputs */}
       <input

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddCollector.css";
-
+import API from "../../api/api";
 function AddCollector() {
   const navigate = useNavigate();
 
@@ -25,32 +25,21 @@ function AddCollector() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
 
-    // 🔥 Get existing collectors from localStorage
-    const existingCollectors =
-      JSON.parse(localStorage.getItem("collectors")) || [];
+    try {
+      const res = await API.post("/collectors", form);
 
-    // 🔥 Create new collector with unique ID
-    const newCollector = {
-      id:
-        existingCollectors.length > 0
-          ? existingCollectors[existingCollectors.length - 1].id + 1
-          : 1,
-      ...form,
-    };
+      alert("Collector Added Successfully");
 
-    const updatedCollectors = [...existingCollectors, newCollector];
-
-    // 🔥 Save back to localStorage
-    localStorage.setItem(
-      "collectors",
-      JSON.stringify(updatedCollectors)
-    );
-
-    navigate("/admin/collectors");
+      navigate("/admin/collectors");
+    } catch (error) {
+      console.log(error);
+      alert("Error adding collector");
+    }
   };
 
   return (

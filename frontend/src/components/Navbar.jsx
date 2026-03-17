@@ -12,6 +12,7 @@ function Navbar() {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isLoggedIn = !!user;
 
   useEffect(() => {
     const checkUser = () => {
@@ -48,22 +49,15 @@ function Navbar() {
           <span className="navbar-logo-text">SwachhSetu</span>
         </Link>
       </div>
-    
+
       {/* CENTER: Main Navigation (Desktop) */}
-     
+
       <div className="navbar-center">
         <ul className="navbar-nav-links">
           <li><Link to="/">Home</Link></li>
           <li><Link to="/about">About</Link></li>
-          <li className="navbar-dropdown">
-            <span className="navbar-dropdown-title">
-              Services <ChevronDown size={12} />
-            </span>
-            <ul className="navbar-dropdown-menu">
-              <li><Link to="/report">Waste Reporting</Link></li>
-              <li><Link to="/services/tracking">Live Tracking</Link></li>
-            </ul>
-          </li>
+          {isLoggedIn && (<li><Link to="/services/tracking">Live Tracking</Link></li>)}
+
           <li><Link to="/report">Report Waste</Link></li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
@@ -138,17 +132,19 @@ function Navbar() {
             <span>Report Waste</span>
           </Link>
 
-          <Link
-            to="/services/tracking"
-            className={`navbar-mobile-link ${location.pathname.startsWith("/services/tracking")
-              ? "navbar-highlight"
-              : ""
-              }`}
-            onClick={toggleMenu}
-          >
-            <Truck size={24} />
-            <span>Live Tracking</span>
-          </Link>
+          {isLoggedIn && (
+            <Link
+              to="/services/tracking"
+              className={`navbar-mobile-link ${location.pathname.startsWith("/services/tracking")
+                  ? "navbar-highlight"
+                  : ""
+                }`}
+              onClick={toggleMenu}
+            >
+              <Truck size={24} />
+              <span>Live Tracking</span>
+            </Link>
+          )}
 
           <Link
             to="/about"

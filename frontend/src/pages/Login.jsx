@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import "./Auth.css";
 import API from "../api/api";
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
+  
   const [passwordFocused, setPasswordFocused] = useState(false);
 
   const [form, setForm] = useState({ email: "", password: "" });
@@ -46,9 +49,9 @@ function Login() {
       // ✅ Trigger storage event so Navbar updates instantly
       window.dispatchEvent(new Event("storage"));
 
-      alert(res.data.message);
+      
 
-      navigate("/");
+      navigate(from);
 
     } catch (error) {
       if (error.response?.data?.error) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./Collectors.css";
 import { Link } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
+import API from "../../api/api";
 
 function Collectors() {
     const defaultCollectors = [
@@ -14,30 +15,47 @@ function Collectors() {
     const [editData, setEditData] = useState({});
 
     useEffect(() => {
-        const savedCollectors = JSON.parse(localStorage.getItem("collectors"));
-        if (savedCollectors && savedCollectors.length > 0) {
-            setCollectors(savedCollectors);
-        } else {
-            setCollectors(defaultCollectors);
-            localStorage.setItem("collectors", JSON.stringify(defaultCollectors));
-        }
+        const fetchCollectors = async () => {
+            try {
+                const res = await API.get("/collectors");
+
+                setCollectors(res.data);
+            } catch (error) {
+                console.log("Error fetching collectors");
+            }
+        };
+
+        fetchCollectors();
     }, []);
 
-    const updateStorage = (updatedCollectors) => {
-        setCollectors(updatedCollectors);
-        localStorage.setItem("collectors", JSON.stringify(updatedCollectors));
+    const handleUpdate = async (id) => {
+        try {
+
+            const res = await API.put(`/collectors/${id}`, editData);
+
+            const updatedCollectors = collectors.map((c) =>
+                c._id === id ? res.data.collector : c
+            );
+
+            setCollectors(updatedCollectors);
+            setEditingId(null);
+
+        } catch (error) {
+            console.log("Update error", error);
+        }
     };
 
-    const handleDelete = (id) => {
-        const updatedCollectors = collectors.filter(c => c.id !== id);
-        updateStorage(updatedCollectors);
-    };
+    const handleDelete = async (id) => {
+        try {
+            await API.delete(`/collectors/${id}`);
 
-    const handleUpdate = (id) => {
-        const updatedCollectors = collectors.map(c => c.id === id ? editData : c);
-        updateStorage(updatedCollectors);
-        setEditingId(null);
-    };
+            setCollectors(collectors.filter(c => c._id !== id));
+        } catch (error) {
+            console.log("Delete error");
+        }
+    };;
+
+
 
     return (
         <div className="admin-page">
@@ -61,11 +79,11 @@ function Collectors() {
                         </tr>
                     </thead>
                     <tbody>
-                        {collectors.map((collector) => (
-                            <tr key={collector.id} className={editingId === collector.id ? "editing-row" : ""}>
-                                <td data-label="ID">{collector.id}</td>
+                        {collectors.map((collector, index) => (
+                            <tr key={collector._id} className={editingId === collector._id ? "editing-row" : ""}>
+                                <td data-label="ID">{index + 1}</td>
                                 <td data-label="Name">
-                                    {editingId === collector.id ? (
+                                    {editingId === collector._id ? (
                                         <input
                                             className="edit-input"
                                             value={editData.name}
@@ -74,7 +92,7 @@ function Collectors() {
                                     ) : collector.name}
                                 </td>
                                 <td data-label="Phone">
-                                    {editingId === collector.id ? (
+                                    {editingId === collector._id ? (
                                         <input
                                             className="edit-input"
                                             value={editData.phone}
@@ -83,7 +101,7 @@ function Collectors() {
                                     ) : collector.phone}
                                 </td>
                                 <td data-label="Area">
-                                    {editingId === collector.id ? (
+                                    {editingId === collector._id ? (
                                         <input
                                             className="edit-input"
                                             value={editData.area}
@@ -92,7 +110,7 @@ function Collectors() {
                                     ) : collector.area}
                                 </td>
                                 <td data-label="Status">
-                                    {editingId === collector.id ? (
+                                    {editingId === collector._id ? (
                                         <select
                                             className="edit-input"
                                             value={editData.status}
@@ -108,17 +126,17 @@ function Collectors() {
                                     )}
                                 </td>
                                 <td data-label="Action" className="action-buttons">
-                                    {editingId === collector.id ? (
+                                    {editingId === collector._id ? (
                                         <div className="edit-actions">
-                                            <button className="save-btn" onClick={() => handleUpdate(collector.id)}>Save</button>
+                                            <button className="save-btn" onClick={() => handleUpdate(collector._id)}>Save</button>
                                             <button className="cancel-btn" onClick={() => setEditingId(null)}>Cancel</button>
                                         </div>
                                     ) : (
                                         <div className="action-wrapper">
-                                            <button className="icon-btn edit-icon" onClick={() => { setEditingId(collector.id); setEditData(collector); }}>
+                                            <button className="icon-btn edit-icon" onClick={() => { setEditingId(collector._id); setEditData(collector); }}>
                                                 <Pencil size={18} />
                                             </button>
-                                            <button className="icon-btn delete-icon" onClick={() => handleDelete(collector.id)}>
+                                            <button className="icon-btn delete-icon" onClick={() => handleDelete(collector._id)}>
                                                 <Trash2 size={18} />
                                             </button>
                                         </div>

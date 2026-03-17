@@ -25,9 +25,16 @@ const reportSchema = new mongoose.Schema(
     photo: {
       type: String, // store image URL
     },
+    cleanedPhoto: {
+      type: String
+    },
     status: {
       type: String,
       default: "Pending",
+    },
+    collector: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }

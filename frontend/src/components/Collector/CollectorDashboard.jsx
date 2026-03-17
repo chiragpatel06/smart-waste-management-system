@@ -2,46 +2,31 @@ import { useState, useEffect } from "react";
 import "./CollectorDashboard.css";
 import { Truck, CheckCircle, MapPin, ClipboardList, Calendar, Layers } from "lucide-react";
 import CloseButton from "../CloseButton";
+import API from "../../api/api";
+
 
 function CollectorDashboard() {
   const [reports, setReports] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [cleanedImages, setCleanedImages] = useState({});
 
+  const handleFileChange = (reportId, file) => {
+    setCleanedImages({
+      ...cleanedImages,
+      [reportId]: file
+    });
+  };
   useEffect(() => {
-    let savedReports = JSON.parse(localStorage.getItem("reports")) || [];
-    if (savedReports.length === 0) {
-      savedReports = [
-        {
-          id: 101,
-          location: "MG Road, Ahmedabad",
-          type: "Plastic Waste",
-          status: "Assigned",
-          date: "23 Feb 2026",
-          collector: "Rahul Sharma",
-          photo: "https://images.unsplash.com/photo-1581578731548-c64695cc6952",
-        },
-        {
-          id: 102,
-          location: "Satellite Area",
-          type: "Organic Waste",
-          status: "Assigned",
-          date: "22 Feb 2026",
-          collector: "Sushil Kumar",
-          photo: "https://images.unsplash.com/photo-1604187351574-c75ca79f5807",
-        },
-        {
-          id: 103,
-          location: "Navrangpura",
-          type: "Mixed Waste",
-          status: "Collected",
-          date: "21 Feb 2026",
-          collector: "Rahul Sharma",
-          photo: "https://images.unsplash.com/photo-1595278069441-2cf29f8005a4",
-        },
-      ];
-      localStorage.setItem("reports", JSON.stringify(savedReports));
-    }
-    setReports(savedReports);
+    const fetchReports = async () => {
+      try {
+        const res = await API.get("/reports");
+        setReports(res.data);
+      } catch (error) {
+        console.log("Error loading reports");
+      }
+    };
+
+    fetchReports();
   }, []);
 
   useEffect(() => {
@@ -52,13 +37,32 @@ function CollectorDashboard() {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  const handleComplete = (reportId) => {
-    const updatedReports = reports.map((report) =>
-      report.id === reportId ? { ...report, status: "Collected" } : report
-    );
-    setReports(updatedReports);
-    localStorage.setItem("reports", JSON.stringify(updatedReports));
+
+
+  const handleComplete = async (reportId) => {
+    try {
+      const formData = new FormData();
+
+      // 👇 yahi hai
+      formData.append("cleanedPhoto", cleanedImages[reportId]);
+
+      const res = await API.put(`/reports/complete/${reportId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
+      const updatedReports = reports.map((r) =>
+        r._id === reportId ? res.data : r
+      );
+
+      setReports(updatedReports);
+
+    } catch (error) {
+      console.log(error);
+    }
   };
+
 
   const assignedReports = reports.filter((r) => r.status === "Assigned");
   const completedReports = reports.filter((r) => r.status === "Collected");
@@ -114,7 +118,7 @@ function CollectorDashboard() {
         {assignedReports.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon-wrapper">
-                <CheckCircle size={40} />
+              <CheckCircle size={40} />
             </div>
             <p className="empty-text">No assigned reports 🎉</p>
           </div>
@@ -130,13 +134,14 @@ function CollectorDashboard() {
                   <th className="collector-table-th">Type</th>
                   <th className="collector-table-th">Date</th>
                   <th className="collector-table-th">Status</th>
+                  <th className="collector-table-th">Cleaned Photo</th>
                   <th className="collector-table-th">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {assignedReports.map((report) => (
-                  <tr key={report.id} className="collector-table-row">
-                    <td className="collector-table-td id-cell">#{report.id}</td>
+                {assignedReports.map((report, index) => (
+                  <tr key={report._id} className="collector-table-row">
+                    <td className="collector-table-td id-cell">#{index + 1}</td>
                     <td className="collector-table-td">
                       {report.photo ? (
                         <img
@@ -155,19 +160,67 @@ function CollectorDashboard() {
                         <MapPin size={14} className="icon-sub" /> {report.location}
                       </div>
                     </td>
-                    <td className="collector-table-td">{report.type}</td>
+                    <td className="collector-table-td">{report.wasteType}</td>
                     <td className="collector-table-td date-cell">
-                        <div className="date-wrapper">
-                            <Calendar size={14} className="icon-sub" /> {report.date}
-                        </div>
+                      <div className="date-wrapper">
+                        <Calendar size={14} className="icon-sub" />
+                        {new Date(report.createdAt).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric"
+                        })}
+                      </div>
                     </td>
                     <td className="collector-table-td">
-                      <span className="status-assigned">{report.status}</span>
+                      <span className="collector-status-assigned">{report.status}</span>
                     </td>
                     <td className="collector-table-td">
-                      <button className="complete-btn" onClick={() => handleComplete(report.id)}>
-                        Complete
-                      </button>
+                      {report.cleanedPhoto ? (
+                        <img
+                          src={report.cleanedPhoto}
+                          alt="Cleaned"
+                          className="waste-img"
+                          onClick={() =>
+                            setSelectedImage(report.cleanedPhoto)
+                          }
+                        />
+                      ) : cleanedImages[report._id] ? (
+                        <img
+                          src={URL.createObjectURL(cleanedImages[report._id])}
+                          alt="Preview"
+                          className="waste-img"
+                          onClick={() =>
+                            setSelectedImage(URL.createObjectURL(cleanedImages[report._id]))
+                          }
+                        />
+                      ) : (
+                        <span className="no-image-text">Not Uploaded</span>
+                      )}
+                    </td>
+                    <td className="collector-table-td">
+                      <div className="collector-action-box">
+
+                        <input
+                          type="file"
+                          accept="image/*"
+                          id={`clean-${report._id}`}
+                          hidden
+                          onChange={(e) => handleFileChange(report._id, e.target.files[0])}
+                        />
+
+                        <label htmlFor={`clean-${report._id}`} className="upload-clean-btn">
+                          Upload
+                        </label>
+
+                        <button
+                          className="complete-btn"
+                          disabled={!cleanedImages[report._id]}
+                          onClick={() => handleComplete(report._id)}
+                        >
+                          Complete
+                        </button>
+
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -189,17 +242,38 @@ function CollectorDashboard() {
                   <th className="collector-table-th">Location</th>
                   <th className="collector-table-th">Type</th>
                   <th className="collector-table-th">Date</th>
+                  <th className="collector-table-th">Cleaned Photo</th>
                   <th className="collector-table-th">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {completedReports.map((report) => (
-                  <tr key={report.id} className="collector-table-row">
-                    <td className="collector-table-td id-cell">#{report.id}</td>
+                {completedReports.map((report, index) => (
+                  <tr key={report._id} className="collector-table-row">
+                    <td className="collector-table-td id-cell">#{index + 1}</td>
                     <td className="collector-table-td fw-600">{report.collector}</td>
-                    <td className="collector-table-td location-cell">{report.location}</td>
-                    <td className="collector-table-td">{report.type}</td>
-                    <td className="collector-table-td date-cell">{report.date}</td>
+                    <td className="collector-table-td location-cell">{report.location?.replaceAll(",", ", ")}</td>
+                    <td className="collector-table-td">{report.wasteType}</td>
+
+                    <td className="collector-table-td date-cell">{new Date(report.createdAt).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric"
+                    })}</td>
+
+                    <td className="collector-table-td">
+                      {report.cleanedPhoto ? (
+                        <img
+                          src={`http://localhost:5000${report.cleanedPhoto}`}
+                          alt="Cleaned"
+                          className="waste-img"
+                          onClick={() =>
+                            setSelectedImage(`http://localhost:5000${report.cleanedPhoto}`)
+                          }
+                        />
+                      ) : (
+                        <span className="no-image-text">No Image</span>
+                      )}
+                    </td>
                     <td className="collector-table-td">
                       <span className="status-completed">Collected</span>
                     </td>
@@ -212,10 +286,22 @@ function CollectorDashboard() {
       )}
 
       {selectedImage && (
-        <div className="collector-image-modal" onClick={() => setSelectedImage(null)}>
-          <div className="collector-image-box" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="collector-image-modal"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div
+            className="collector-image-box"
+            onClick={(e) => e.stopPropagation()}
+          >
             <CloseButton onClick={() => setSelectedImage(null)} />
-            <img src={selectedImage} alt="Zoomed Waste" className="collector-modal-image" />
+
+            <img
+              src={selectedImage}
+              alt="Preview"
+              className="collector-modal-image"
+            />
+
           </div>
         </div>
       )}

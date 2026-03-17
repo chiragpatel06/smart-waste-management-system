@@ -4,6 +4,8 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import userRoutes from "./routes/userRoutes.js"; // ✅ ADD THIS
+import collectorRoutes from "./routes/collectorRoutes.js";
+
 
 dotenv.config();
 connectDB();
@@ -23,6 +25,7 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/api/reports", reportRoutes);
 app.use("/api/users", userRoutes); // ✅ ADD THIS
+app.use("/api/collectors", collectorRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running ✅");

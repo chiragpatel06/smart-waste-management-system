@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import API from "../../api/api";
 import {
   ClipboardList,
   CheckCircle,
@@ -9,49 +10,92 @@ import {
 } from "lucide-react";
 
 function AdminDashboard() {
+
   const [activeCard, setActiveCard] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-
-  const reportsData = [
-    { id: 101, location: "Smart City Area", type: "Plastic", status: "Pending" },
-    { id: 102, location: "Main Road", type: "Garbage", status: "Collected" },
-    { id: 103, location: "River Side", type: "E-Waste", status: "Pending" },
-    { id: 104, location: "Market Area", type: "Organic", status: "Collected" },
-  ];
-
-  const collectorsData = [
-    { id: 1, name: "Rahul Sharma", area: "Smart City Area", status: "Active" },
-    { id: 2, name: "Amit Kumar", area: "Main Road", status: "On Break" },
-  ];
+  const [reportsData, setReportsData] = useState([]);
+  const [collectorsData, setCollectorsData] = useState([]);
 
   const filteredReports = reportsData
     .filter((r) => (activeCard === "All" ? true : r.status === activeCard))
-    .filter((r) => r.location.toLowerCase().includes(searchQuery.toLowerCase()));
+    .filter((r) =>
+      r.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.wasteType?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  useEffect(() => {
+
+    const fetchReports = async () => {
+      try {
+        const res = await API.get("/reports");
+        setReportsData(res.data);
+      } catch (error) {
+        console.log("Error fetching reports");
+      }
+    };
+
+    const fetchCollectors = async () => {
+      try {
+        const res = await API.get("/collectors");
+        setCollectorsData(res.data);
+      } catch (error) {
+        console.log("Error fetching collectors");
+      }
+    };
+
+    fetchReports();
+    fetchCollectors();
+
+  }, []);
 
   return (
-    <div className="dashboard-content">
-      <header className="content-header">
-        <div className="header-title-box">
-          <h1>Dashboard Overview</h1>
-          <p className="subtitle">Welcome back, Admin</p>
-        </div>
-        <div className="header-actions">
-          <div className="search-box">
-            <Search size={18} />
-            <input
-              type="text"
-              placeholder="Search locations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+
+    <div className="admin-dashboard-container">
+
+      {/* HEADER */}
+      <header className="admin-dashboard-header">
+
+        <h1 className="admin-dashboard-title">
+          Dashboard Overview
+        </h1>
+
+        <div className="admin-dashboard-subheader">
+
+          <p className="admin-dashboard-subtitle">
+            Welcome back, Admin
+          </p>
+
+          <div className="admin-dashboard-header-actions">
+
+            <div className="admin-search-box">
+              <Search size={18} />
+
+              <input
+                className="admin-search-input"
+                type="text"
+                placeholder="Search locations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            <button className="admin-primary-btn">
+              <Plus size={18} />
+              <span className="admin-btn-text">
+                New Report
+              </span>
+            </button>
+
           </div>
-          <button className="primary-btn">
-            <Plus size={18} /> <span>New Report</span>
-          </button>
+
         </div>
+
       </header>
 
-      <div className="stats-grid">
+      {/* STAT CARDS */}
+
+      <div className="admin-stats-grid">
+
         <StatCard
           title="Total Reports"
           count={reportsData.length}
@@ -59,6 +103,7 @@ function AdminDashboard() {
           active={activeCard === "All"}
           onClick={() => setActiveCard("All")}
         />
+
         <StatCard
           title="Pending"
           count={reportsData.filter(r => r.status === "Pending").length}
@@ -66,6 +111,7 @@ function AdminDashboard() {
           active={activeCard === "Pending"}
           onClick={() => setActiveCard("Pending")}
         />
+
         <StatCard
           title="Collected"
           count={reportsData.filter(r => r.status === "Collected").length}
@@ -73,6 +119,7 @@ function AdminDashboard() {
           active={activeCard === "Collected"}
           onClick={() => setActiveCard("Collected")}
         />
+
         <StatCard
           title="Collectors"
           count={collectorsData.length}
@@ -80,86 +127,215 @@ function AdminDashboard() {
           active={activeCard === "Collectors"}
           onClick={() => setActiveCard("Collectors")}
         />
+
       </div>
 
-      <section className="data-section">
-        <div className="section-header">
-          <h2>Recent Activity</h2>
-          <div className="view-toggle">
-            <button className={activeCard === "All" || activeCard === "Pending" || activeCard === "Collected" ? "active" : ""} onClick={() => setActiveCard("All")}>
+
+      {/* DATA SECTION */}
+
+      <section className="admin-dashboard-section">
+
+        <div className="admin-section-header">
+
+          <h2 className="admin-section-title">
+            Recent Activity
+          </h2>
+
+          <div className="admin-view-toggle">
+
+            <button
+              className={`admin-toggle-btn ${(activeCard === "All" || activeCard === "Pending" || activeCard === "Collected") ? "active" : ""}`}
+              onClick={() => setActiveCard("All")}
+            >
               Reports
             </button>
-            <button className={activeCard === "Collectors" ? "active" : ""} onClick={() => setActiveCard("Collectors")}>
+
+            <button
+              className={`admin-toggle-btn ${activeCard === "Collectors" ? "active" : ""}`}
+              onClick={() => setActiveCard("Collectors")}
+            >
               Collectors
             </button>
+
           </div>
+
         </div>
 
-        {/* TABLE WRAPPER FOR SCROLL */}
-        <div className="table-wrapper">
-          <table className="modern-table">
-            <thead>
+
+        {/* TABLE */}
+
+        <div className="admin-table-wrapper">
+
+          <table className="admin-table">
+
+            <thead className="admin-table-head">
+
               {activeCard === "Collectors" ? (
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Area</th>
-                  <th>Status</th>
+
+                <tr className="admin-table-row">
+
+                  <th className="admin-table-th">ID</th>
+                  <th className="admin-table-th">Name</th>
+                  <th className="admin-table-th">Area</th>
+                  <th className="admin-table-th">Status</th>
+
                 </tr>
+
               ) : (
-                <tr>
-                  <th>ID</th>
-                  <th>Location</th>
-                  <th>Category</th>
-                  <th>Status</th>
+
+                <tr className="admin-table-row">
+
+                  <th className="admin-table-th">ID</th>
+                  <th className="admin-table-th">Location</th>
+                  <th className="admin-table-th">Category</th>
+                  <th className="admin-table-th">Photo</th>
+                  <th className="admin-table-th">Cleaned</th>
+                  <th className="admin-table-th">Status</th>
+
                 </tr>
+
               )}
+
             </thead>
-            <tbody>
+
+
+            <tbody className="admin-table-body">
+
               {activeCard === "Collectors"
-                ? collectorsData.map((collector) => (
-                  <tr key={collector.id}>
-                    <td>#{collector.id}</td>
-                    <td><strong>{collector.name}</strong></td>
-                    <td>{collector.area}</td>
-                    <td>
-                      <span className={`status-badge ${collector.status.toLowerCase().replace(" ", "-")}`}>
+
+                ? collectorsData.map((collector, index) => (
+
+                  <tr className="admin-table-row" key={collector._id}>
+
+                    <td className="admin-table-td">#{index + 1}</td>
+
+                    <td className="admin-table-td">
+                      <strong className="admin-collector-name">
+                        {collector.name}
+                      </strong>
+                    </td>
+
+                    <td className="admin-table-td">
+                      {collector.area}
+                    </td>
+
+                    <td className="admin-table-td">
+
+                      <span className={`admin-status-badge ${collector.status.toLowerCase().replace(" ", "-")}`}>
+
                         {collector.status}
+
                       </span>
+
                     </td>
+
                   </tr>
+
                 ))
-                : filteredReports.map((report) => (
-                  <tr key={report.id}>
-                    <td>#{report.id}</td>
-                    <td><strong>{report.location}</strong></td>
-                    <td>{report.type}</td>
-                    <td>
-                      <span className={`status-badge ${report.status.toLowerCase()}`}>
+
+                : filteredReports.map((report, index) => (
+
+                  <tr className="admin-table-row" key={report._id}>
+
+                    <td className="admin-table-td">#{index + 1}</td>
+
+                    <td className="admin-table-td">
+                      <strong className="admin-location-text">
+                        {report.location}
+                      </strong>
+                    </td>
+
+                    <td className="admin-table-td">
+                      {report.wasteType}
+                    </td>
+
+                    <td className="admin-table-td">
+
+                      {report.photo ? (
+
+                        <img
+                          src={report.photo}
+                          alt="Waste"
+                          className="admin-mini-img"
+                        />
+
+                      ) : "-"}
+
+                    </td>
+
+                    <td className="admin-table-td">
+
+                      {report.cleanedPhoto ? (
+
+                        <img
+                          src={`http://localhost:5000${report.cleanedPhoto}`}
+                          alt="Cleaned"
+                          className="admin-mini-img"
+                        />
+
+                      ) : "-"}
+
+                    </td>
+
+                    <td className="admin-table-td">
+
+                      <span className={`admin-status-badge ${report.status.toLowerCase()}`}>
+
                         {report.status}
+
                       </span>
+
                     </td>
+
                   </tr>
+
                 ))
+
               }
+
             </tbody>
+
           </table>
+
         </div>
+
       </section>
+
     </div>
   );
 }
 
+
+
 function StatCard({ title, count, icon, active, onClick }) {
+
   return (
-    <div className={`stat-card ${active ? "is-active" : ""}`} onClick={onClick}>
-      <div className="stat-icon-bg">{icon}</div>
-      <div>
-        <h3>{title}</h3>
-        <p className="stat-number">{count}</p>
+
+    <div
+      className={`admin-stat-card ${active ? "admin-stat-active" : ""}`}
+      onClick={onClick}
+    >
+
+      <div className="admin-stat-icon">
+        {icon}
       </div>
+
+      <div className="admin-stat-text">
+
+        <h3 className="admin-stat-title">
+          {title}
+        </h3>
+
+        <p className="admin-stat-number">
+          {count}
+        </p>
+
+      </div>
+
     </div>
+
   );
+
 }
 
 export default AdminDashboard;

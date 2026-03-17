@@ -15,7 +15,7 @@ import {
 
 function Home() {
   const [language, setLanguage] = useState("English");
-
+  const token = localStorage.getItem("token");
   const content = {
     English: {
       title: "SwachhSetu",
@@ -64,10 +64,12 @@ function Home() {
               {t.mainBtn}
             </a>
 
-            <a href="/login" className="action-btn loginyo-btn">
-              <LogIn size={18} />
-              {t.loginBtn}
-            </a>
+            {!token && (
+              <a href="/login" className="action-btn loginyo-btn">
+                <LogIn size={18} />
+                {t.loginBtn}
+              </a>
+            )}
           </div>
         </div>
       </section>

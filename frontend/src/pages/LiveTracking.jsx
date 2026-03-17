@@ -10,22 +10,31 @@ import {
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
+import API from "../api/api";
 
-const reportsData = [
-  { id: 101, location: "Smart City, India", wasteType: "Plastic", status: "Out for Collection", step: 3, image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952" },
-  { id: 102, location: "Sector 21, India", wasteType: "Organic", status: "Assigned", step: 2, image: "https://images.unsplash.com/photo-1604187351574-c75ca79f5807" },
-  { id: 103, location: "Industrial Zone", wasteType: "E-Waste", status: "Collected", step: 4, image: "https://images.unsplash.com/photo-1581092335397-9583eb92d232" },
-  { id: 104, location: "City Center", wasteType: "Plastic", status: "Assigned", step: 2, image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d" },
-  { id: 105, location: "Green Park", wasteType: "Organic", status: "Collected", step: 4, image: "https://images.unsplash.com/photo-1524593119774-6c22d0d49f53" }
-];
 
 function LiveTracking() {
-
+  const [reportsData, setReportsData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
   const [selectedReport, setSelectedReport] = useState(null);
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
 
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        const res = await API.get(`/reports/my-reports/${user.email}`);
+
+        setReportsData(res.data);
+      } catch (error) {
+        console.log("Error fetching reports", error);
+      }
+    };
+
+    fetchReports();
+  }, []);
   // ✅ Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 3;
@@ -34,7 +43,7 @@ function LiveTracking() {
   const filteredReports = reportsData.filter((report) => {
     const matchesSearch =
       report.wasteType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.id.toString().includes(searchTerm);
+      report._id.toString().includes(searchTerm);
 
     const matchesFilter =
       filterStatus === "All" || report.status === filterStatus;
@@ -69,11 +78,19 @@ function LiveTracking() {
         return { color: "#3b82f6", icon: <Truck size={16} />, class: "status-shipping" };
       case "Collected":
         return { color: "#10b981", icon: <CheckCircle size={16} />, class: "status-done" };
+      case "Pending":
+        return { color: "#64748b", icon: <Clock size={16} />, class: "status-pending" };
       default:
         return { color: "#64748b", icon: <Clock size={16} />, class: "" };
     }
   };
-
+  const getStep = (status) => {
+    if (status === "Pending") return 1;
+    if (status === "Assigned") return 2;
+    if (status === "Out for Collection") return 3;
+    if (status === "Collected") return 4;
+    return 1;
+  };
   return (
     <div className="tracking-wrapper">
 
@@ -119,8 +136,8 @@ function LiveTracking() {
 
             return (
               <div
-                key={report.id}
-                className={`report-item ${selectedReport?.id === report.id ? "selected" : ""}`}
+                key={report._id}
+                className={`report-item ${selectedReport?.id === report._id ? "selected" : ""}`}
                 onClick={() => handleSelectReport(report)}
               >
                 <div
@@ -130,7 +147,7 @@ function LiveTracking() {
 
                 <div className="item-content">
                   <div className="item-top">
-                    <span className="report-id">#{report.id}</span>
+                    <span className="report-id">#{report._id.slice(-6)}</span>
                     <span className={`status-tag ${config.class}`}>
                       {config.icon} {report.status}
                     </span>
@@ -203,7 +220,7 @@ function LiveTracking() {
             </div>
 
             <div className="image-container">
-              <img src={selectedReport.image} alt="Waste" />
+              <img src={selectedReport.photo} alt="Waste" />
             </div>
 
             {/* 🔥 STEPPER */}
@@ -216,11 +233,11 @@ function LiveTracking() {
               ].map((step, idx) => (
                 <div
                   key={idx}
-                  className={`step-item ${selectedReport.step >= idx + 1 ? "completed" : ""
+                  className={`step-item ${getStep(selectedReport.status) >= idx + 1 ? "completed" : ""
                     }`}
                 >
                   <div className="step-node">
-                    {selectedReport.step >= idx + 1 ? (
+                    {getStep(selectedReport.status) >= idx + 1 ? (
                       <CheckCircle size={18} />
                     ) : (
                       step.icon

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import API from "../../api/api";
 import "./Analytics.css";
 
 function Analytics() {
@@ -8,22 +9,34 @@ function Analytics() {
   const [collectorFilter, setCollectorFilter] = useState("All");
   const [cardFilter, setCardFilter] = useState("All");
 
-  const [reports] = useState([
-    { id: 1, status: "Pending", collector: "Rahul" },
-    { id: 2, status: "Collected", collector: "Amit" },
-    { id: 3, status: "Pending", collector: "Rahul" },
-    { id: 4, status: "Collected", collector: "Amit" },
-    { id: 5, status: "Collected", collector: "Rahul" },
-    { id: 6, status: "Pending", collector: "Amit" },
-  ]);
+  const [reports, setReports] = useState([]);
+  useEffect(() => {
 
-  const collectors = [...new Set(reports.map(r => r.collector))];
+    const fetchReports = async () => {
+      try {
+        const res = await API.get("/reports");
+        console.log(res.data);
+        setReports(res.data);
+      } catch (error) {
+        console.log("Error loading reports");
+      }
+    };
+
+    fetchReports();
+
+  }, []);
+
+  const collectors = [...new Set(
+  reports
+    .map(r => r.collector)
+    .filter(c => c && c.trim() !== "")
+)];
 
   // 🔥 FILTER LOGIC
   const filteredReports = reports.filter(report => {
     const matchesSearch =
-      report.collector.toLowerCase().includes(search.toLowerCase()) ||
-      report.id.toString().includes(search);
+      report.collector?.toLowerCase().includes(search.toLowerCase()) ||
+      report._id?.toString().includes(search);
 
     const matchesStatus =
       statusFilter === "All" || report.status === statusFilter;
@@ -51,15 +64,19 @@ function Analytics() {
 
   // 🔥 ADVANCED COLLECTOR STATS
   const collectorStats = filteredReports.reduce((acc, report) => {
-    if (!acc[report.collector]) {
-      acc[report.collector] = { total: 0, Pending: 0, Collected: 0 };
-    }
 
-    acc[report.collector].total++;
-    acc[report.collector][report.status]++;
+  if (!report.collector || report.collector === "") return acc;
 
-    return acc;
-  }, {});
+  if (!acc[report.collector]) {
+    acc[report.collector] = { total: 0, Pending: 0, Collected: 0 };
+  }
+
+  acc[report.collector].total++;
+  acc[report.collector][report.status]++;
+
+  return acc;
+
+}, {});
 
   const rankedCollectors = Object.entries(collectorStats).sort(
     (a, b) => b[1].total - a[1].total
@@ -183,11 +200,11 @@ function Analytics() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredReports.map(report => (
-                    <tr key={report.id}>
-                      <td>{report.id}</td>
+                  {filteredReports.map((report, index) => (
+                    <tr key={report._id}>
+                      <td>{index + 1}</td>
                       <td>{report.status}</td>
-                      <td>{report.collector}</td>
+                      <td>{report.collector || "-"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -209,7 +226,7 @@ function Analytics() {
 
                   <div className="collector-header">
                     <span className="rank-badge">#{index + 1}</span>
-                    <span className="collector-name">{name}</span>
+                    <span className="collector-name">{ name.charAt(0).toUpperCase() + name.slice(1) }</span>
                     <span className="collector-total">{stats.total} Reports</span>
                   </div>
 
@@ -221,7 +238,7 @@ function Analytics() {
                   <div className="progress-bar">
                     <div
                       className="progress-fill"
-                      style={{ width: `${(stats.total / reports.length) * 100}%` }}
+                      style={{ width: `${(stats.total / filteredReports.length) * 100}%` }}
                     ></div>
                   </div>
 

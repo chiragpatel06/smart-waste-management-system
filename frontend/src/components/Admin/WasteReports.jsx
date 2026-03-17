@@ -2,7 +2,7 @@ import "./WasteReports.css";
 import p2 from "../../assets/p2.jpg";
 import { useState, useEffect } from "react";
 import CloseButton from "../CloseButton"; // 👈 reusable button
-
+import API from "../../api/api";
 function WasteReports() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [filter, setFilter] = useState("All");
@@ -12,84 +12,58 @@ function WasteReports() {
 
   // ================= LOAD DATA =================
   useEffect(() => {
-    const savedReports = JSON.parse(localStorage.getItem("reports"));
-    const savedCollectors =
-      JSON.parse(localStorage.getItem("collectors")) || [];
 
-    if (!savedReports || savedReports.length === 0) {
-      const defaultReports = [
-        {
-          id: 101,
-          location: "Smart City Area",
-          type: "Plastic",
-          status: "Pending",
-          collector: null,
-          photo: p2,
-        }, {
-          id: 101,
-          location: "Smart City Area",
-          type: "Plastic",
-          status: "Pending",
-          collector: null,
-          photo: p2,
-        },
-        {
-          id: 102,
-          location: "Main Road",
-          type: "Other",
-          status: "Pending",
-          collector: null,
-          photo: p2,
-        },
-        {
-          id: 103,
-          location: "River Side",
-          type: "Organic",
-          status: "Pending",
-          collector: null,
-          photo: p2,
-        },
-      ];
+    const fetchReports = async () => {
+      try {
 
-      setReports(defaultReports);
-      localStorage.setItem("reports", JSON.stringify(defaultReports));
-    } else {
-      setReports(savedReports);
-    }
+        const res = await API.get("/reports");
 
-    setCollectors(savedCollectors);
+        setReports(res.data);
+
+      } catch (error) {
+        console.log("Error loading reports");
+      }
+    };
+
+    const fetchCollectors = async () => {
+      try {
+
+        const res = await API.get("/collectors");
+
+        setCollectors(res.data);
+
+      } catch (error) {
+        console.log("Error loading collectors");
+      }
+    };
+
+    fetchReports();
+    fetchCollectors();
+
   }, []);
 
   // ================= ASSIGN COLLECTOR =================
-  const handleAssign = (reportId, collectorName) => {
-    const updatedReports = reports.map((report) =>
-      report.id === reportId
-        ? {
-          ...report,
-          status: "Assigned",
-          collector: collectorName,
-        }
-        : report
-    );
+  const handleAssign = async (reportId, collectorName) => {
 
-    setReports(updatedReports);
-    localStorage.setItem("reports", JSON.stringify(updatedReports));
+    try {
 
-    const updatedCollectors = collectors.map((col) =>
-      col.name === collectorName
-        ? { ...col, status: "Busy" }
-        : col
-    );
+      await API.put(`/reports/assign/${reportId}`, {
+        collector: collectorName
+      });
 
-    setCollectors(updatedCollectors);
-    localStorage.setItem(
-      "collectors",
-      JSON.stringify(updatedCollectors)
-    );
+      const updatedReports = reports.map(r =>
+        r._id === reportId
+          ? { ...r, status: "Assigned", collector: collectorName }
+          : r
+      );
 
-    setAssigningId(null);
+      setReports(updatedReports);
+
+    } catch (error) {
+      console.log("Assign error");
+    }
+
   };
-
   // ================= FILTER =================
   const filteredReports =
     filter === "All"
@@ -121,6 +95,7 @@ function WasteReports() {
               <th>Location</th>
               <th>Type</th>
               <th>Photo</th>
+              <th>Cleaned Photo</th>
               <th>Status</th>
               <th>Collector</th>
               <th>Action</th>
@@ -128,11 +103,11 @@ function WasteReports() {
           </thead>
 
           <tbody>
-            {filteredReports.map((report) => (
-              <tr key={report.id}>
-                <td>#{report.id}</td>
+            {filteredReports.map((report, index) => (
+              <tr key={report._id}>
+                <td>#{index + 1}</td>
                 <td>{report.location}</td>
-                <td>{report.type}</td>
+                <td>{report.wasteType}</td>
 
                 <td>
                   <img
@@ -144,7 +119,18 @@ function WasteReports() {
                     }
                   />
                 </td>
-
+                <td>
+                  {report.cleanedPhoto ? (
+                    <img
+                      src={`http://localhost:5000${report.cleanedPhoto}`}
+                      alt="Cleaned"
+                      className="report-image"
+                      onClick={() => setSelectedImage(`http://localhost:5000${report.cleanedPhoto}`)}
+                    />
+                  ) : (
+                    <span style={{ color: "#64748b" }}>No Image</span>
+                  )}
+                </td>
                 <td
                   className={
                     report.status === "Pending"
@@ -161,11 +147,11 @@ function WasteReports() {
 
                 <td>
                   {report.status === "Pending" ? (
-                    assigningId === report.id ? (
+                    assigningId === report._id ? (
                       <select
                         onChange={(e) =>
                           handleAssign(
-                            report.id,
+                            report._id,
                             e.target.value
                           )
                         }
@@ -182,7 +168,7 @@ function WasteReports() {
                           )
                           .map((col) => (
                             <option
-                              key={col.id}
+                              key={col._id}
                               value={col.name}
                             >
                               {col.name}
@@ -193,7 +179,7 @@ function WasteReports() {
                       <button
                         className="assign-btn"
                         onClick={() =>
-                          setAssigningId(report.id)
+                          setAssigningId(report._id)
                         }
                       >
                         Assign
