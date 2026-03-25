@@ -43,9 +43,14 @@ function AddCollector() {
   };
 
   return (
-    <div className="add-collector-page">
-      <div className="add-collector-card">
-        <h1>Add New Collector</h1>
+    <div className="admin-page-wrapper">
+      <header className="admin-page-header">
+        <div className="admin-page-title-group">
+          <h1 className="admin-page-title">Add New Collector</h1>
+        </div>
+      </header>
+
+      <div className="add-collector-card" style={{ margin: '0 auto' }}>
 
         <form onSubmit={handleSubmit}>
           <input

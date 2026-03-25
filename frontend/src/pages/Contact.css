@@ -14,7 +14,7 @@
   align-items: center;
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
   padding: 20px;
-  font-family: 'Inter', sans-serif;
+
 }
 
 .contact-wrapper {
@@ -35,7 +35,9 @@
 }
 
 .direct-contact-section h1 {
-  font-size: 36px;
+  font-size: var(--fs-3xl);
+  /* ✅ was 36px → Hero title */
+  font-weight: var(--fw-extrabold);
   color: var(--text-dark);
   margin-bottom: 10px;
 }
@@ -43,7 +45,9 @@
 .direct-contact-section p {
   color: var(--text-light);
   margin-bottom: 40px;
-  font-size: 16px;
+  font-size: var(--fs-md);
+  /* ✅ was 16px → Paragraph */
+  font-weight: var(--fw-normal)
 }
 
 /* ACTION CARDS */
@@ -68,8 +72,15 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
-.contact-card.call { background: #eff6ff; color: var(--call-blue); }
-.contact-card.whatsapp { background: #f0fdf4; color: var(--whatsapp-green); }
+.contact-card.call {
+  background: #eff6ff;
+  color: var(--call-blue);
+}
+
+.contact-card.whatsapp {
+  background: #f0fdf4;
+  color: var(--whatsapp-green);
+}
 
 .icon-circle {
   width: 56px;
@@ -85,12 +96,16 @@
 
 .card-text span {
   display: block;
-  font-size: 14px;
+  font-size: var(--fs-md);
+  /* ✅ was 14px → Small text */
+  font-weight: var(--fw-medium);
   opacity: 0.8;
 }
 
 .card-text strong {
-  font-size: 20px;
+  font-size: var(--fs-xl);
+  /* ✅ was 20px → maps to 1.5rem */
+  font-weight: var(--fw-bold);
   display: block;
 }
 
@@ -107,10 +122,14 @@
   align-items: center;
   gap: 12px;
   color: var(--text-dark);
-  font-weight: 500;
+  font-size: var(--fs-sm);
+  /* ✅ added — was unsized */
+  font-weight: var(--fw-medium);
 }
 
-.blue-icon { color: var(--primary-blue); }
+.blue-icon {
+  color: var(--primary-blue);
+}
 
 /* RIGHT SECTION: FORM */
 .message-form-section {
@@ -118,8 +137,18 @@
   background: var(--bg-soft);
 }
 
-.message-form-section h2 { margin-bottom: 8px; }
-.message-form-section p { font-size: 14px; color: var(--text-light); margin-bottom: 30px; }
+.message-form-section h2 {
+  font-size: var(--fs-3xl);          /* ✅ was missing entirely */
+  font-weight: var(--fw-bold);
+  margin-bottom: 8px;
+}
+
+.message-form-section > p {
+  font-size: var(--fs-md);           /* ✅ was 14px → Small text */
+  font-weight: var(--fw-normal);
+  color: var(--text-light);
+  margin-bottom: 30px;
+}
 
 .input-field {
   margin-bottom: 20px;
@@ -127,9 +156,10 @@
 
 .input-field label {
   display: block;
-  font-weight: 600;
+  font-size: var(--fs-sm);           /* ✅ was 14px hardcoded */
+  font-weight: var(--fw-semibold);
   margin-bottom: 8px;
-  font-size: 14px;
+  
   color: var(--text-dark);
 }
 
@@ -140,7 +170,9 @@
   border-radius: 12px;
   border: 2px solid #e2e8f0;
   background: white;
-  font-size: 15px;
+  font-size: var(--fs-sm);           /* ✅ was 15px hardcoded */
+  font-weight: var(--fw-normal);
+  font-family: inherit;
   outline: none;
   transition: 0.2s;
 }
@@ -157,8 +189,9 @@
   border: none;
   background: var(--primary-blue);
   color: white;
-  font-weight: bold;
-  font-size: 16px;
+  font-size: var(--fs-sm);           /* ✅ was 16px → Button → fs-sm */
+  font-weight: var(--fw-semibold);
+  font-family: inherit; 
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -167,15 +200,49 @@
   transition: 0.3s;
 }
 
-.contact-btn:hover { background: #1e40af; }
-.contact-btn.loading { opacity: 0.7; cursor: not-allowed; }
+.contact-btn:hover {
+  background: #1e40af;
+}
+
+.contact-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 
 /* MOBILE RESPONSIVE */
 @media (max-width: 900px) {
   .contact-wrapper {
     grid-template-columns: 1fr;
   }
-  .direct-contact-section, .message-form-section {
+
+  .direct-contact-section,
+  .message-form-section {
     padding: 40px 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --fs-3xl: 2rem;      /* ✅ h1 scales down */
+    --fs-2xl: 1.6rem;
+    --fs-xl: 1.3rem;     /* ✅ card strong text scales */
+  }
+}
+
+/* Small devices */
+@media (max-width: 480px) {
+  :root {
+    --fs-3xl: 1.75rem;
+    --fs-2xl: 1.4rem;
+    --fs-xl: 1.2rem;
+    --fs-md: 0.9rem;
+  }
+
+  .contact-wrapper {
+    border-radius: 20px;
+  }
+
+  .card-text strong {
+    font-size: var(--fs-lg);         /* ✅ slightly smaller on mobile */
   }
 }

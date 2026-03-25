@@ -14,7 +14,7 @@
   padding: 0 40px;
   height: 80px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 1000;
 }
@@ -50,7 +50,7 @@
   padding: 0;
 }
 
-.navbar-nav-links li a, 
+.navbar-nav-links li a,
 .navbar-dropdown-title {
   text-decoration: none;
   color: var(--text-gray);
@@ -112,7 +112,7 @@
   top: 100%;
   left: 0;
   background: white;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   padding: 10px 0;
   min-width: 180px;
@@ -208,7 +208,7 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
-  box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-mobile-drawer.navbar-open {
@@ -241,7 +241,8 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 18px; /* High tap area for uneducated/mobile users */
+  padding: 18px;
+  /* High tap area for uneducated/mobile users */
   text-decoration: none;
   color: var(--text-dark);
   font-weight: 600;
@@ -277,14 +278,20 @@
   background: var(--primary-blue);
   color: white;
 }
-.navbar-login-mobile svg { color: white; }
+
+.navbar-login-mobile svg {
+  color: white;
+}
 
 .navbar-logout-mobile {
   background: #fee2e2;
   color: #dc2626;
   margin-top: 10px;
 }
-.navbar-logout-mobile svg { color: #dc2626; }
+
+.navbar-logout-mobile svg {
+  color: #dc2626;
+}
 
 .navbar-mobile-user-card {
   display: flex;
@@ -303,8 +310,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* RESPONSIVE LOGIC */
@@ -312,24 +324,27 @@
   .navbar-main {
     padding: 0 20px;
   }
-  .navbar-center, 
+
+  .navbar-center,
   .navbar-desktop-only {
     display: none !important;
   }
+
   .navbar-mobile-toggle {
     display: block;
   }
 }
 
 /* This hides the hamburger button only when the drawer is open */
-.navbar-mobile-drawer.navbar-open ~ .navbar-right .navbar-mobile-toggle {
+.navbar-mobile-drawer.navbar-open~.navbar-right .navbar-mobile-toggle {
   opacity: 0;
   pointer-events: none;
 }
 
 /* Ensure the drawer is wide enough to cover the top right area */
 .navbar-mobile-drawer {
-  width: 100%; /* Or keep 85% but ensure it feels solid */
+  width: 100%;
+  /* Or keep 85% but ensure it feels solid */
   max-width: 400px;
 }
 

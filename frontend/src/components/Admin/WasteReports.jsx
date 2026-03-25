@@ -1,15 +1,16 @@
 import "./WasteReports.css";
-import p2 from "../../assets/p2.jpg";
+import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
-import CloseButton from "../CloseButton"; // 👈 reusable button
+// 👈 reusable button
 import API from "../../api/api";
+import ImagePreview from "../ImagePreview";
 function WasteReports() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [filter, setFilter] = useState("All");
   const [assigningId, setAssigningId] = useState(null);
   const [reports, setReports] = useState([]);
   const [collectors, setCollectors] = useState([]);
-
+  const [searchQuery, setSearchQuery] = useState("");
   // ================= LOAD DATA =================
   useEffect(() => {
 
@@ -65,27 +66,48 @@ function WasteReports() {
 
   };
   // ================= FILTER =================
-  const filteredReports =
-    filter === "All"
-      ? reports
-      : reports.filter((r) => r.status === filter);
+  const filteredReports = reports
+    .filter((r) => (filter === "All" ? true : r.status === filter))
+    .filter((r) =>
+      r.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.wasteType?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.collector?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   return (
-    <div className="admin-content">
-      <h1>Waste Reports</h1>
+    <div className="admin-page-wrapper">
 
-      {/* FILTER */}
-      <div className="filter-bar">
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="All">All</option>
-          <option value="Pending">Pending</option>
-          <option value="Assigned">Assigned</option>
-          <option value="Collected">Collected</option>
-        </select>
-      </div>
+      
+      <header className="admin-page-header">
+        <div className="admin-page-title-group">
+          <h1 className="admin-page-title">Waste Reports</h1>
+        </div>
+
+        <div className="admin-header-actions">
+          <div className="admin-search-box">
+            <Search size={18} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search location, type..."
+              className="admin-search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="filter-bar">
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="All">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Assigned">Assigned</option>
+              <option value="Collected">Collected</option>
+            </select>
+          </div>
+        </div>
+      </header>
 
       <div className="table-card">
         <table>
@@ -114,9 +136,7 @@ function WasteReports() {
                     src={report.photo}
                     alt="Waste"
                     className="report-image"
-                    onClick={() =>
-                      setSelectedImage(report.photo)
-                    }
+                    onClick={() => setSelectedImage(report.photo)}
                   />
                 </td>
                 <td>
@@ -125,22 +145,19 @@ function WasteReports() {
                       src={`http://localhost:5000${report.cleanedPhoto}`}
                       alt="Cleaned"
                       className="report-image"
-                      onClick={() => setSelectedImage(`http://localhost:5000${report.cleanedPhoto}`)}
+                      onClick={() =>
+                        setSelectedImage(`http://localhost:5000${report.cleanedPhoto}`)
+                      }
                     />
                   ) : (
                     <span style={{ color: "#64748b" }}>No Image</span>
                   )}
                 </td>
-                <td
-                  className={
-                    report.status === "Pending"
-                      ? "pending"
-                      : report.status === "Assigned"
-                        ? "assigned"
-                        : "collected"
-                  }
-                >
-                  {report.status}
+
+                <td>
+                  <span className={`admin-status-badge ${report.status.toLowerCase()}`}>
+                    {report.status}
+                  </span>
                 </td>
 
                 <td>{report.collector || "-"}</td>
@@ -202,28 +219,13 @@ function WasteReports() {
             ))}
           </tbody>
         </table>
-
+        <ImagePreview
+          image={selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
         {/* IMAGE MODAL */}
         {/* IMAGE MODAL */}
-        {selectedImage && (
-          <div
-            className="image-modal"
-            onClick={() => setSelectedImage(null)}
-          >
-            <div
-              className="image-box"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <CloseButton onClick={() => setSelectedImage(null)} />
 
-              <img
-                src={selectedImage}
-                alt="Full View"
-                className="modal-image"
-              />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

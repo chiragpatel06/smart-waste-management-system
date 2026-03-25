@@ -11,6 +11,9 @@ import Contact from "./pages/Contact";
 import ReportWaste from "./pages/ReportWaste";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import ProtectedAuth from "./pages/ProtectedAuth";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 import AdminLayout from "./components/Admin/AdminLayout";
 import AdminDashboard from "./components/Admin/AdminDashboard";
@@ -98,9 +101,11 @@ function App() {
           path="/login"
           element={
             <>
-              <Navbar />
-              <Login />
-              <Footer />
+              <ProtectedAuth>
+                <Navbar />
+                <Login />
+                <Footer />
+              </ProtectedAuth>
             </>
           }
         />
@@ -109,9 +114,24 @@ function App() {
           path="/register"
           element={
             <>
-              <Navbar />
-              <Register />
-              <Footer />
+              <ProtectedAuth>
+                <Navbar />
+                <Register />
+                <Footer />
+              </ProtectedAuth>
+            </>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <>
+              <ProtectedRoute>
+
+                <Profile />
+
+              </ProtectedRoute>
             </>
           }
         />

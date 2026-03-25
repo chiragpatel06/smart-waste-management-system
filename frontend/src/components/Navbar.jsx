@@ -74,7 +74,11 @@ function Navbar() {
         {/* Auth Section */}
         {user ? (
           <div className="navbar-user-profile navbar-desktop-only">
-            <div className="navbar-user-badge">
+            <div
+              className="navbar-user-badge"
+              onClick={() => navigate("/profile")}
+              style={{ cursor: "pointer" }}
+            >
               <div className="navbar-avatar">
                 {firstName?.charAt(0).toUpperCase()}
               </div>
@@ -136,8 +140,8 @@ function Navbar() {
             <Link
               to="/services/tracking"
               className={`navbar-mobile-link ${location.pathname.startsWith("/services/tracking")
-                  ? "navbar-highlight"
-                  : ""
+                ? "navbar-highlight"
+                : ""
                 }`}
               onClick={toggleMenu}
             >
@@ -174,16 +178,44 @@ function Navbar() {
 
           {user ? (
             <div className="navbar-mobile-user-section">
-              <div className="navbar-mobile-user-card">
-                <div className="navbar-avatar">{firstName?.charAt(0).toUpperCase()}</div>
+
+              {/* Profile Link */}
+              <Link
+                to="/profile"
+                className="navbar-mobile-link"
+                onClick={toggleMenu}
+              >
+                <UserIcon size={24} />
+                <span>Profile</span>
+              </Link>
+
+              {/* User Card */}
+              <div
+                className="navbar-mobile-user-card"
+                onClick={() => {
+                  navigate("/profile");
+                  toggleMenu();
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="navbar-avatar">
+                  {firstName?.charAt(0).toUpperCase()}
+                </div>
                 <div className="navbar-mobile-user-info">
                   <p>Logged in as</p>
                   <strong>{user.name}</strong>
                 </div>
               </div>
-              <button onClick={handleLogout} className="navbar-mobile-link navbar-logout-mobile">
-                <LogOut size={24} /> <span>Logout / बाहर निकलें</span>
+
+              {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className="navbar-mobile-link navbar-logout-mobile"
+              >
+                <LogOut size={24} />
+                <span>Logout / बाहर निकलें</span>
               </button>
+
             </div>
           ) : (
             <Link to="/login" className="navbar-mobile-link navbar-login-mobile" onClick={toggleMenu}>

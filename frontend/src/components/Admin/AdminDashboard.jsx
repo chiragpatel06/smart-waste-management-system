@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import ImagePreview from "../ImagePreview";
 import {
   ClipboardList,
   CheckCircle,
@@ -15,6 +16,7 @@ function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [reportsData, setReportsData] = useState([]);
   const [collectorsData, setCollectorsData] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const filteredReports = reportsData
     .filter((r) => (activeCard === "All" ? true : r.status === activeCard))
@@ -50,46 +52,33 @@ function AdminDashboard() {
 
   return (
 
-    <div className="admin-dashboard-container">
+    <div className="admin-page-wrapper">
 
       {/* HEADER */}
-      <header className="admin-dashboard-header">
-
-        <h1 className="admin-dashboard-title">
-          Dashboard Overview
-        </h1>
-
-        <div className="admin-dashboard-subheader">
-
-          <p className="admin-dashboard-subtitle">
-            Welcome back, Admin
-          </p>
-
-          <div className="admin-dashboard-header-actions">
-
-            <div className="admin-search-box">
-              <Search size={18} />
-
-              <input
-                className="admin-search-input"
-                type="text"
-                placeholder="Search locations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-
-            <button className="admin-primary-btn">
-              <Plus size={18} />
-              <span className="admin-btn-text">
-                New Report
-              </span>
-            </button>
-
-          </div>
-
+      <header className="admin-page-header">
+        
+        <div className="admin-page-title-group">
+          <h1 className="admin-page-title">Dashboard Overview</h1>
+          <p className="admin-page-subtitle">Welcome back, Admin</p>
         </div>
 
+        <div className="admin-header-actions">
+          <div className="admin-search-box">
+            <Search size={18} className="search-icon" />
+            <input
+              className="admin-search-input"
+              type="text"
+              placeholder="Search locations..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <button className="admin-primary-btn">
+            <Plus size={18} />
+            <span className="admin-btn-text">New Report</span>
+          </button>
+        </div>
       </header>
 
       {/* STAT CARDS */}
@@ -257,6 +246,8 @@ function AdminDashboard() {
                           src={report.photo}
                           alt="Waste"
                           className="admin-mini-img"
+                          onClick={() => setSelectedImage(report.photo)}
+                          style={{ cursor: "pointer" }}
                         />
 
                       ) : "-"}
@@ -271,6 +262,10 @@ function AdminDashboard() {
                           src={`http://localhost:5000${report.cleanedPhoto}`}
                           alt="Cleaned"
                           className="admin-mini-img"
+                          onClick={() =>
+                            setSelectedImage(`http://localhost:5000${report.cleanedPhoto}`)
+                          }
+                          style={{ cursor: "pointer" }}
                         />
 
                       ) : "-"}
@@ -296,6 +291,10 @@ function AdminDashboard() {
             </tbody>
 
           </table>
+          <ImagePreview
+            image={selectedImage}
+            onClose={() => setSelectedImage(null)}
+          />
 
         </div>
 

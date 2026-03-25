@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Collectors.css";
 import { Link } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Search, Plus } from "lucide-react";
 import API from "../../api/api";
 
 function Collectors() {
@@ -13,6 +13,7 @@ function Collectors() {
     const [collectors, setCollectors] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [editData, setEditData] = useState({});
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const fetchCollectors = async () => {
@@ -57,17 +58,38 @@ function Collectors() {
 
 
 
+    const filteredCollectors = collectors.filter(c => 
+        (c.name && c.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (c.phone && c.phone.includes(searchTerm)) ||
+        (c.area && c.area.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
     return (
-        <div className="admin-page">
-            <main className="admin-content">
-                <header className="collectors-header">
-                    <h1>Collectors Management</h1>
-                    <Link to="/admin/add-collector" className="add-btn">
-                        + Add Collector
-                    </Link>
+        <div className="admin-page-wrapper">
+                <header className="admin-page-header">
+                    <div className="admin-page-title-group">
+                        <h1 className="admin-page-title">Collectors Management</h1>
+                    </div>
+                    
+                    <div className="admin-header-actions">
+                        <div className="admin-search-box">
+                            <Search size={18} className="search-icon" />
+                            <input
+                                type="text"
+                                placeholder="Search Name, Phone, Area..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="admin-search-input"
+                            />
+                        </div>
+                        <Link to="/admin/add-collector" className="admin-primary-btn" style={{ textDecoration: 'none' }}>
+                            <Plus size={18} />
+                            <span className="admin-btn-text">Add Collector</span>
+                        </Link>
+                    </div>
                 </header>
 
-                <table className="admin-table">
+                <table className="collector-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -79,7 +101,7 @@ function Collectors() {
                         </tr>
                     </thead>
                     <tbody>
-                        {collectors.map((collector, index) => (
+                        {filteredCollectors.map((collector, index) => (
                             <tr key={collector._id} className={editingId === collector._id ? "editing-row" : ""}>
                                 <td data-label="ID">{index + 1}</td>
                                 <td data-label="Name">
@@ -120,7 +142,7 @@ function Collectors() {
                                             <option value="Busy">Busy</option>
                                         </select>
                                     ) : (
-                                        <span className={collector.status === "Available" ? "status-available" : "status-busy"}>
+                                        <span className={`collector-status-badge ${collector.status.toLowerCase()}`}>
                                             {collector.status}
                                         </span>
                                     )}
@@ -146,7 +168,6 @@ function Collectors() {
                         ))}
                     </tbody>
                 </table>
-            </main>
         </div>
     );
 }

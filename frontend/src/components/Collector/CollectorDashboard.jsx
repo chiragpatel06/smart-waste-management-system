@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./CollectorDashboard.css";
-import { Truck, CheckCircle, MapPin, ClipboardList, Calendar, Layers } from "lucide-react";
-import CloseButton from "../CloseButton";
+import { Recycle, CheckCircle, MapPin, ClipboardList, Calendar, Layers } from "lucide-react";
+import ImagePreview from "../ImagePreview";
 import API from "../../api/api";
 
 
@@ -73,10 +73,10 @@ function CollectorDashboard() {
     <div className="collector-page">
       <div className="collectordas-header">
         <div className="header-title-wrapper">
-          <div className="header-icon-box">
-            <Truck size={24} />
-          </div>
-          <h2 className="header-main-title">Collector Dashboard</h2>
+          <Recycle size={32} className="swachhsetu-logo-icon" />
+          <h1 className="header-main-title">SwachhSetu</h1>
+          <span className="header-divider">|</span>
+          <span className="header-subtitle">Collector Dashboard</span>
         </div>
       </div>
 
@@ -128,21 +128,21 @@ function CollectorDashboard() {
               <thead>
                 <tr className="collector-table-header-row">
                   <th className="collector-table-th">ID</th>
-                  <th className="collector-table-th">Photo</th>
+                  <th className="collector-table-th photo-cell">Photo</th>
                   <th className="collector-table-th">Collector</th>
                   <th className="collector-table-th">Location</th>
                   <th className="collector-table-th">Type</th>
                   <th className="collector-table-th">Date</th>
                   <th className="collector-table-th">Status</th>
-                  <th className="collector-table-th">Cleaned Photo</th>
-                  <th className="collector-table-th">Action</th>
+                  <th className="collector-table-th photo-cell">Cleaned Photo</th>
+                  <th className="collector-table-th action-cell">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {assignedReports.map((report, index) => (
                   <tr key={report._id} className="collector-table-row">
                     <td className="collector-table-td id-cell">#{index + 1}</td>
-                    <td className="collector-table-td">
+                    <td className="collector-table-td photo-cell">
                       {report.photo ? (
                         <img
                           src={report.photo}
@@ -160,7 +160,7 @@ function CollectorDashboard() {
                         <MapPin size={14} className="icon-sub" /> {report.location}
                       </div>
                     </td>
-                    <td className="collector-table-td">{report.wasteType}</td>
+                    <td className="collector-table-td type-cell">{report.wasteType}</td>
                     <td className="collector-table-td date-cell">
                       <div className="date-wrapper">
                         <Calendar size={14} className="icon-sub" />
@@ -174,7 +174,7 @@ function CollectorDashboard() {
                     <td className="collector-table-td">
                       <span className="collector-status-assigned">{report.status}</span>
                     </td>
-                    <td className="collector-table-td">
+                    <td className="collector-table-td photo-cell">
                       {report.cleanedPhoto ? (
                         <img
                           src={report.cleanedPhoto}
@@ -197,7 +197,7 @@ function CollectorDashboard() {
                         <span className="no-image-text">Not Uploaded</span>
                       )}
                     </td>
-                    <td className="collector-table-td">
+                    <td className="collector-table-td action-cell">
                       <div className="collector-action-box">
 
                         <input
@@ -208,12 +208,12 @@ function CollectorDashboard() {
                           onChange={(e) => handleFileChange(report._id, e.target.files[0])}
                         />
 
-                        <label htmlFor={`clean-${report._id}`} className="upload-clean-btn">
+                        <label htmlFor={`clean-${report._id}`} className="collector-btn upload-clean-btn">
                           Upload
                         </label>
 
                         <button
-                          className="complete-btn"
+                          className="collector-btn complete-btn"
                           disabled={!cleanedImages[report._id]}
                           onClick={() => handleComplete(report._id)}
                         >
@@ -242,7 +242,7 @@ function CollectorDashboard() {
                   <th className="collector-table-th">Location</th>
                   <th className="collector-table-th">Type</th>
                   <th className="collector-table-th">Date</th>
-                  <th className="collector-table-th">Cleaned Photo</th>
+                  <th className="collector-table-th photo-cell">Cleaned Photo</th>
                   <th className="collector-table-th">Status</th>
                 </tr>
               </thead>
@@ -251,16 +251,25 @@ function CollectorDashboard() {
                   <tr key={report._id} className="collector-table-row">
                     <td className="collector-table-td id-cell">#{index + 1}</td>
                     <td className="collector-table-td fw-600">{report.collector}</td>
-                    <td className="collector-table-td location-cell">{report.location?.replaceAll(",", ", ")}</td>
-                    <td className="collector-table-td">{report.wasteType}</td>
+                    <td className="collector-table-td location-cell">
+                      <div className="location-wrapper">
+                        <MapPin size={14} className="icon-sub" /> {report.location?.replaceAll(",", ", ")}
+                      </div>
+                    </td>
+                    <td className="collector-table-td type-cell">{report.wasteType}</td>
 
-                    <td className="collector-table-td date-cell">{new Date(report.createdAt).toLocaleDateString("en-IN", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric"
-                    })}</td>
+                    <td className="collector-table-td date-cell">
+                      <div className="date-wrapper">
+                        <Calendar size={14} className="icon-sub" />
+                        {new Date(report.createdAt).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric"
+                        })}
+                      </div>
+                    </td>
 
-                    <td className="collector-table-td">
+                    <td className="collector-table-td photo-cell">
                       {report.cleanedPhoto ? (
                         <img
                           src={`http://localhost:5000${report.cleanedPhoto}`}
@@ -285,26 +294,10 @@ function CollectorDashboard() {
         </div>
       )}
 
-      {selectedImage && (
-        <div
-          className="collector-image-modal"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div
-            className="collector-image-box"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <CloseButton onClick={() => setSelectedImage(null)} />
-
-            <img
-              src={selectedImage}
-              alt="Preview"
-              className="collector-modal-image"
-            />
-
-          </div>
-        </div>
-      )}
+      <ImagePreview
+        image={selectedImage}
+        onClose={() => setSelectedImage(null)}
+      />
     </div>
   );
 }

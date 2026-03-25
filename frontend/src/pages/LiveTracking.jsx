@@ -19,6 +19,7 @@ function LiveTracking() {
   const [filterStatus, setFilterStatus] = useState("All");
   const [selectedReport, setSelectedReport] = useState(null);
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
+  const [showImage, setShowImage] = useState(null);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -219,9 +220,55 @@ function LiveTracking() {
               </span>
             </div>
 
-            <div className="image-container">
-              <img src={selectedReport.photo} alt="Waste" />
+            {/* IMPROVED BEFORE & AFTER SECTION */}
+            <div className="comparison-grid">
+              {/* BEFORE CLEANING CARD */}
+              <div className="comparison-card before">
+                <div className="comparison-badge">
+                  <Clock size={14} />
+                  <span>Before / पहले</span>
+                </div>
+                <div className="img-wrapper">
+                  <img
+                    src={selectedReport.photo}
+                    alt="Before Cleaning"
+                    onClick={() => setShowImage("before")}
+                  />
+                  <div className="status-bar danger">⚠️ Reported / शिकायत</div>
+                </div>
+              </div>
+
+              {/* AFTER CLEANING CARD */}
+              {selectedReport.cleanedPhoto ? (
+                <div className="comparison-card after">
+                  <div className="comparison-badge">
+                    <CheckCircle size={14} />
+                    <span>After / बाद में</span>
+                  </div>
+                  <div className="img-wrapper">
+                    <img
+                      src={`http://localhost:5000${selectedReport.cleanedPhoto}`}
+                      alt="After Cleaning"
+                      onClick={() => setShowImage("after")}
+                    />
+                    <div className="status-bar success">✅ Cleaned / सफाई सफल</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="comparison-card processing">
+                  <div className="comparison-badge">
+                    <Clock size={14} />
+                    <span>Status / स्थिति</span>
+                  </div>
+                  <div className="processing-placeholder">
+                    <div className="pulse-loader"></div>
+                    <p>Cleaning in Progress...</p>
+                    <span>सफाई चल रही है</span>
+                  </div>
+                </div>
+              )}
             </div>
+
 
             {/* 🔥 STEPPER */}
             <div className="stepper">
@@ -265,6 +312,19 @@ function LiveTracking() {
                 <p>{selectedReport.wasteType}</p>
               </div>
             </div>
+            {showImage && (
+              <div className="image-modal" onClick={() => setShowImage(null)}>
+                <img
+                  src={
+                    showImage === "before"
+                      ? selectedReport.photo
+                      : selectedReport.cleanedPhoto
+                  }
+                  alt="Preview"
+                />
+              </div>
+            )}
+
           </>
         ) : (
           <div className="empty-state">

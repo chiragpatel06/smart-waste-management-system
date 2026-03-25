@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../../api/api";
 import "./Analytics.css";
+import { Search } from "lucide-react";
 
 function Analytics() {
   const [view, setView] = useState("visual");
@@ -90,32 +91,40 @@ function Analytics() {
   };
 
   return (
-    <div className="admin-page">
-      <main className="admin-content">
-        <h1>Analytics Dashboard</h1>
+    <div className="admin-page-wrapper">
+        <header className="admin-page-header">
+          <div className="admin-page-title-group">
+            <h1 className="admin-page-title">Analytics Dashboard</h1>
+          </div>
 
-        {/* SEARCH + FILTER */}
-        <div className="filter-section">
-          <input
-            type="text"
-            placeholder="Search by ID or Collector..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div className="admin-header-actions">
+            <div className="admin-search-box">
+              <Search size={18} className="search-icon" />
+              <input
+                type="text"
+                placeholder="Search ID or Collector..."
+                className="admin-search-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
 
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="All">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Collected">Collected</option>
-          </select>
+            <div className="filter-section">
+              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                <option value="All">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Collected">Collected</option>
+              </select>
 
-          <select value={collectorFilter} onChange={(e) => setCollectorFilter(e.target.value)}>
-            <option value="All">All Collectors</option>
-            {collectors.map(name => (
-              <option key={name} value={name}>{name}</option>
-            ))}
-          </select>
-        </div>
+              <select value={collectorFilter} onChange={(e) => setCollectorFilter(e.target.value)}>
+                <option value="All">All Collectors</option>
+                {collectors.map(name => (
+                  <option key={name} value={name}>{name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </header>
 
         {/* CLICKABLE CARDS */}
         <div className="analytics-cards">
@@ -247,7 +256,6 @@ function Analytics() {
             </div>
           </>
         )}
-      </main>
     </div>
   );
 }

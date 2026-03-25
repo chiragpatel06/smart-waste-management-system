@@ -1,37 +1,51 @@
 .add-collector-page {
-  padding: 40px;
+  padding: 0;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .add-collector-card {
   max-width: 500px;
   margin: auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
 .add-collector-card h1 {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .add-collector-card input,
 .add-collector-card select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  padding: 0 16px;
+  height: 44px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
 .add-collector-card button {
   width: 100%;
-  padding: 12px;
-  background: #0072ff;
+  height: 44px;
+  background: linear-gradient(135deg, #3C80F3, #2563eb);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+}
+
+.add-collector-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .error {
@@ -46,7 +60,7 @@
 
 @media (max-width: 768px) {
   .add-collector-page {
-    padding: 15px;
+    padding: 0;
   }
 
   .add-collector-card {

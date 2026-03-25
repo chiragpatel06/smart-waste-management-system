@@ -28,8 +28,14 @@ function AdminLayout() {
 
       {/* SIDEBAR */}
       <aside className={`admin-sidebar ${isSidebarOpen ? "open" : ""}`}>
+        <svg width="0" height="0" style={{ position: 'absolute' }}>
+          <linearGradient id="swachhsetu-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop stopColor="#3b82f6" offset="0%" />
+            <stop stopColor="#10b981" offset="100%" />
+          </linearGradient>
+        </svg>
         <div className="logo-section">
-          <Recycle className="logo-icon" size={32} />
+          <Recycle className="logo-icon" size={32} stroke="url(#swachhsetu-grad)" />
           <span className="logo-text">SwachhSetu</span>
           <button className="close-sidebar-btn" onClick={closeSidebar}>
             <X size={24} />
