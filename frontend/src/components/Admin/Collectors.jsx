@@ -14,6 +14,8 @@ function Collectors() {
     const [editingId, setEditingId] = useState(null);
     const [editData, setEditData] = useState({});
     const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const collectorsPerPage = 5;
 
     useEffect(() => {
         const fetchCollectors = async () => {
@@ -64,6 +66,15 @@ function Collectors() {
         (c.area && c.area.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
+    const indexOfLastCollector = currentPage * collectorsPerPage;
+    const indexOfFirstCollector = indexOfLastCollector - collectorsPerPage;
+    const currentCollectors = filteredCollectors.slice(indexOfFirstCollector, indexOfLastCollector);
+    const totalPages = Math.ceil(filteredCollectors.length / collectorsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
+
     return (
         <div className="admin-page-wrapper">
                 <header className="admin-page-header">
@@ -89,31 +100,33 @@ function Collectors() {
                     </div>
                 </header>
 
-                <table className="collector-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Area</th>
-                            <th>Status</th>
-                            <th>Action</th>
+
+            <div className="admin-table-wrapper">
+                <table className="admin-table">
+                    <thead className="admin-table-head">
+                        <tr className="admin-table-row">
+                            <th className="admin-table-th">ID</th>
+                            <th className="admin-table-th">Name</th>
+                            <th className="admin-table-th">Phone</th>
+                            <th className="admin-table-th">Area</th>
+                            <th className="admin-table-th">Status</th>
+                            <th className="admin-table-th">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {filteredCollectors.map((collector, index) => (
-                            <tr key={collector._id} className={editingId === collector._id ? "editing-row" : ""}>
-                                <td data-label="ID">{index + 1}</td>
-                                <td data-label="Name">
+                    <tbody className="admin-table-body">
+                        {currentCollectors.map((collector, index) => (
+                            <tr key={collector._id} className={`admin-table-row ${editingId === collector._id ? "editing-row" : ""}`}>
+                                <td className="admin-table-td">{indexOfFirstCollector + index + 1}</td>
+                                <td className="admin-table-td">
                                     {editingId === collector._id ? (
                                         <input
                                             className="edit-input"
                                             value={editData.name}
                                             onChange={(e) => setEditData({ ...editData, name: e.target.value })}
                                         />
-                                    ) : collector.name}
+                                    ) : <strong className="admin-collector-name">{collector.name}</strong>}
                                 </td>
-                                <td data-label="Phone">
+                                <td className="admin-table-td">
                                     {editingId === collector._id ? (
                                         <input
                                             className="edit-input"
@@ -122,7 +135,7 @@ function Collectors() {
                                         />
                                     ) : collector.phone}
                                 </td>
-                                <td data-label="Area">
+                                <td className="admin-table-td">
                                     {editingId === collector._id ? (
                                         <input
                                             className="edit-input"
@@ -131,7 +144,7 @@ function Collectors() {
                                         />
                                     ) : collector.area}
                                 </td>
-                                <td data-label="Status">
+                                <td className="admin-table-td">
                                     {editingId === collector._id ? (
                                         <select
                                             className="edit-input"
@@ -142,12 +155,12 @@ function Collectors() {
                                             <option value="Busy">Busy</option>
                                         </select>
                                     ) : (
-                                        <span className={`collector-status-badge ${collector.status.toLowerCase()}`}>
+                                        <span className={`admin-status-badge ${collector.status.toLowerCase()}`}>
                                             {collector.status}
                                         </span>
                                     )}
                                 </td>
-                                <td data-label="Action" className="action-buttons">
+                                <td className="admin-table-td action-buttons">
                                     {editingId === collector._id ? (
                                         <div className="edit-actions">
                                             <button className="save-btn" onClick={() => handleUpdate(collector._id)}>Save</button>
@@ -166,8 +179,54 @@ function Collectors() {
                                 </td>
                             </tr>
                         ))}
+
+                        {currentCollectors.length < collectorsPerPage &&
+                            Array.from({ length: collectorsPerPage - currentCollectors.length }).map((_, index) => (
+                                <tr key={`empty-${index}`} className="admin-table-row placeholder-row">
+                                    <td className="admin-table-td">-</td>
+                                    <td className="admin-table-td"></td>
+                                    <td className="admin-table-td"></td>
+                                    <td className="admin-table-td"></td>
+                                    <td className="admin-table-td"></td>
+                                    <td className="admin-table-td"></td>
+                                </tr>
+                            ))
+                        }
                     </tbody>
                 </table>
+
+                {filteredCollectors.length > collectorsPerPage && (
+                    <div className="admin-pagination">
+                        <button
+                            className="pagination-btn"
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+
+                        <div className="pagination-numbers">
+                            {[...Array(totalPages)].map((_, i) => (
+                                <button
+                                    key={i + 1}
+                                    onClick={() => setCurrentPage(i + 1)}
+                                    className={`pagination-number ${currentPage === i + 1 ? "active" : ""}`}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            className="pagination-btn"
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

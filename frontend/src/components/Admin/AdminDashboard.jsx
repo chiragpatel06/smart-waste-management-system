@@ -17,13 +17,28 @@ function AdminDashboard() {
   const [reportsData, setReportsData] = useState([]);
   const [collectorsData, setCollectorsData] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-
+  // Add these lines
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 5;
   const filteredReports = reportsData
     .filter((r) => (activeCard === "All" ? true : r.status === activeCard))
     .filter((r) =>
       r.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.wasteType?.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+  // Pagination Calculations
+  const indexOfLastReport = currentPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+  const currentReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
+  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
+  // Reset to page 1 when search or category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, activeCard]);
+
+
+
 
   useEffect(() => {
 
@@ -56,7 +71,7 @@ function AdminDashboard() {
 
       {/* HEADER */}
       <header className="admin-page-header">
-        
+
         <div className="admin-page-title-group">
           <h1 className="admin-page-title">Dashboard Overview</h1>
           <p className="admin-page-subtitle">Welcome back, Admin</p>
@@ -189,108 +204,99 @@ function AdminDashboard() {
 
 
             <tbody className="admin-table-body">
-
               {activeCard === "Collectors"
-
                 ? collectorsData.map((collector, index) => (
-
                   <tr className="admin-table-row" key={collector._id}>
-
                     <td className="admin-table-td">#{index + 1}</td>
-
                     <td className="admin-table-td">
-                      <strong className="admin-collector-name">
-                        {collector.name}
-                      </strong>
+                      <strong className="admin-collector-name">{collector.name}</strong>
                     </td>
-
+                    <td className="admin-table-td">{collector.area}</td>
                     <td className="admin-table-td">
-                      {collector.area}
-                    </td>
-
-                    <td className="admin-table-td">
-
                       <span className={`admin-status-badge ${collector.status.toLowerCase().replace(" ", "-")}`}>
-
                         {collector.status}
-
                       </span>
-
                     </td>
-
                   </tr>
-
                 ))
+                : (
+                  <>
+                    {/* Render Actual Data */}
+                    {currentReports.map((report, index) => (
+                      <tr className="admin-table-row" key={report._id}>
+                        <td className="admin-table-td">#{indexOfFirstReport + index + 1}</td>
+                        <td className="admin-table-td">
+                          <strong className="admin-location-text">{report.location}</strong>
+                        </td>
+                        <td className="admin-table-td">{report.wasteType}</td>
+                        <td className="admin-table-td">
+                          {report.photo ? (
+                            <img src={report.photo} alt="Waste" className="admin-mini-img" onClick={() => setSelectedImage(report.photo)} style={{ cursor: "pointer" }} />
+                          ) : "-"}
+                        </td>
+                        <td className="admin-table-td">
+                          {report.cleanedPhoto ? (
+                            <img src={`http://localhost:5000${report.cleanedPhoto}`} alt="Cleaned" className="admin-mini-img" onClick={() => setSelectedImage(`http://localhost:5000${report.cleanedPhoto}`)} style={{ cursor: "pointer" }} />
+                          ) : "-"}
+                        </td>
+                        <td className="admin-table-td">
+                          <span className={`admin-status-badge ${report.status.toLowerCase()}`}>
+                            {report.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
 
-                : filteredReports.map((report, index) => (
-
-                  <tr className="admin-table-row" key={report._id}>
-
-                    <td className="admin-table-td">#{index + 1}</td>
-
-                    <td className="admin-table-td">
-                      <strong className="admin-location-text">
-                        {report.location}
-                      </strong>
-                    </td>
-
-                    <td className="admin-table-td">
-                      {report.wasteType}
-                    </td>
-
-                    <td className="admin-table-td">
-
-                      {report.photo ? (
-
-                        <img
-                          src={report.photo}
-                          alt="Waste"
-                          className="admin-mini-img"
-                          onClick={() => setSelectedImage(report.photo)}
-                          style={{ cursor: "pointer" }}
-                        />
-
-                      ) : "-"}
-
-                    </td>
-
-                    <td className="admin-table-td">
-
-                      {report.cleanedPhoto ? (
-
-                        <img
-                          src={`http://localhost:5000${report.cleanedPhoto}`}
-                          alt="Cleaned"
-                          className="admin-mini-img"
-                          onClick={() =>
-                            setSelectedImage(`http://localhost:5000${report.cleanedPhoto}`)
-                          }
-                          style={{ cursor: "pointer" }}
-                        />
-
-                      ) : "-"}
-
-                    </td>
-
-                    <td className="admin-table-td">
-
-                      <span className={`admin-status-badge ${report.status.toLowerCase()}`}>
-
-                        {report.status}
-
-                      </span>
-
-                    </td>
-
-                  </tr>
-
-                ))
-
+                    {/* Render Placeholder Rows (Fills the gap to always show 5 rows) */}
+                    {currentReports.length < reportsPerPage &&
+                      Array.from({ length: reportsPerPage - currentReports.length }).map((_, index) => (
+                        <tr key={`empty-${index}`} className="admin-table-row placeholder-row">
+                          <td className="admin-table-td">-</td>
+                          <td className="admin-table-td"></td>
+                          <td className="admin-table-td"></td>
+                          <td className="admin-table-td"></td>
+                          <td className="admin-table-td"></td>
+                          <td className="admin-table-td"></td>
+                        </tr>
+                      ))
+                    }
+                  </>
+                )
               }
-
             </tbody>
 
           </table>
+          {activeCard !== "Collectors" && filteredReports.length > reportsPerPage && (
+            <div className="admin-pagination">
+              <button
+                className="pagination-btn"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+
+              <div className="pagination-numbers">
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`pagination-number ${currentPage === i + 1 ? "active" : ""}`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                className="pagination-btn"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          )}
           <ImagePreview
             image={selectedImage}
             onClose={() => setSelectedImage(null)}

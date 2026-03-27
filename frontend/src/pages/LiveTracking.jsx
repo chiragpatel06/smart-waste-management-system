@@ -20,13 +20,21 @@ function LiveTracking() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [showImage, setShowImage] = useState(null);
+  const getImageUrl = (path) => {
+    if (!path) return "https://via.placeholder.com/300"; // fallback
+
+    if (path.startsWith("http")) return path;
+
+    return `http://localhost:5000/${path.replace(/^\/+/, "")}`;
+  };
+
 
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem("user"));
 
-        const res = await API.get(`/reports/my-reports/${user.email}`);
+
+        const res = await API.get("/reports/my-reports");
 
         setReportsData(res.data);
       } catch (error) {
@@ -230,9 +238,9 @@ function LiveTracking() {
                 </div>
                 <div className="img-wrapper">
                   <img
-                    src={selectedReport.photo}
+                    src={getImageUrl(selectedReport.photo)}
                     alt="Before Cleaning"
-                    onClick={() => setShowImage("before")}
+                    onClick={() => setShowImage("before")}   // ✅ ADD THIS
                   />
                   <div className="status-bar danger">⚠️ Reported / शिकायत</div>
                 </div>
@@ -317,8 +325,8 @@ function LiveTracking() {
                 <img
                   src={
                     showImage === "before"
-                      ? selectedReport.photo
-                      : selectedReport.cleanedPhoto
+                      ? getImageUrl(selectedReport.photo)
+                      : getImageUrl(selectedReport.cleanedPhoto)
                   }
                   alt="Preview"
                 />

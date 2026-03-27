@@ -2,16 +2,24 @@ import express from "express";
 import upload from "../middleware/upload.js";
 import { createReport } from "../controllers/reportController.js";
 import Report from "../models/Report.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+
 
 const router = express.Router();
 
 /* CREATE REPORT */
-router.post("/", upload.single("photo"), createReport);
+router.post("/", authMiddleware, upload.single("photo"), createReport);
 
 /* GET USER REPORTS */
-router.get("/my-reports/:email", async (req, res) => {
+router.get("/my-reports", authMiddleware, async (req, res) => {
   try {
-    const reports = await Report.find({ email: req.params.email }).sort({ createdAt: -1 });
+    const reports = await Report.find({
+      $or: [
+        { userId: req.user._id },
+        { email: req.user.email }
+      ]
+    }).sort({ createdAt: -1 });
+
     res.json(reports);
   } catch (error) {
     res.status(500).json({ message: "Error fetching reports" });

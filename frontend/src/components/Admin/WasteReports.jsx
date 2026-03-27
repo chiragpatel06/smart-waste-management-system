@@ -11,6 +11,8 @@ function WasteReports() {
   const [reports, setReports] = useState([]);
   const [collectors, setCollectors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 5;
   // ================= LOAD DATA =================
   useEffect(() => {
 
@@ -74,6 +76,15 @@ function WasteReports() {
       r.collector?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+  const indexOfLastReport = currentPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+  const currentReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
+  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filter]);
+
   return (
     <div className="admin-page-wrapper">
 
@@ -109,60 +120,65 @@ function WasteReports() {
         </div>
       </header>
 
-      <div className="table-card">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Location</th>
-              <th>Type</th>
-              <th>Photo</th>
-              <th>Cleaned Photo</th>
-              <th>Status</th>
-              <th>Collector</th>
-              <th>Action</th>
+
+      <div className="admin-table-wrapper">
+        <table className="admin-table">
+          <thead className="admin-table-head">
+            <tr className="admin-table-row">
+              <th className="admin-table-th">ID</th>
+              <th className="admin-table-th">Location</th>
+              <th className="admin-table-th">Type</th>
+              <th className="admin-table-th">Photo</th>
+              <th className="admin-table-th">Cleaned Photo</th>
+              <th className="admin-table-th">Status</th>
+              <th className="admin-table-th">Collector</th>
+              <th className="admin-table-th">Action</th>
             </tr>
           </thead>
 
-          <tbody>
-            {filteredReports.map((report, index) => (
-              <tr key={report._id}>
-                <td>#{index + 1}</td>
-                <td>{report.location}</td>
-                <td>{report.wasteType}</td>
+          <tbody className="admin-table-body">
+            {currentReports.map((report, index) => (
+              <tr key={report._id} className="admin-table-row">
+                <td className="admin-table-td">#{indexOfFirstReport + index + 1}</td>
+                <td className="admin-table-td">
+                   <strong className="admin-location-text">{report.location}</strong>
+                </td>
+                <td className="admin-table-td">{report.wasteType}</td>
 
-                <td>
+                <td className="admin-table-td">
                   <img
                     src={report.photo}
                     alt="Waste"
-                    className="report-image"
+                    className="admin-mini-img"
                     onClick={() => setSelectedImage(report.photo)}
+                    style={{ cursor: 'pointer' }}
                   />
                 </td>
-                <td>
+                <td className="admin-table-td">
                   {report.cleanedPhoto ? (
                     <img
                       src={`http://localhost:5000${report.cleanedPhoto}`}
                       alt="Cleaned"
-                      className="report-image"
+                      className="admin-mini-img"
                       onClick={() =>
                         setSelectedImage(`http://localhost:5000${report.cleanedPhoto}`)
                       }
+                      style={{ cursor: 'pointer' }}
                     />
                   ) : (
-                    <span style={{ color: "#64748b" }}>No Image</span>
+                    <span style={{ color: "#94a3b8" }}>No Image</span>
                   )}
                 </td>
 
-                <td>
+                <td className="admin-table-td">
                   <span className={`admin-status-badge ${report.status.toLowerCase()}`}>
                     {report.status}
                   </span>
                 </td>
 
-                <td>{report.collector || "-"}</td>
+                <td className="admin-table-td">{report.collector || "-"}</td>
 
-                <td>
+                <td className="admin-table-td">
                   {report.status === "Pending" ? (
                     assigningId === report._id ? (
                       <select
@@ -217,8 +233,55 @@ function WasteReports() {
                 </td>
               </tr>
             ))}
+
+            {currentReports.length < reportsPerPage &&
+              Array.from({ length: reportsPerPage - currentReports.length }).map((_, index) => (
+                <tr key={`empty-${index}`} className="admin-table-row placeholder-row">
+                  <td className="admin-table-td">-</td>
+                  <td className="admin-table-td"></td>
+                  <td className="admin-table-td"></td>
+                  <td className="admin-table-td"></td>
+                  <td className="admin-table-td"></td>
+                  <td className="admin-table-td"></td>
+                  <td className="admin-table-td"></td>
+                  <td className="admin-table-td"></td>
+                </tr>
+              ))
+            }
           </tbody>
         </table>
+
+        {filteredReports.length > reportsPerPage && (
+          <div className="admin-pagination">
+            <button
+              className="pagination-btn"
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+
+            <div className="pagination-numbers">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`pagination-number ${currentPage === i + 1 ? "active" : ""}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+
+            <button
+              className="pagination-btn"
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
         <ImagePreview
           image={selectedImage}
           onClose={() => setSelectedImage(null)}

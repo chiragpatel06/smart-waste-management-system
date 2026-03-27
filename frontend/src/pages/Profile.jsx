@@ -1,89 +1,319 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, MapPin, User, Calendar, Phone, LogOut, Edit3, ShieldCheck } from "lucide-react";
+import {
+  Mail, MapPin, User, Calendar, Phone, LogOut,
+  Edit3, ShieldCheck, CheckCircle2, ArrowLeft, Save, X,
+  Camera, Trash2, LayoutDashboard, Truck, Map, Lock, AlertCircle
+} from "lucide-react";
 import API from "../api/api";
 import "./profile.css";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
+  // States
+  const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [user, setUser] = useState(null);
+  const [editData, setEditData] = useState({});
+  const [passwordData, setPasswordData] = useState({ current: "", new: "", confirm: "" });
+
+  // UI States
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await API.get("/users/me");
-        setUser(res.data);
-      } catch (err) { console.error(err); } 
-      finally { setLoading(false); }
-    };
     fetchUser();
   }, []);
 
-  if (loading) return <div className="profile-page"><div className="loader">Loading...</div></div>;
+  const handleLogout = () => {
+    // remove token
+    localStorage.removeItem("token");
+
+    // optional: remove user data
+    localStorage.removeItem("user");
+
+    // reload app state (IMPORTANT)
+    window.location.href = "/login";
+  };
+
+  const fetchUser = async () => {
+    try {
+      const res = await API.get("/users/me");
+      setUser(res.data);
+      setEditData(res.data);
+    } catch (err) {
+      showToast("Failed to load profile", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Toast Logic ---
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, show: false }));
+    }, 3000);
+  };
+
+  // --- Change Detection ---
+  const hasChanges =
+    user && editData && JSON.stringify(user) !== JSON.stringify(editData);
+
+
+  const handleCancel = () => {
+    setEditData(user);
+    setIsEditing(false);
+    showToast("Changes discarded", "success");
+  };
+
+
+  // --- Profile Image Logic ---
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    try {
+      setLoading(true);
+      const res = await API.post("/users/upload-photo", formData);
+      setUser({ ...user, profileImage: res.data.url });
+      setEditData({ ...editData, profileImage: res.data.url });
+      showToast("Photo updated successfully");
+    } catch (err) {
+      showToast("Error uploading photo", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Form Handlers ---
+  const handleInputChange = (e) => {
+    setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveProfile = async () => {
+    if (!hasChanges) return;
+    setLoading(true);
+    try {
+      const res = await API.put("/users/update", editData);
+      setUser(res.data);
+      setIsEditing(false);
+      showToast("Profile updated successfully");
+    } catch (err) {
+      showToast("Failed to update profile", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    if (passwordData.new !== passwordData.confirm) {
+      return showToast("Passwords do not match", "error");
+    }
+    if (passwordData.new.length < 6) {
+      return showToast("Min 6 characters required", "error");
+    }
+
+    try {
+      setLoading(true);
+      await API.put("/users/change-password", {
+        currentPassword: passwordData.current,
+        newPassword: passwordData.new
+      });
+      showToast("Password changed successfully");
+      setShowPasswordForm(false);
+      setPasswordData({ current: "", new: "", confirm: "" });
+    } catch (err) {
+      showToast(err.response?.data?.message || "Error changing password", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading && !user) return <div className="profile-loading-screen"><div className="profile-spinner"></div></div>;
 
   return (
-    <div className="profile-page">
-      <div className="profile-card">
-        {/* Header - Compact */}
-        <div className="profile-header">
-          <div className="avatar-container">
-            <div className="profile-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
-            <div className="role-badge"><ShieldCheck size={12}/> {user?.role || "User"}</div>
-          </div>
-          <h1 className="user-name">{user?.name}</h1>
-          <p className="user-status">Account Active</p>
+    <div className="profile-page-container">
+      {/* Toast Notification */}
+      {toast.show && (
+        <div className={`profile-toast profile-toast-${toast.type}`}>
+          {toast.type === "success" ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+          {toast.message}
         </div>
+      )}
 
-        {/* Content - Two Columns on Desktop */}
-        <div className="profile-content">
-          {/* Column 1 */}
-          <div className="info-section">
-            <h3 className="section-title">Basic Details</h3>
-            <div className="info-row">
-              <div className="info-label"><User size={18} color="#2563eb"/> <span>Name</span></div>
-              <div className="info-value">{user?.name}</div>
-            </div>
-            <div className="divider"></div>
-            <div className="info-row">
-              <div className="info-label"><Mail size={18} color="#2563eb"/> <span>Email</span></div>
-              <div className="info-value">{user?.email}</div>
-            </div>
-          </div>
+      <div className="profile-glass-bg"></div>
 
-          {/* Column 2 */}
-          <div className="info-section">
-            <h3 className="section-title">Contact Info</h3>
-            <div className="info-row">
-              <div className="info-label"><Phone size={18} color="#2563eb"/> <span>Mobile</span></div>
-              <div className="info-value">{user?.phone || "Not Added"}</div>
-            </div>
-            <div className="divider"></div>
-            <div className="info-row">
-              <div className="info-label"><MapPin size={18} color="#2563eb"/> <span>Home</span></div>
-              <div className="info-value">{user?.address || "Not Added"}</div>
-            </div>
-          </div>
+      <div className={`profile-main-card ${isEditing ? "profile-mode-editing" : ""}`}>
 
-          {/* Row 3 - Full Width Info */}
-          <div className="info-section full-width">
-            <h3 className="section-title" style={{margin:0}}>Account Details</h3>
-            <div className="info-row" style={{gap: '20px'}}>
-              <div className="info-label"><Calendar size={18} color="#2563eb"/> <span>Joined On:</span></div>
-              <div className="info-value">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Buttons - Side by Side */}
-        <div className="profile-actions">
-          <button className="btn-edit" onClick={() => navigate("/edit-profile")}>
-            <Edit3 size={18} /> Edit Profile
+        {/* Nav */}
+        <div className="profile-card-nav">
+          <button className="profile-back-btn" onClick={() => navigate(-1)}>
+            <ArrowLeft size={20} /> <span>Back</span>
           </button>
-          <button className="btn-logout" onClick={() => {/* logout logic */}}>
-            <LogOut size={18} /> Logout
-          </button>
+          {hasChanges && isEditing && (
+            <span className="profile-unsaved-tag">Unsaved Changes</span>
+          )}
         </div>
+
+        {/* Header */}
+        <header className="profile-header-section">
+          <div className="profile-avatar-container">
+            <div className="profile-avatar-main">
+              {user?.profileImage ? (
+                <img src={user.profileImage} alt="Profile" className="profile-img-fluid" />
+              ) : (
+                user?.name?.charAt(0).toUpperCase()
+              )}
+              <div className="profile-avatar-overlay" onClick={() => fileInputRef.current.click()}>
+                <Camera size={20} />
+                <span>Change</span>
+              </div>
+            </div>
+            <input type="file" ref={fileInputRef} hidden onChange={handleImageUpload} accept="image/*" />
+            <div className="profile-role-badge">
+              <ShieldCheck size={12} /> {user?.role || "User"}
+            </div>
+          </div>
+
+          <div className="profile-header-info">
+            <h1>{user?.name}</h1>
+            <div className="profile-status-active">
+              <span className="profile-dot-glow"></span> Account Active
+            </div>
+          </div>
+        </header>
+
+        {/* Stats Section */}
+        <div className="profile-stats-grid">
+          <div className="profile-stat-item">
+            <div className="profile-stat-icon blue"><LayoutDashboard size={20} /></div>
+            <div className="profile-stat-data">
+              <h3>{user?.stats?.reports || 0}</h3>
+              <p>Total Reports</p>
+            </div>
+          </div>
+          <div className="profile-stat-item">
+            <div className="profile-stat-icon green"><Truck size={20} /></div>
+            <div className="profile-stat-data">
+              <h3>{user?.stats?.pickups || 0}</h3>
+              <p>Completed</p>
+            </div>
+          </div>
+          <div className="profile-stat-item">
+            <div className="profile-stat-icon orange"><Map size={20} /></div>
+            <div className="profile-stat-data">
+              <h3>{user?.stats?.areas || 0}</h3>
+              <p>Pending</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Grid */}
+        <div className="profile-info-grid">
+          <section className="profile-info-subcard">
+            <h2 className="profile-group-title">Personal Details</h2>
+            <div className="profile-data-row">
+              <div className="profile-icon-wrapper"><User size={18} /></div>
+              <div className="profile-field-content">
+                <label>Full Name</label>
+                {isEditing ? (
+                  <input type="text" name="name" className="profile-input-field" value={editData.name || ""} onChange={handleInputChange} />
+                ) : <p>{user?.name}</p>}
+              </div>
+            </div>
+            <div className="profile-data-row">
+              <div className="profile-icon-wrapper"><Mail size={18} /></div>
+              <div className="profile-field-content">
+                <label>Email</label>
+                {isEditing ? (
+                  <input type="email" name="email" className="profile-input-field" value={editData.email || ""} onChange={handleInputChange} />
+                ) : <p>{user?.email}</p>}
+              </div>
+            </div>
+          </section>
+
+          <section className="profile-info-subcard">
+            <h2 className="profile-group-title">Contact Information</h2>
+            <div className="profile-data-row">
+              <div className="profile-icon-wrapper"><Phone size={18} /></div>
+              <div className="profile-field-content">
+                <label>Mobile</label>
+                {isEditing ? (
+                  <input type="text" name="phone" className="profile-input-field" value={editData.phone || ""} onChange={handleInputChange} />
+                ) : <p>{user?.phone || "Not Added"}</p>}
+              </div>
+            </div>
+            <div className="profile-data-row">
+              <div className="profile-icon-wrapper"><MapPin size={18} /></div>
+              <div className="profile-field-content">
+                <label>Address</label>
+                {isEditing ? (
+                  <textarea name="address" className="profile-input-field" value={editData.address || ""} onChange={handleInputChange} rows="1" />
+                ) : <p>{user?.address || "Not Added"}</p>}
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Change Password Card */}
+        <div className="profile-info-subcard profile-password-card">
+          <div className="profile-password-header" onClick={() => setShowPasswordForm(!showPasswordForm)}>
+            <div className="profile-flex-center">
+              <Lock size={18} className="profile-text-blue" />
+              <h2 className="profile-group-title" style={{ margin: 0, marginLeft: '10px' }}>Security & Password</h2>
+            </div>
+            <Edit3 size={16} className="profile-text-muted" />
+          </div>
+
+          {showPasswordForm && (
+            <form className="profile-password-form" onSubmit={handlePasswordChange}>
+              <div className="profile-input-group">
+                <input type="password" placeholder="Current Password" required
+                  value={passwordData.current} onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })} />
+              </div>
+              <div className="profile-input-group">
+                <input type="password" placeholder="New Password" required
+                  value={passwordData.new} onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })} />
+              </div>
+              <div className="profile-input-group">
+                <input type="password" placeholder="Confirm New Password" required
+                  value={passwordData.confirm} onChange={(e) => setPasswordData({ ...passwordData, confirm: e.target.value })} />
+              </div>
+              <button type="submit" className="profile-btn-sm">Update Password</button>
+            </form>
+          )}
+        </div>
+
+        {/* Footer */}
+        <footer className="profile-card-actions">
+          {isEditing ? (
+            <>
+              <button className={`profile-btn profile-btn-primary ${!hasChanges ? 'disabled' : ''}`} onClick={handleSaveProfile} disabled={!hasChanges}>
+                <Save size={18} /> Save Changes
+              </button>
+              <button className="profile-btn profile-btn-cancel" onClick={handleCancel}><X size={18} /> Cancel</button>
+            </>
+          ) : (
+            <>
+              <button className="profile-btn profile-btn-primary" onClick={() => setIsEditing(true)}>
+                <Edit3 size={18} /> Edit Profile
+              </button>
+              <button
+                className="profile-btn profile-btn-secondary"
+                onClick={handleLogout}
+              >
+                <LogOut size={18} /> Logout
+              </button>
+            </>
+          )}
+        </footer>
       </div>
     </div>
   );

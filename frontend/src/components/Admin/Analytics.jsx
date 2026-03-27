@@ -1,7 +1,32 @@
 import { useState, useEffect } from "react";
 import API from "../../api/api";
 import "./Analytics.css";
-import { Search } from "lucide-react";
+import { 
+  Search, 
+  TrendingUp, 
+  Clock, 
+  CheckCircle, 
+  BarChart3, 
+  Filter, 
+  Award,
+  Calendar,
+  MapPin,
+  Trash2,
+  ChevronRight
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
+} from "recharts";
 
 function Analytics() {
   const [view, setView] = useState("visual");
@@ -9,253 +34,291 @@ function Analytics() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [collectorFilter, setCollectorFilter] = useState("All");
   const [cardFilter, setCardFilter] = useState("All");
-
   const [reports, setReports] = useState([]);
-  useEffect(() => {
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
     const fetchReports = async () => {
       try {
         const res = await API.get("/reports");
-        console.log(res.data);
         setReports(res.data);
       } catch (error) {
-        console.log("Error loading reports");
+        console.error("Error loading reports");
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchReports();
-
   }, []);
 
-  const collectors = [...new Set(
-  reports
-    .map(r => r.collector)
-    .filter(c => c && c.trim() !== "")
-)];
+  // Data Calculations
+  const now = new Date();
+  const oneMonthReports = reports.filter(r => (now - new Date(r.createdAt)) / 86400000 <= 30);
+  const prevMonthReports = reports.filter(r => {
+    const d = (now - new Date(r.createdAt)) / 86400000;
+    return d > 30 && d <= 60;
+  });
 
-  // 🔥 FILTER LOGIC
+  const growth = oneMonthReports.length - prevMonthReports.length;
+  const growthType = growth >= 0 ? "positive" : "negative";
+
+  // Chart Data Preparation
+  const statusData = [
+    { name: "Pending", value: reports.filter(r => r.status === "Pending").length, fill: "#f59e0b" },
+    { name: "Collected", value: reports.filter(r => r.status === "Collected").length, fill: "#10b981" }
+  ];
+
+  const categoryCounts = reports.reduce((acc, r) => {
+    acc[r.wasteType] = (acc[r.wasteType] || 0) + 1;
+    return acc;
+  }, {});
+
+  const pieData = Object.entries(categoryCounts).map(([name, value]) => ({ name, value }));
+  const COLORS = ["#3b82f6", "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e"];
+
+  // Filter Logic
   const filteredReports = reports.filter(report => {
-    const matchesSearch =
-      report.collector?.toLowerCase().includes(search.toLowerCase()) ||
-      report._id?.toString().includes(search);
-
-    const matchesStatus =
-      statusFilter === "All" || report.status === statusFilter;
-
-    const matchesCollector =
-      collectorFilter === "All" || report.collector === collectorFilter;
-
-    const matchesCard =
-      cardFilter === "All" || report.status === cardFilter;
-
+    const matchesSearch = (report.collector?.toLowerCase().includes(search.toLowerCase()) || report._id?.includes(search));
+    const matchesStatus = statusFilter === "All" || report.status === statusFilter;
+    const matchesCollector = collectorFilter === "All" || report.collector === collectorFilter;
+    const matchesCard = cardFilter === "All" || report.status === cardFilter;
     return matchesSearch && matchesStatus && matchesCollector && matchesCard;
   });
 
-  const totalReports = filteredReports.length;
-  const pendingReports = filteredReports.filter(r => r.status === "Pending").length;
-  const collectedReports = filteredReports.filter(r => r.status === "Collected").length;
+  // Collector Performance Logic
+  const collectorStats = reports.reduce((acc, r) => {
+    if (!r.collector) return acc;
+    if (!acc[r.collector]) acc[r.collector] = { total: 0, Collected: 0, Pending: 0 };
+    acc[r.collector].total++;
+    acc[r.collector][r.status]++;
+    return acc;
+  }, {});
 
-  const pendingPercent = totalReports
-    ? (pendingReports / totalReports) * 100
-    : 0;
+  const rankedCollectors = Object.entries(collectorStats)
+    .sort((a, b) => b[1].total - a[1].total)
+    .slice(0, 5);
 
-  const collectedPercent = totalReports
-    ? (collectedReports / totalReports) * 100
-    : 0;
-
-  // 🔥 ADVANCED COLLECTOR STATS
-  const collectorStats = filteredReports.reduce((acc, report) => {
-
-  if (!report.collector || report.collector === "") return acc;
-
-  if (!acc[report.collector]) {
-    acc[report.collector] = { total: 0, Pending: 0, Collected: 0 };
-  }
-
-  acc[report.collector].total++;
-  acc[report.collector][report.status]++;
-
-  return acc;
-
-}, {});
-
-  const rankedCollectors = Object.entries(collectorStats).sort(
-    (a, b) => b[1].total - a[1].total
-  );
-
-  const topCollector = rankedCollectors[0];
-
-  const handleCardClick = (type) => {
-    setCardFilter(type);
-    setView("table");
-  };
+  const getInitials = (name) => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
   return (
-    <div className="admin-page-wrapper">
-        <header className="admin-page-header">
-          <div className="admin-page-title-group">
-            <h1 className="admin-page-title">Analytics Dashboard</h1>
-          </div>
+    <div className="analytics-container">
+      {/* HEADER SECTION */}
+      <header className="analytics-header">
+        <div className="title-section">
+          <h1 className="main-title">Analytics Overview</h1>
+          <p className="sub-title">Monitor waste collection performance and trends</p>
+        </div>
 
-          <div className="admin-header-actions">
-            <div className="admin-search-box">
-              <Search size={18} className="search-icon" />
-              <input
-                type="text"
-                placeholder="Search ID or Collector..."
-                className="admin-search-input"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+        <div className="action-bar">
+          <div className="modern-search">
+            <Search size={18} />
+            <input 
+              type="text" 
+              placeholder="Search reports..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          
+          <div className="filter-chips">
+            <div className={`chip ${statusFilter === 'All' ? 'active' : ''}`} onClick={() => setStatusFilter('All')}>All</div>
+            <div className={`chip ${statusFilter === 'Pending' ? 'active' : ''}`} onClick={() => setStatusFilter('Pending')}>Pending</div>
+            <div className={`chip ${statusFilter === 'Collected' ? 'active' : ''}`} onClick={() => setStatusFilter('Collected')}>Collected</div>
+          </div>
+        </div>
+      </header>
+
+      {/* STATS GRID */}
+      <div className="stats-grid">
+        <StatCard 
+          title="Total Reports" 
+          value={reports.length} 
+          icon={<BarChart3 color="#3b82f6" />} 
+          subtitle="Lifetime volume"
+          trend="+12% from last month"
+          onClick={() => setCardFilter("All")}
+        />
+        <StatCard 
+          title="Pending" 
+          value={reports.filter(r => r.status === "Pending").length} 
+          icon={<Clock color="#f59e0b" />} 
+          subtitle="Awaiting action"
+          color="warning"
+          onClick={() => setCardFilter("Pending")}
+        />
+        <StatCard 
+          title="Collected" 
+          value={reports.filter(r => r.status === "Collected").length} 
+          icon={<CheckCircle color="#10b981" />} 
+          subtitle="Completed tasks"
+          color="success"
+          onClick={() => setCardFilter("Collected")}
+        />
+        <StatCard 
+          title="Monthly Growth" 
+          value={growth >= 0 ? `+${growth}` : growth} 
+          icon={<TrendingUp color="#8b5cf6" />} 
+          subtitle="Last 30 days"
+          trend={growthType === "positive" ? "Trending Up" : "Trending Down"}
+          color="purple"
+        />
+      </div>
+
+      {/* VIEW TOGGLE */}
+      <div className="view-switcher">
+        <button className={view === "visual" ? "active" : ""} onClick={() => setView("visual")}>
+          <BarChart3 size={18} /> Visual Insights
+        </button>
+        <button className={view === "table" ? "active" : ""} onClick={() => setView("table")}>
+          <Calendar size={18} /> Detailed Records
+        </button>
+      </div>
+
+      <div className="analytics-content">
+        {view === "visual" ? (
+          <div className="visual-grid">
+            {/* CHARTS */}
+            <div className="chart-card main-chart">
+              <h3>Reports Distribution</h3>
+              <div className="chart-wrapper">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={statusData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                    <YAxis axisLine={false} tickLine={false} />
+                    <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
+                    <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={60} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
-            <div className="filter-section">
-              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                <option value="All">All Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Collected">Collected</option>
-              </select>
+            <div className="chart-card side-chart">
+              <h3>Waste Categories</h3>
+              <div className="chart-wrapper">
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie data={pieData} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend verticalAlign="bottom" iconType="circle" />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
 
-              <select value={collectorFilter} onChange={(e) => setCollectorFilter(e.target.value)}>
-                <option value="All">All Collectors</option>
-                {collectors.map(name => (
-                  <option key={name} value={name}>{name}</option>
+            {/* LEADERBOARD */}
+            <div className="leaderboard-card">
+              <div className="card-header">
+                <h3><Award size={20} color="#f59e0b" /> Top Performers</h3>
+                <button className="text-btn">View All</button>
+              </div>
+              <div className="leaderboard-list">
+                {rankedCollectors.map(([name, stats], index) => (
+                  <div key={name} className="leader-item">
+                    <div className="leader-info">
+                      <div className="leader-avatar">{getInitials(name)}</div>
+                      <div>
+                        <p className="leader-name">{name}</p>
+                        <p className="leader-sub">{stats.total} assignments</p>
+                      </div>
+                    </div>
+                    <div className="leader-stats">
+                      <div className="progress-mini">
+                        <div className="progress-label">
+                          <span>Efficiency</span>
+                          <span>{Math.round((stats.Collected / stats.total) * 100)}%</span>
+                        </div>
+                        <div className="progress-track">
+                          <div className="progress-bar" style={{ width: `${(stats.Collected / stats.total) * 100}%` }}></div>
+                        </div>
+                      </div>
+                      {index === 0 && <span className="top-badge">🏆</span>}
+                    </div>
+                  </div>
                 ))}
-              </select>
-            </div>
-          </div>
-        </header>
-
-        {/* CLICKABLE CARDS */}
-        <div className="analytics-cards">
-          <div className="analytics-card" onClick={() => handleCardClick("All")}>
-            <h3>Total Reports</h3>
-            <p>{reports.length}</p>
-          </div>
-
-          <div className="analytics-card" onClick={() => handleCardClick("Pending")}>
-            <h3>Pending</h3>
-            <p className="pending">
-              {reports.filter(r => r.status === "Pending").length}
-            </p>
-          </div>
-
-          <div className="analytics-card" onClick={() => handleCardClick("Collected")}>
-            <h3>Collected</h3>
-            <p className="collected">
-              {reports.filter(r => r.status === "Collected").length}
-            </p>
-          </div>
-        </div>
-
-        {/* TOGGLE */}
-        <div className="toggle-buttons">
-          <button
-            className={view === "visual" ? "active" : ""}
-            onClick={() => setView("visual")}
-          >
-            Visual Representation
-          </button>
-
-          <button
-            className={view === "table" ? "active" : ""}
-            onClick={() => setView("table")}
-          >
-            Table Records
-          </button>
-        </div>
-
-        {/* VISUAL MODE */}
-        {view === "visual" && (
-          <div className="overview-card">
-            <h2>Waste Reports Overview</h2>
-
-            <div className="chart-container">
-              <div className="chart-item">
-                <div
-                  className="chart-bar pending-bar"
-                  style={{ height: `${pendingPercent}%` }}
-                >
-                  <span>{pendingPercent.toFixed(0)}%</span>
-                </div>
-                <p>Pending</p>
-              </div>
-
-              <div className="chart-item">
-                <div
-                  className="chart-bar collected-bar"
-                  style={{ height: `${collectedPercent}%` }}
-                >
-                  <span>{collectedPercent.toFixed(0)}%</span>
-                </div>
-                <p>Collected</p>
               </div>
             </div>
           </div>
-        )}
-
-        {/* TABLE MODE */}
-        {view === "table" && (
-          <>
-            <div className="table-card">
-              <h2>Report Records</h2>
-
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Status</th>
-                    <th>Collector</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredReports.map((report, index) => (
+        ) : (
+          <div className="table-container fade-in">
+            <table className="modern-table">
+              <thead>
+                <tr>
+                  <th>Report Info</th>
+                  <th>Waste Type</th>
+                  <th>Collector</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredReports.length > 0 ? (
+                  filteredReports.slice(0, 8).map((report) => (
                     <tr key={report._id}>
-                      <td>{index + 1}</td>
-                      <td>{report.status}</td>
-                      <td>{report.collector || "-"}</td>
+                      <td>
+                        <div className="id-cell">
+                          <span className="id-text">#{report._id.slice(-6)}</span>
+                          <span className="loc-text"><MapPin size={12} /> {report.location || 'Unknown'}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="waste-tag">
+                          <Trash2 size={14} /> {report.wasteType}
+                        </span>
+                      </td>
+                      <td className="collector-cell">
+                        <div className="mini-avatar">{getInitials(report.collector || 'U')}</div>
+                        {report.collector || 'Unassigned'}
+                      </td>
+                      <td>{new Date(report.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <span className={`status-pill ${report.status.toLowerCase()}`}>
+                          {report.status}
+                        </span>
+                      </td>
+                      <td><ChevronRight size={18} className="row-arrow" /></td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="empty-state">
+                      <div className="empty-content">
+                        <Filter size={48} />
+                        <p>No reports found matching your criteria</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+            <div className="table-footer">
+              <p>Showing {Math.min(filteredReports.length, 8)} of {filteredReports.length} records</p>
+              <button className="outline-btn">Download Report</button>
             </div>
-
-            {/* 🔥 ADVANCED COLLECTOR PERFORMANCE */}
-            <div className="collector-card">
-              <h2>Collector Performance</h2>
-
-              {topCollector && (
-                <div className="top-performer">
-                  🏆 Top Performer: <strong>{topCollector[0]}</strong> ({topCollector[1].total} Reports)
-                </div>
-              )}
-
-              {rankedCollectors.map(([name, stats], index) => (
-                <div key={name} className="collector-item-advanced">
-
-                  <div className="collector-header">
-                    <span className="rank-badge">#{index + 1}</span>
-                    <span className="collector-name">{ name.charAt(0).toUpperCase() + name.slice(1) }</span>
-                    <span className="collector-total">{stats.total} Reports</span>
-                  </div>
-
-                  <div className="collector-breakdown">
-                    <span className="collected-text">✔ {stats.Collected} Collected</span>
-                    <span className="pending-text">⏳ {stats.Pending} Pending</span>
-                  </div>
-
-                  <div className="progress-bar">
-                    <div
-                      className="progress-fill"
-                      style={{ width: `${(stats.total / filteredReports.length) * 100}%` }}
-                    ></div>
-                  </div>
-
-                </div>
-              ))}
-            </div>
-          </>
+          </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ title, value, icon, subtitle, trend, color, onClick }) {
+  return (
+    <div className={`modern-stat-card ${color}`} onClick={onClick}>
+      <div className="card-top">
+        <div className="icon-box">{icon}</div>
+        {trend && <span className="trend-label">{trend}</span>}
+      </div>
+      <div className="card-body">
+        <h2 className="stat-value">{value}</h2>
+        <p className="stat-title">{title}</p>
+        <p className="stat-subtitle">{subtitle}</p>
+      </div>
     </div>
   );
 }

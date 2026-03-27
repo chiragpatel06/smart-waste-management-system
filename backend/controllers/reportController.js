@@ -9,6 +9,7 @@ export const createReport = async (req, res) => {
       : "";
 
     const report = await Report.create({
+      userId: req.user._id,
       name,
       email,
       location,
