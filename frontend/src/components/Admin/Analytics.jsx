@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 import "./Analytics.css";
 import { 
@@ -78,7 +78,7 @@ function Analytics() {
 
   // Filter Logic
   const filteredReports = reports.filter(report => {
-    const matchesSearch = (report.collector?.toLowerCase().includes(search.toLowerCase()) || report._id?.includes(search));
+    const matchesSearch = (report.collector?.toLowerCase()?.includes(search.toLowerCase()) || report._id?.includes(search));
     const matchesStatus = statusFilter === "All" || report.status === statusFilter;
     const matchesCollector = collectorFilter === "All" || report.collector === collectorFilter;
     const matchesCard = cardFilter === "All" || report.status === cardFilter;
@@ -99,6 +99,28 @@ function Analytics() {
     .slice(0, 5);
 
   const getInitials = (name) => name.split(' ').map(n => n[0]).join('').toUpperCase();
+
+  const handleDownload = () => {
+    const headers = ["Report ID", "Location", "Waste Type", "Collector", "Date", "Status"];
+    const rows = filteredReports.map(report => [
+      report._id,
+      `"${(report.location || '').replace(/"/g, '""')}"`, // Escape quotes and wrap in quotes
+      report.wasteType,
+      report.collector || 'Unassigned',
+      new Date(report.createdAt).toLocaleDateString(),
+      report.status
+    ]);
+
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "reports.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="analytics-container">
@@ -277,11 +299,11 @@ function Analytics() {
                       </td>
                       <td>{new Date(report.createdAt).toLocaleDateString()}</td>
                       <td>
-                        <span className={`status-pill ${report.status.toLowerCase()}`}>
+                        <span className={`status-pill ${report.status?.toLowerCase()}`}>
                           {report.status}
                         </span>
                       </td>
-                      <td><ChevronRight size={18} className="row-arrow" /></td>
+                      <td></td>
                     </tr>
                   ))
                 ) : (
@@ -298,7 +320,7 @@ function Analytics() {
             </table>
             <div className="table-footer">
               <p>Showing {Math.min(filteredReports.length, 8)} of {filteredReports.length} records</p>
-              <button className="outline-btn">Download Report</button>
+              <button className="outline-btn" onClick={handleDownload}>Download Report</button>
             </div>
           </div>
         )}
