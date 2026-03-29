@@ -18,17 +18,33 @@
 }
 
 /* Progress Bar */
-.progress-bar {
+/* Progress Bar */
+.progress-bar-report {
   display: flex;
-  gap: 10px;
-  margin-bottom: 30px;
-}
-.progress-step {
   height: 6px;
+  overflow: hidden;
+  gap: 0;
+  margin-bottom: 30px;
+  background: #e2e8f0;
+  border-radius: 10px; /* Ensures the overall bar has rounded ends */
+}
+
+.progress-step {
+  height: 100%;
   flex: 1;
   background: #e2e8f0;
-  border-radius: 10px;
+  border-radius: 0; /* Remove rounding from individual segments */
+  transition: background 0.3s ease;
 }
+
+.progress-step:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.progress-step:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
 .progress-step.active {
   background: #2563eb;
 }

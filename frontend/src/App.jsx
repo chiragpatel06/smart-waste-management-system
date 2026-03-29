@@ -12,8 +12,9 @@ import ReportWaste from "./pages/ReportWaste";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
-import ProtectedAuth from "./pages/ProtectedAuth";
-import ProtectedRoute from "./pages/ProtectedRoute";
+import ProtectedRoute from "./pages/ProtectedRoute"
+import ProtectedAuth from "./pages/ProtectedAuth"
+
 
 import AdminLayout from "./components/Admin/AdminLayout";
 import AdminDashboard from "./components/Admin/AdminDashboard";
@@ -100,41 +101,38 @@ function App() {
         <Route
           path="/login"
           element={
-            <>
-              <ProtectedAuth>
-                <Navbar />
-                <Login />
-                <Footer />
-              </ProtectedAuth>
-            </>
+            <ProtectedAuth>
+              <Navbar />
+              <Login />
+              <Footer />
+            </ProtectedAuth>
           }
         />
 
         <Route
           path="/register"
           element={
-            <>
-              <ProtectedAuth>
-                <Navbar />
-                <Register />
-                <Footer />
-              </ProtectedAuth>
-            </>
+            <ProtectedAuth>
+              <Navbar />
+              <Register />
+              <Footer />
+            </ProtectedAuth>
           }
         />
 
         <Route
           path="/profile"
           element={
-            <>
-              <ProtectedRoute>
-
-                <Profile />
-
-              </ProtectedRoute>
-            </>
+            <ProtectedRoute>
+              <Navbar />
+              <Profile />
+              <Footer />
+            </ProtectedRoute>
           }
         />
+
+
+
 
         {/* ================= ADMIN ROUTES ================= */}
 

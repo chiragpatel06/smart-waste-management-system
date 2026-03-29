@@ -83,6 +83,8 @@ const Profile = () => {
       const res = await API.post("/users/upload-photo", formData);
       setUser({ ...user, profileImage: res.data.url });
       setEditData({ ...editData, profileImage: res.data.url });
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      window.dispatchEvent(new Event("userUpdated"));
       showToast("Photo updated successfully");
     } catch (err) {
       showToast("Error uploading photo", "error");
@@ -99,11 +101,19 @@ const Profile = () => {
   const handleSaveProfile = async () => {
     if (!hasChanges) return;
     setLoading(true);
+
     try {
       const res = await API.put("/users/update", editData);
+
       setUser(res.data);
+
+      // ✅ ADD THIS
+      localStorage.setItem("user", JSON.stringify(res.data));
+      window.dispatchEvent(new Event("userUpdated"));
+
       setIsEditing(false);
       showToast("Profile updated successfully");
+
     } catch (err) {
       showToast("Failed to update profile", "error");
     } finally {
@@ -137,6 +147,8 @@ const Profile = () => {
   };
 
   if (loading && !user) return <div className="profile-loading-screen"><div className="profile-spinner"></div></div>;
+  // Profile.js ke update functions ke andar:
+
 
   return (
     <div className="profile-page-container">
@@ -275,17 +287,38 @@ const Profile = () => {
           {showPasswordForm && (
             <form className="profile-password-form" onSubmit={handlePasswordChange}>
               <div className="profile-input-group">
-                <input type="password" placeholder="Current Password" required
-                  value={passwordData.current} onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })} />
+                <label>Current Password</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                  value={passwordData.current}
+                  onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })}
+                />
               </div>
+
               <div className="profile-input-group">
-                <input type="password" placeholder="New Password" required
-                  value={passwordData.new} onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })} />
+                <label>New Password</label>
+                <input
+                  type="password"
+                  placeholder="Minimum 6 characters"
+                  required
+                  value={passwordData.new}
+                  onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
+                />
               </div>
+
               <div className="profile-input-group">
-                <input type="password" placeholder="Confirm New Password" required
-                  value={passwordData.confirm} onChange={(e) => setPasswordData({ ...passwordData, confirm: e.target.value })} />
+                <label>Confirm New Password</label>
+                <input
+                  type="password"
+                  placeholder="Re-type new password"
+                  required
+                  value={passwordData.confirm}
+                  onChange={(e) => setPasswordData({ ...passwordData, confirm: e.target.value })}
+                />
               </div>
+
               <button type="submit" className="profile-btn-sm">Update Password</button>
             </form>
           )}

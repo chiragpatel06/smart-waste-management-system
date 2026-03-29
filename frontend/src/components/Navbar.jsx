@@ -19,9 +19,16 @@ function Navbar() {
       const storedUser = localStorage.getItem("user");
       setUser(storedUser ? JSON.parse(storedUser) : null);
     };
+
     checkUser();
+
+    window.addEventListener("userUpdated", checkUser);
     window.addEventListener("storage", checkUser);
-    return () => window.removeEventListener("storage", checkUser);
+
+    return () => {
+      window.removeEventListener("userUpdated", checkUser);
+      window.removeEventListener("storage", checkUser);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -39,6 +46,15 @@ function Navbar() {
   };
 
   const firstName = user?.name?.split(" ")[0];
+  const renderAvatar = () => (
+    <div className="navbar-avatar">
+      {user?.profileImage ? (
+        <img src={user.profileImage} alt="Profile" className="navbar-avatar-img" />
+      ) : (
+        firstName?.charAt(0).toUpperCase()
+      )}
+    </div>
+  );
 
   return (
     <nav className="navbar-main">
@@ -79,9 +95,7 @@ function Navbar() {
               onClick={() => navigate("/profile")}
               style={{ cursor: "pointer" }}
             >
-              <div className="navbar-avatar">
-                {firstName?.charAt(0).toUpperCase()}
-              </div>
+              {renderAvatar()}
               <span className="navbar-user-name">Hi, {firstName}</span>
             </div>
             <button onClick={handleLogout} className="navbar-logout-icon">
@@ -198,9 +212,7 @@ function Navbar() {
                 }}
                 style={{ cursor: "pointer" }}
               >
-                <div className="navbar-avatar">
-                  {firstName?.charAt(0).toUpperCase()}
-                </div>
+                {renderAvatar()}
                 <div className="navbar-mobile-user-info">
                   <p>Logged in as</p>
                   <strong>{user.name}</strong>

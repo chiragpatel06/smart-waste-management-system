@@ -124,6 +124,7 @@
 
 .profile-avatar-container {
   position: relative;
+  
 }
 
 .profile-avatar-main {
@@ -169,20 +170,26 @@
   opacity: 1;
 }
 
+/* --- UPDATED ROLE BADGE ALIGNMENT --- */
 .profile-role-badge {
   position: absolute;
-  bottom: -5px;
-  right: -5px;
+  bottom: -10px; /* Positions it overlapping the bottom edge of the avatar */
+  left: 50%;
+  transform: translateX(-50%); /* Perfectly centers it horizontally */
   background: var(--p-success);
   color: white;
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 5px;
-  border: 3px solid white;
+  border: 3px solid white; /* Creates a clean 'cutout' look against the background */
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  z-index: 2;
 }
 
 .profile-header-info h1 {
@@ -342,25 +349,66 @@ textarea.profile-input-field { resize: none; }
 
 .profile-password-form {
   margin-top: 25px;
-  padding-top: 20px;
+  padding-top: 25px;
   border-top: 1px solid #f1f5f9;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
+  display: flex;
+  flex-direction: column; /* Vertical layout for better focus */
+  gap: 20px;
   animation: profileFadeDown 0.3s ease;
+  max-width: 500px; /* Form ko zyada wide hone se rokne ke liye */
+}
+
+.profile-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-input-group label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--p-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-password-form input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid #f1f5f9;
+  background: #f8fafc;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--p-text-main);
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.profile-password-form input:focus {
+  border-color: var(--p-primary);
+  background: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
 }
 
 .profile-btn-sm {
+  margin-top: 10px;
   background: var(--p-primary);
   color: white;
   border: none;
-  padding: 12px;
+  padding: 14px;
   border-radius: 12px;
   font-weight: 700;
+  font-size: 15px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
-.profile-btn-sm:hover { background: #1d4ed8; }
+.profile-btn-sm:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+}
 
 /* --- BUTTONS --- */
 .profile-card-actions {
