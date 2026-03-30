@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -15,7 +15,6 @@ import Profile from "./pages/Profile";
 import ProtectedRoute from "./pages/ProtectedRoute"
 import ProtectedAuth from "./pages/ProtectedAuth"
 
-
 import AdminLayout from "./components/Admin/AdminLayout";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import WasteReports from "./components/Admin/WasteReports";
@@ -25,117 +24,60 @@ import Analytics from "./components/Admin/Analytics";
 
 import CollectorDashboard from "./components/Collector/CollectorDashboard";
 
+// Layout for Public Pages (Maintains Navbar/Footer state)
+const MainLayout = () => {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+      <Footer />
+    </>
+  );
+};
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* ================= PUBLIC PAGES ================= */}
+        {/* ================= PUBLIC PAGES (Wrapped in Layout) ================= */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/tracking" element={<LiveTracking />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/report" element={<ReportWaste />} />
+          
+          <Route
+            path="/login"
+            element={
+              <ProtectedAuth>
+                <Login />
+              </ProtectedAuth>
+            }
+          />
 
-        <Route
-          path="/"
-          element={
-            <>
-              <Navbar />
-              <Home />
-              <Footer />
-            </>
-          }
-        />
+          <Route
+            path="/register"
+            element={
+              <ProtectedAuth>
+                <Register />
+              </ProtectedAuth>
+            }
+          />
 
-        <Route
-          path="/about"
-          element={
-            <>
-              <Navbar />
-              <About />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/services"
-          element={
-            <>
-              <Navbar />
-              <Services />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/services/tracking"
-          element={
-            <>
-              <Navbar />
-              <LiveTracking />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/contact"
-          element={
-            <>
-              <Navbar />
-              <Contact />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/report"
-          element={
-            <>
-              <Navbar />
-              <ReportWaste />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/login"
-          element={
-            <ProtectedAuth>
-              <Navbar />
-              <Login />
-              <Footer />
-            </ProtectedAuth>
-          }
-        />
-
-        <Route
-          path="/register"
-          element={
-            <ProtectedAuth>
-              <Navbar />
-              <Register />
-              <Footer />
-            </ProtectedAuth>
-          }
-        />
-
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Navbar />
-              <Profile />
-              <Footer />
-            </ProtectedRoute>
-          }
-        />
-
-
-
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
         {/* ================= ADMIN ROUTES ================= */}
-
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="waste-reports" element={<WasteReports />} />
@@ -145,7 +87,6 @@ function App() {
         </Route>
 
         {/* ================= COLLECTOR ROUTE ================= */}
-
         <Route path="/collector" element={<CollectorDashboard />} />
 
       </Routes>

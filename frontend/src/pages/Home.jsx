@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom"; // ✅ Import Link
 import "./Home.css";
 import homeImage from "../assets/home.png";
 import {
@@ -59,16 +60,16 @@ function Home() {
           <p>{t.subtitle}</p>
 
           <div className="cta-area">
-            <a href="/report" className="action-btn report-btn">
+            <Link to="/report" className="action-btn report-btn">
               <Camera size={22} />
               {t.mainBtn}
-            </a>
+            </Link>
 
             {!token && (
-              <a href="/login" className="action-btn loginyo-btn">
+              <Link to="/login" className="action-btn loginyo-btn">
                 <LogIn size={18} />
                 {t.loginBtn}
-              </a>
+              </Link>
             )}
           </div>
         </div>

@@ -1,15 +1,41 @@
 import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  MapPin, Image as ImageIcon, 
-  Trash2, Recycle, Leaf, Box, ChevronRight, ChevronLeft, CheckCircle 
+import { MapPin, Image as ImageIcon, 
+  Trash2, Recycle, Leaf, Box, ChevronRight, ChevronLeft, CheckCircle, Info, X 
 } from "lucide-react";
 import API from "../api/api";
 import "./ReportWaste.css";
 
+const wasteInfo = {
+  Garbage: {
+    title: "Garbage Waste",
+    description: "Non-recyclable and non-compostable waste that usually goes to landfills.",
+    items: ["Diapers", "Sanitary waste", "Broken ceramics", "Dust", "Cigarette butts"],
+    avoid: ["Plastic bottles", "Food waste", "Metal cans"]
+  },
+  Plastic: {
+    title: "Plastic Waste",
+    description: "Recyclable plastic materials that can be processed into new products.",
+    items: ["Bottles", "Containers", "Wrappers", "Plastic bags", "Shampoo bottles"],
+    avoid: ["Food waste", "Glass", "Paper with grease"]
+  },
+  Organic: {
+    title: "Organic Waste",
+    description: "Biodegradable natural waste that can be turned into compost for plants.",
+    items: ["Food scraps", "Vegetable peels", "Leaves", "Coffee grounds", "Eggshells"],
+    avoid: ["Plastic", "Metal", "Glass", "Meat/Dairy"]
+  },
+  Others: {
+    title: "Special/Others",
+    description: "Hazardous or special waste that requires professional handling.",
+    items: ["Batteries", "E-waste", "Chemicals", "LED bulbs", "Expired Medicines"],
+    avoid: ["Regular garbage", "Food waste"]
+  }
+};
+
 function ReportWaste() {
   const [step, setStep] = useState(1);
-  const [showOptions, setShowOptions] = useState(false); // ✅ NEW
+  const [showInfo, setShowInfo] = useState(false); // ✅ Info Panel Toggle
 
   const [form, setForm] = useState({
     name: "",
@@ -69,6 +95,7 @@ useEffect(() => {
 
   const selectWasteType = (type) => {
     setForm({ ...form, wasteType: type });
+    setShowInfo(true); // Open info panel on selection
   };
 
   const handlePhotoChange = (e) => {
@@ -113,7 +140,7 @@ useEffect(() => {
   return (
     <>
       <div className="report-wrapper">
-        <div className="report-card">
+        <div className={`report-card ${step === 2 ? "step-two-card" : ""} ${showInfo && step === 2 ? "info-open" : ""}`}>
 
           {/* Progress Bar */}
           <div className="progress-bar-report">
@@ -151,34 +178,83 @@ useEffect(() => {
           )}
 
           {step === 2 && (
-            <div className="step-container animate-in">
-              <h2>Step 2: What is it?</h2>
-              <div className="waste-grid">
-                {[
-                  { name: "Garbage", icon: <Trash2 color="#ef4444"/> },
-                  { name: "Plastic", icon: <Box color="#3b82f6"/> },
-                  { name: "Organic", icon: <Leaf color="#22c55e"/> },
-                  { name: "Others", icon: <Recycle color="#64748b"/> }
-                ].map((item) => (
-                  <div 
-                    key={item.name}
-                    className={`waste-card ${form.wasteType === item.name ? "selected" : ""}`}
-                    onClick={() => selectWasteType(item.name)}
-                  >
-                    {item.icon}
-                    <span>{item.name}</span>
-                  </div>
-                ))}
+            <div className={`step-container animate-in ${showInfo ? "info-open" : ""}`}>
+              <div className="category-header">
+                <h2>Step 2: What is it?</h2>
+                <p>Select the type of waste you found.</p>
+              </div>
+
+              <div className="step-two-layout">
+                <div className="waste-grid">
+                  {[
+                    { name: "Garbage", icon: <Trash2 color="#ef4444" /> },
+                    { name: "Plastic", icon: <Box color="#3b82f6" /> },
+                    { name: "Organic", icon: <Leaf color="#22c55e" /> },
+                    { name: "Others", icon: <Recycle color="#64748b" /> }
+                  ].map((item) => (
+                    <div
+                      key={item.name}
+                      className={`waste-card ${form.wasteType === item.name ? "selected" : ""}`}
+                      onClick={() => selectWasteType(item.name)}
+                    >
+                      <div className="card-selection-indicator">
+                        <CheckCircle size={16} />
+                      </div>
+                      {item.icon}
+                      <span>{item.name}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* INFO PANEL (Desktop: Side, Mobile: Bottom Drawer) */}
+                <div className={`waste-info-panel ${showInfo ? "panel-active" : "panel-placeholder"}`}>
+                  {form.wasteType ? (
+                    <>
+                      <div className="panel-header">
+                        <div className="header-left">
+                          <Info size={18} />
+                          <h3>{wasteInfo[form.wasteType].title}</h3>
+                        </div>
+                        <button className="close-panel" onClick={() => setShowInfo(false)}>
+                          <X size={20} />
+                        </button>
+                      </div>
+
+                      <div className="panel-body">
+                        <p className="type-desc">{wasteInfo[form.wasteType].description}</p>
+
+                        <div className="items-section">
+                          <h4>✅ Put these items here:</h4>
+                          <ul className="items-list">
+                            {wasteInfo[form.wasteType].items.map(i => <li key={i}>{i}</li>)}
+                          </ul>
+                        </div>
+
+                        <div className="items-section avoid">
+                          <h4>❌ Avoid putting:</h4>
+                          <ul className="items-list">
+                            {wasteInfo[form.wasteType].avoid.map(i => <li key={i}>{i}</li>)}
+                          </ul>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="panel-empty-state">
+                      <Recycle size={50} className="empty-icon" />
+                      <p>Select a category to see detailed guidance.</p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="nav-btns">
-                <button className="btn-back" onClick={() => setStep(1)}>
+                <button className="btn-back" onClick={() => { setStep(1); setShowInfo(false); }}>
                   <ChevronLeft /> Back
                 </button>
-                <button 
-                  className="btn-next" 
+                <button
+                  className="btn-next"
                   disabled={!form.wasteType}
-                  onClick={() => setStep(3)}
+                  onClick={() => { setStep(3); setShowInfo(false); }}
                 >
                   Next <ChevronRight />
                 </button>
@@ -232,7 +308,18 @@ useEffect(() => {
               <p>Your report has been sent to the authorities.</p>
               <button 
                 className="btn-next" 
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                  setForm({
+                    name: "",
+                    email: "",
+                    location: "",
+                    wasteType: "",
+                    description: "",
+                    photo: null,
+                    photoPreview: null,
+                  });
+                  setStep(1);
+                }}
               >
                 Report Another
               </button>

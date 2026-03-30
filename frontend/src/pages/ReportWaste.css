@@ -15,6 +15,19 @@
   padding: 30px;
   border-radius: 24px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.report-card.step-two-card {
+  max-width: 850px; /* Always broad on desktop for step 2 */
+}
+
+@media (max-width: 768px) {
+  .report-card.step-two-card {
+    max-width: 450px;
+  }
 }
 
 /* Progress Bar */
@@ -102,15 +115,212 @@
   gap: 10px;
   cursor: pointer;
   font-weight: 600;
-  transition: 0.2s;
+  transition: 0.3s;
+  position: relative;
 }
+
+.card-selection-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #2563eb;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: 0.3s;
+}
+
 .waste-card.selected {
   border-color: #2563eb;
   background: #eff6ff;
-  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
 }
 
-/* Inputs & Buttons */
+.waste-card.selected .card-selection-indicator {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Step 2 Layout */
+.step-two-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  min-height: 320px;
+}
+
+.waste-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  flex: 1;
+}
+
+/* Info Panel Styling */
+.waste-info-panel {
+  flex: 1;
+  background: #f8fafc;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.panel-placeholder {
+  opacity: 0.7;
+  border-style: dashed;
+  background: #f1f5f9;
+}
+
+.panel-empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.empty-icon {
+  margin-bottom: 15px;
+  opacity: 0.5;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.panel-header {
+  padding: 16px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2563eb;
+}
+
+.header-left h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.close-panel {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  transition: 0.2s;
+}
+.close-panel:hover { background: #f1f5f9; color: #1e293b; }
+
+.panel-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.type-desc {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #475569;
+  margin-bottom: 20px !important;
+}
+
+.items-section {
+  margin-bottom: 15px;
+}
+
+.items-section h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #059669; /* Green for What goes here */
+}
+
+.items-section.avoid h4 {
+  color: #dc2626; /* Red for Avoid */
+}
+
+.items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.items-list li {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .report-card.info-open {
+    max-width: 450px;
+  }
+
+  .step-two-layout {
+    flex-direction: column;
+  }
+
+  .waste-info-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60vh;
+    border-radius: 24px 24px 0 0;
+    z-index: 2005;
+    box-shadow: 0 -10px 25px rgba(0,0,0,0.1);
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: none; /* Disable side slide on mobile */
+  }
+
+  .waste-info-panel.panel-active {
+    transform: translateY(0);
+  }
+
+  /* Overlay behind bottom drawer on mobile */
+  .info-open::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 2004;
+    animation: fadeIn 0.3s ease;
+  }
+}
 .text-input, textarea {
   width: 100%;
   padding: 14px;

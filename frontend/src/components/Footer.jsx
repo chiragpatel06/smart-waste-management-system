@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"; // ✅ Import Link
 import "./Footer.css";
 import {
   Mail,
@@ -21,10 +22,10 @@ function Footer() {
 
         {/* BRAND */}
         <div className="footer-col">
-          <h3 className="brand-title">
+          <Link to="/" className="brand-title" style={{ textDecoration: 'none' }}>
             <Recycle size={22} className="brand-icon" />
             SwachhSetu
-          </h3>
+          </Link>
 
           <p>
             A digital platform focused on improving waste reporting,
@@ -45,22 +46,22 @@ function Footer() {
           <ul className="footer-links">
             <li>
               <Home size={16} className="link-icon" />
-              <a href="/">Home</a>
+              <Link to="/">Home</Link>
             </li>
 
             <li>
               <FileText size={16} className="link-icon" />
-              <a href="/report">Report Waste</a>
+              <Link to="/report">Report Waste</Link>
             </li>
 
             <li>
               <LogIn size={16} className="link-icon" />
-              <a href="/login">Login</a>
+              <Link to="/login">Login</Link>
             </li>
 
             <li>
               <Info size={16} className="link-icon" />
-              <a href="/about">About Us</a>
+              <Link to="/about">About Us</Link>
             </li>
           </ul>
         </div>

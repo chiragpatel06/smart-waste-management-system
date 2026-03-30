@@ -182,6 +182,7 @@ export const loginUser = async (req, res) => {
         email: user.email,
         phone: user.phone,
         address: user.address,
+        profileImage: user.profileImage, // ✅ ADD THIS
         createdAt: user.createdAt
       }
     });

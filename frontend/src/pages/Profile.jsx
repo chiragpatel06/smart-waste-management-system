@@ -28,14 +28,10 @@ const Profile = () => {
   }, []);
 
   const handleLogout = () => {
-    // remove token
     localStorage.removeItem("token");
-
-    // optional: remove user data
     localStorage.removeItem("user");
-
-    // reload app state (IMPORTANT)
-    window.location.href = "/login";
+    // navigate instead of refresh
+    navigate("/login");
   };
 
   const fetchUser = async () => {
@@ -43,6 +39,9 @@ const Profile = () => {
       const res = await API.get("/users/me");
       setUser(res.data);
       setEditData(res.data);
+      // Sync with localStorage so navbar stays updated
+      localStorage.setItem("user", JSON.stringify(res.data));
+      window.dispatchEvent(new Event("userUpdated"));
     } catch (err) {
       showToast("Failed to load profile", "error");
     } finally {
@@ -81,9 +80,11 @@ const Profile = () => {
     try {
       setLoading(true);
       const res = await API.post("/users/upload-photo", formData);
-      setUser({ ...user, profileImage: res.data.url });
+      const updatedUser = { ...user, profileImage: res.data.url };
+      setUser(updatedUser);
       setEditData({ ...editData, profileImage: res.data.url });
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+      
+      localStorage.setItem("user", JSON.stringify(updatedUser)); // FIXED: updatedUser was undefined
       window.dispatchEvent(new Event("userUpdated"));
       showToast("Photo updated successfully");
     } catch (err) {
