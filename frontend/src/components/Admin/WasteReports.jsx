@@ -1,5 +1,5 @@
 import "./WasteReports.css";
-import { Search } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 // 👈 reusable button
 import API from "../../api/api";
@@ -88,7 +88,7 @@ function WasteReports() {
   return (
     <div className="admin-page-wrapper">
 
-      
+
       <header className="admin-page-header">
         <div className="admin-page-title-group">
           <h1 className="admin-page-title">Waste Reports</h1>
@@ -129,7 +129,7 @@ function WasteReports() {
               <th className="admin-table-th">Location</th>
               <th className="admin-table-th">Type</th>
               <th className="admin-table-th">Photo</th>
-              <th className="admin-table-th">Cleaned Photo</th>
+              <th className="admin-table-th">Cleaned</th>
               <th className="admin-table-th">Status</th>
               <th className="admin-table-th">Collector</th>
               <th className="admin-table-th">Action</th>
@@ -141,7 +141,7 @@ function WasteReports() {
               <tr key={report._id} className="admin-table-row">
                 <td className="admin-table-td">#{indexOfFirstReport + index + 1}</td>
                 <td className="admin-table-td">
-                   <strong className="admin-location-text">{report.location}</strong>
+                  <strong className="admin-location-text">{report.location}</strong>
                 </td>
                 <td className="admin-table-td">{report.wasteType}</td>
 
@@ -258,7 +258,7 @@ function WasteReports() {
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
-              Previous
+              <ChevronLeft size={16} /> Previous
             </button>
 
             <div className="pagination-numbers">
@@ -278,7 +278,7 @@ function WasteReports() {
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
-              Next
+              Next <ChevronRight size={16} />
             </button>
           </div>
         )}

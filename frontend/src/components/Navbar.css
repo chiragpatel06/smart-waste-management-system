@@ -246,7 +246,17 @@
 .navbar-close-btn {
   background: none;
   border: none;
-  color: var(--text-gray);
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  transition: opacity 0.2s;
+}
+
+.navbar-close-btn:active {
+  opacity: 0.6;
 }
 
 .navbar-mobile-content {
@@ -352,12 +362,6 @@
   .navbar-mobile-toggle {
     display: block;
   }
-}
-
-/* This hides the hamburger button only when the drawer is open */
-.navbar-mobile-drawer.navbar-open~.navbar-right .navbar-mobile-toggle {
-  opacity: 0;
-  pointer-events: none;
 }
 
 /* Ensure the drawer is wide enough to cover the top right area */

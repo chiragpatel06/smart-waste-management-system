@@ -1,0 +1,282 @@
+/* ============================= */
+/* PAGE WRAPPER & ANIMATION */
+/* ============================= */
+.userboard-page-wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 10px;
+  animation: userboard-fadeIn 0.4s ease-out;
+}
+
+@keyframes userboard-fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================= */
+/* HEADER & SEARCH */
+/* ============================= */
+.userboard-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.userboard-page-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+.userboard-page-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.userboard-header-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 600px;
+}
+
+.userboard-search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0 15px;
+  height: 46px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+.userboard-search-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding-left: 10px;
+  font-size: 14px;
+}
+
+.userboard-primary-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  height: 46px;
+  transition: 0.2s;
+}
+
+.userboard-primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+}
+
+/* ============================= */
+/* MINI STATS */
+/* ============================= */
+.userboard-mini-stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.userboard-mini-card {
+  background: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  border: 1px solid #f1f5f9;
+}
+
+/* ============================= */
+/* TABLE DESIGN */
+/* ============================= */
+.userboard-main-section {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+}
+
+.userboard-table-container {
+  overflow-x: auto; /* For Mobile responsiveness */
+}
+
+.userboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.userboard-table-th {
+  background: #f8fafc;
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.userboard-table-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: 0.2s;
+}
+
+.userboard-table-row:hover {
+  background: #f8fbff;
+}
+
+.userboard-table-td {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.userboard-bold-text {
+  font-weight: 700;
+  color: #1e293b;
+  display: block;
+}
+
+.userboard-id-text {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.userboard-contact-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userboard-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.userboard-align-right { text-align: right; }
+
+/* ============================= */
+/* BADGES */
+/* ============================= */
+.userboard-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.userboard-role-badge { background: #eff6ff; color: #2563eb; }
+.userboard-status-green { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.userboard-status-red { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+/* ============================= */
+/* ACTION BUTTONS */
+/* ============================= */
+.userboard-action-btns {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.userboard-icon-btn {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.userboard-edit-btn:hover { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+.userboard-delete-btn:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+
+/* ============================= */
+/* PAGINATION */
+/* ============================= */
+.userboard-pagination {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  background: #f8fafc;
+}
+
+.userboard-page-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.userboard-page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.userboard-page-numbers { display: flex; gap: 5px; }
+
+.userboard-number {
+  width: 35px;
+  height: 35px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.userboard-number.userboard-active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.userboard-no-data {
+  text-align: center;
+  padding: 40px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* ============================= */
+/* MOBILE RESPONSIVE */
+/* ============================= */
+@media (max-width: 768px) {
+  .userboard-page-header { flex-direction: column; align-items: flex-start; }
+  .userboard-header-actions { width: 100%; flex-direction: column; }
+  .userboard-page-btn span { display: none; } /* Hide Prev/Next text */
+  .userboard-mini-stats { flex-wrap: wrap; }
+}

@@ -21,6 +21,7 @@ import WasteReports from "./components/Admin/WasteReports";
 import Collectors from "./components/Admin/Collectors";
 import AddCollector from "./components/Admin/AddCollector";
 import Analytics from "./components/Admin/Analytics";
+import UsersManagement from "./components/Admin/UserManagement";
 
 import CollectorDashboard from "./components/Collector/CollectorDashboard";
 
@@ -84,6 +85,7 @@ function App() {
           <Route path="collectors" element={<Collectors />} />
           <Route path="add-collector" element={<AddCollector />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="users" element={<UsersManagement />} />
         </Route>
 
         {/* ================= COLLECTOR ROUTE ================= */}

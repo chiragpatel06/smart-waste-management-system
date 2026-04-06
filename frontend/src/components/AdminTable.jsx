@@ -4,7 +4,7 @@ function AdminTable({ columns, data, renderRow }) {
 
   return (
     <div className="admin-table-wrapper">
-
+      <p>hello</p>
       <table className="admin-table">
 
         <thead>
@@ -20,6 +20,7 @@ function AdminTable({ columns, data, renderRow }) {
           {data.length === 0 ? (
             <tr>
               <td colSpan={columns.length} style={{ textAlign: "center", padding: "20px" }}>
+                
                 No Data Found
               </td>
             </tr>

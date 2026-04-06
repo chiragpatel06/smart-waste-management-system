@@ -5,7 +5,9 @@ import {
   getUserProfile,
   updateUserProfile,
   changePassword,
-  uploadProfilePhoto
+  uploadProfilePhoto,
+  getAllUsers,
+  deleteUser
 } from "../controllers/userController.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -15,6 +17,8 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.get("/", getAllUsers);
+router.delete("/:id", deleteUser);
 
 // ✅ NEW ROUTES
 router.get("/me", authMiddleware, getUserProfile);

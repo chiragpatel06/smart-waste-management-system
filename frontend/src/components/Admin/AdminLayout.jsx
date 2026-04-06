@@ -4,42 +4,29 @@ import {
   LayoutDashboard, 
   ClipboardList, 
   Users, 
+  UserCircle, // Added for Users Management
   BarChart3, 
   LogOut,
   Recycle,
-  Menu, // Hamburger icon
-  X     // Close icon
+  Menu, 
+  X     
 } from "lucide-react";
 import "./AdminDashboard.css";
 
 function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
 
   return (
     <div className="admin-container">
-      {/* MOBILE OVERLAY */}
-      <div 
-        className={`sidebar-overlay ${isSidebarOpen ? "active" : ""}`} 
-        onClick={closeSidebar}
-      ></div>
+      <div className={`sidebar-overlay ${isSidebarOpen ? "active" : ""}`} onClick={closeSidebar}></div>
 
-      {/* SIDEBAR */}
       <aside className={`admin-sidebar ${isSidebarOpen ? "open" : ""}`}>
-        <svg width="0" height="0" style={{ position: 'absolute' }}>
-          <linearGradient id="swachhsetu-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop stopColor="#3b82f6" offset="0%" />
-            <stop stopColor="#10b981" offset="100%" />
-          </linearGradient>
-        </svg>
         <div className="logo-section">
-          <Recycle className="logo-icon" size={32} stroke="url(#swachhsetu-grad)" />
+          <Recycle className="logo-icon" size={32} />
           <span className="logo-text">SwachhSetu</span>
-          <button className="close-sidebar-btn" onClick={closeSidebar}>
-            <X size={24} />
-          </button>
+          <button className="close-sidebar-btn" onClick={closeSidebar}><X size={24} /></button>
         </div>
 
         <nav className="sidebar-nav">
@@ -48,6 +35,11 @@ function AdminLayout() {
             <li>
               <NavLink to="/admin" end onClick={closeSidebar}>
                 <LayoutDashboard size={20} /> <span>Dashboard</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin/users" onClick={closeSidebar}>
+                <UserCircle size={20} /> <span>Users</span>
               </NavLink>
             </li>
             <li>
@@ -75,16 +67,11 @@ function AdminLayout() {
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
       <main className="admin-main">
-        {/* MOBILE HEADER TOGGLE */}
         <div className="mobile-header-nav">
-          <button className="hamburger-btn" onClick={toggleSidebar}>
-            <Menu size={28} />
-          </button>
+          <button className="hamburger-btn" onClick={toggleSidebar}><Menu size={28} /></button>
           <span className="mobile-logo-text">SwachhSetu</span>
         </div>
-        
         <Outlet />
       </main>
     </div>

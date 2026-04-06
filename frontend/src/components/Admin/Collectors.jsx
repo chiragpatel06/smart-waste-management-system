@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Collectors.css";
 import { Link } from "react-router-dom";
-import { Pencil, Trash2, Search, Plus } from "lucide-react";
+import { Pencil, Trash2, Search, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import API from "../../api/api";
 
 function Collectors() {
@@ -60,7 +60,7 @@ function Collectors() {
 
 
 
-    const filteredCollectors = collectors.filter(c => 
+    const filteredCollectors = collectors.filter(c =>
         (c.name && c.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (c.phone && c.phone.includes(searchTerm)) ||
         (c.area && c.area.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -77,28 +77,28 @@ function Collectors() {
 
     return (
         <div className="admin-page-wrapper">
-                <header className="admin-page-header">
-                    <div className="admin-page-title-group">
-                        <h1 className="admin-page-title">Collectors Management</h1>
+            <header className="admin-page-header">
+                <div className="admin-page-title-group">
+                    <h1 className="admin-page-title">Collectors Management</h1>
+                </div>
+
+                <div className="admin-header-actions">
+                    <div className="admin-search-box">
+                        <Search size={18} className="search-icon" />
+                        <input
+                            type="text"
+                            placeholder="Search Name, Phone, Area..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="admin-search-input"
+                        />
                     </div>
-                    
-                    <div className="admin-header-actions">
-                        <div className="admin-search-box">
-                            <Search size={18} className="search-icon" />
-                            <input
-                                type="text"
-                                placeholder="Search Name, Phone, Area..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="admin-search-input"
-                            />
-                        </div>
-                        <Link to="/admin/add-collector" className="admin-primary-btn" style={{ textDecoration: 'none' }}>
-                            <Plus size={18} />
-                            <span className="admin-btn-text">Add Collector</span>
-                        </Link>
-                    </div>
-                </header>
+                    <Link to="/admin/add-collector" className="admin-primary-btn" style={{ textDecoration: 'none' }}>
+                        <Plus size={18} />
+                        <span className="admin-btn-text">Add Collector</span>
+                    </Link>
+                </div>
+            </header>
 
 
             <div className="admin-table-wrapper">
@@ -202,7 +202,7 @@ function Collectors() {
                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1}
                         >
-                            Previous
+                            <ChevronLeft size={16} /> Previous
                         </button>
 
                         <div className="pagination-numbers">
@@ -222,7 +222,7 @@ function Collectors() {
                             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                             disabled={currentPage === totalPages}
                         >
-                            Next
+                            Next <ChevronRight size={16} />
                         </button>
                     </div>
                 )}

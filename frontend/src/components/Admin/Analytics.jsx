@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 import "./Analytics.css";
-import { 
-  Search, 
-  TrendingUp, 
-  Clock, 
-  CheckCircle, 
-  BarChart3, 
-  Filter, 
+import {
+  Search,
+  TrendingUp,
+  Clock,
+  CheckCircle,
+  BarChart3,
+  Filter,
   Award,
   Calendar,
   MapPin,
   Trash2,
-  ChevronRight
+  ChevronRight,
+  ChevronLeft
 } from "lucide-react";
 import {
   BarChart,
@@ -36,6 +37,13 @@ function Analytics() {
   const [cardFilter, setCardFilter] = useState("All");
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 8;
+
+  useEffect(() => {
+    // Reset to first page when filtering
+    setCurrentPage(1);
+  }, [search, statusFilter, collectorFilter, cardFilter]);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -78,12 +86,26 @@ function Analytics() {
 
   // Filter Logic
   const filteredReports = reports.filter(report => {
-    const matchesSearch = (report.collector?.toLowerCase()?.includes(search.toLowerCase()) || report._id?.includes(search));
+    const searchLower = search.toLowerCase();
+    const matchesSearch = (
+      report.collector?.toLowerCase()?.includes(searchLower) ||
+      report.location?.toLowerCase()?.includes(searchLower) ||
+      report.wasteType?.toLowerCase()?.includes(searchLower) ||
+      report._id?.includes(searchLower)
+    );
     const matchesStatus = statusFilter === "All" || report.status === statusFilter;
     const matchesCollector = collectorFilter === "All" || report.collector === collectorFilter;
     const matchesCard = cardFilter === "All" || report.status === cardFilter;
     return matchesSearch && matchesStatus && matchesCollector && matchesCard;
   });
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredReports.length / recordsPerPage);
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = filteredReports.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Collector Performance Logic
   const collectorStats = reports.reduce((acc, r) => {
@@ -134,52 +156,55 @@ function Analytics() {
         <div className="action-bar">
           <div className="modern-search">
             <Search size={18} />
-            <input 
-              type="text" 
-              placeholder="Search reports..." 
+            <input
+              type="text"
+              placeholder="Search reports..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setView("table");
+              }}
             />
           </div>
-          
+
           <div className="filter-chips">
-            <div className={`chip ${statusFilter === 'All' ? 'active' : ''}`} onClick={() => setStatusFilter('All')}>All</div>
-            <div className={`chip ${statusFilter === 'Pending' ? 'active' : ''}`} onClick={() => setStatusFilter('Pending')}>Pending</div>
-            <div className={`chip ${statusFilter === 'Collected' ? 'active' : ''}`} onClick={() => setStatusFilter('Collected')}>Collected</div>
+            <div className={`chip ${statusFilter === 'All' ? 'active' : ''}`} onClick={() => { setStatusFilter('All'); setView("table"); }}>All</div>
+            <div className={`chip ${statusFilter === 'Pending' ? 'active' : ''}`} onClick={() => { setStatusFilter('Pending'); setView("table"); }}>Pending</div>
+            <div className={`chip ${statusFilter === 'Collected' ? 'active' : ''}`} onClick={() => { setStatusFilter('Collected'); setView("table"); }}>Collected</div>
           </div>
         </div>
       </header>
 
       {/* STATS GRID */}
       <div className="stats-grid">
-        <StatCard 
-          title="Total Reports" 
-          value={reports.length} 
-          icon={<BarChart3 color="#3b82f6" />} 
+        <StatCard
+          title="Total Reports"
+          value={reports.length}
+          icon={<BarChart3 color="#3b82f6" />}
           subtitle="Lifetime volume"
           trend="+12% from last month"
-          onClick={() => setCardFilter("All")}
+          onClick={() => { setCardFilter("All"); setView("table"); }}
         />
-        <StatCard 
-          title="Pending" 
-          value={reports.filter(r => r.status === "Pending").length} 
-          icon={<Clock color="#f59e0b" />} 
+        <StatCard
+          title="Pending"
+          value={reports.filter(r => r.status === "Pending").length}
+          icon={<Clock color="#f59e0b" />}
           subtitle="Awaiting action"
           color="warning"
-          onClick={() => setCardFilter("Pending")}
+          onClick={() => { setCardFilter("Pending"); setView("table"); }}
         />
-        <StatCard 
-          title="Collected" 
-          value={reports.filter(r => r.status === "Collected").length} 
-          icon={<CheckCircle color="#10b981" />} 
+        <StatCard
+          title="Collected"
+          value={reports.filter(r => r.status === "Collected").length}
+          icon={<CheckCircle color="#10b981" />}
           subtitle="Completed tasks"
           color="success"
-          onClick={() => setCardFilter("Collected")}
+          onClick={() => { setCardFilter("Collected"); setView("table"); }}
         />
-        <StatCard 
-          title="Monthly Growth" 
-          value={growth >= 0 ? `+${growth}` : growth} 
-          icon={<TrendingUp color="#8b5cf6" />} 
+        <StatCard
+          title="Monthly Growth"
+          value={growth >= 0 ? `+${growth}` : growth}
+          icon={<TrendingUp color="#8b5cf6" />}
           subtitle="Last 30 days"
           trend={growthType === "positive" ? "Trending Up" : "Trending Down"}
           color="purple"
@@ -208,8 +233,18 @@ function Analytics() {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                     <XAxis dataKey="name" axisLine={false} tickLine={false} />
                     <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
-                    <Bar dataKey="value" radius={[10, 10, 0, 0]} barSize={60} />
+                    <Tooltip
+                      cursor={{ fill: 'rgba(241,245,249,0.5)' }}
+                      contentStyle={{
+                        backgroundColor: '#0f172a',
+                        borderRadius: '12px',
+                        border: 'none',
+                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
+                        color: '#f8fafc'
+                      }}
+                      itemStyle={{ color: '#e2e8f0', fontWeight: 600 }}
+                    />
+                    <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={40} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -225,7 +260,16 @@ function Analytics() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#0f172a',
+                        borderRadius: '12px',
+                        border: 'none',
+                        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)',
+                        color: '#f8fafc'
+                      }}
+                      itemStyle={{ color: '#e2e8f0', fontWeight: 600 }}
+                    />
                     <Legend verticalAlign="bottom" iconType="circle" />
                   </PieChart>
                 </ResponsiveContainer>
@@ -267,59 +311,131 @@ function Analytics() {
           </div>
         ) : (
           <div className="table-container fade-in">
-            <table className="modern-table">
-              <thead>
-                <tr>
-                  <th>Report Info</th>
-                  <th>Waste Type</th>
-                  <th>Collector</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredReports.length > 0 ? (
-                  filteredReports.slice(0, 8).map((report) => (
-                    <tr key={report._id}>
-                      <td>
-                        <div className="id-cell">
-                          <span className="id-text">#{report._id.slice(-6)}</span>
-                          <span className="loc-text"><MapPin size={12} /> {report.location || 'Unknown'}</span>
+            <div className="table-scroll-wrapper">
+              <table className="modern-table">
+                <thead>
+                  <tr>
+                    <th>Report Info</th>
+                    <th>Waste Type</th>
+                    <th>Collector</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    Array.from({ length: recordsPerPage }).map((_, idx) => (
+                      <tr key={`skeleton-${idx}`} className="skeleton-row">
+                        <td>
+                          <div className="report-info-wrapper">
+                            <div className="skeletonloc-icon skeleton" style={{ width: '16px', height: '16px', borderRadius: '50%' }}></div>
+                            <div className="skeleton skeleton-text" style={{ width: '80%' }}></div>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="skeleton skeleton-text" style={{ width: '60%' }}></div>
+                        </td>
+                        <td className="collector-td">
+                          <div className="collector-flex-container">
+                            <div className="skeleton skeleton-avatar"></div>
+                            <div className="skeleton skeleton-text" style={{ width: '50%' }}></div>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="skeleton skeleton-text" style={{ width: '40%' }}></div>
+                        </td>
+                        <td>
+                          <div className="skeleton skeleton-pill"></div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : currentRecords.length > 0 ? (
+                    <>
+                      {currentRecords.map((report) => (
+                        <tr key={report._id}>
+                          <td>
+                            <div className="report-info-wrapper">
+                              <MapPin size={16} className="loc-icon" />
+                              <strong className="address-text">
+                                {report.location || 'Unknown'}
+                              </strong>
+                            </div>
+                          </td>
+                          <td>
+                            <span className="waste-tag">
+                              <Trash2 size={14} /> {report.wasteType}
+                            </span>
+                          </td>
+                          <td className="collector-td">
+                            <div className="collector-flex-container">
+                              <div className="mini-avatar">{getInitials(report.collector || 'Unassigned')}</div>
+                              <span className="collector-name">{report.collector || 'Unassigned'}</span>
+                            </div>
+                          </td>
+                          <td>{new Date(report.createdAt).toLocaleDateString()}</td>
+                          <td>
+                            <span className={`status-pill ${report.status?.toLowerCase()}`}>
+                              {report.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="empty-state">
+                        <div className="empty-content">
+                          <div className="empty-icon-wrapper">
+                            <Filter size={40} strokeWidth={2} />
+                          </div>
+                          <h3>No Reports Found</h3>
+                          <p>We couldn't find any data matching your current filters.</p>
                         </div>
                       </td>
-                      <td>
-                        <span className="waste-tag">
-                          <Trash2 size={14} /> {report.wasteType}
-                        </span>
-                      </td>
-                      <td className="collector-cell">
-                        <div className="mini-avatar">{getInitials(report.collector || 'U')}</div>
-                        {report.collector || 'Unassigned'}
-                      </td>
-                      <td>{new Date(report.createdAt).toLocaleDateString()}</td>
-                      <td>
-                        <span className={`status-pill ${report.status?.toLowerCase()}`}>
-                          {report.status}
-                        </span>
-                      </td>
-                      <td></td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="empty-state">
-                      <div className="empty-content">
-                        <Filter size={48} />
-                        <p>No reports found matching your criteria</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
             <div className="table-footer">
-              <p>Showing {Math.min(filteredReports.length, 8)} of {filteredReports.length} records</p>
+              <div className="footer-left">
+                <p>Showing {indexOfFirstRecord + 1} - {Math.min(indexOfLastRecord, filteredReports.length)} of {filteredReports.length} records</p>
+              </div>
+
+              <div className="pagination-controls">
+                {totalPages > 1 && (
+                  <>
+                    <button
+                      className="page-btn prev"
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft size={16} />
+                      <span>Previous</span>
+                    </button>
+                    <div className="page-numbers">
+                      {[...Array(totalPages)].map((_, i) => (
+                        <button
+                          key={i + 1}
+                          className={`page-num ${currentPage === i + 1 ? 'active' : ''}`}
+                          onClick={() => paginate(i + 1)}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      className="page-btn next"
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    >
+                      <span>Next</span>
+                      <ChevronRight size={16} />
+                    </button>
+                  </>
+                )}
+              </div>
+
               <button className="outline-btn" onClick={handleDownload}>Download Report</button>
             </div>
           </div>

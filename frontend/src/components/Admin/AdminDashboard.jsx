@@ -7,7 +7,9 @@ import {
   Clock,
   Users,
   Search,
-  Plus
+  Plus,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 function AdminDashboard() {
@@ -273,7 +275,7 @@ function AdminDashboard() {
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
               >
-                Previous
+                <ChevronLeft size={16} /> Previous
               </button>
 
               <div className="pagination-numbers">
@@ -293,7 +295,7 @@ function AdminDashboard() {
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
               >
-                Next
+                Next <ChevronRight size={16} />
               </button>
             </div>
           )}

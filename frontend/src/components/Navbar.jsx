@@ -108,11 +108,11 @@ function Navbar() {
           </Link>
         )}
 
-        {/* Hamburger Menu Icon */}
-        {/* FIXED: Only show Hamburger icon here */}
-        <button className="navbar-mobile-toggle" onClick={toggleMenu}>
-          {isMenuOpen ? <X size={30} /> : <MenuIcon size={30} />}
-        </button>
+        {!isMenuOpen && (
+          <button className="navbar-mobile-toggle" onClick={toggleMenu}>
+            <MenuIcon size={30} />
+          </button>
+        )}
       </div>
 
       {/* MOBILE OVERLAY */}
@@ -125,6 +125,9 @@ function Navbar() {
             <Recycle size={24} className="navbar-logo-icon" />
             <span className="navbar-logo-text">SwachhSetu</span>
           </div>
+          <button className="navbar-close-btn" onClick={toggleMenu}>
+            <X size={30} />
+          </button>
 
         </div>
 

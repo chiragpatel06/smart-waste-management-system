@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin, Image as ImageIcon, 
-  Trash2, Recycle, Leaf, Box, ChevronRight, ChevronLeft, CheckCircle, Info, X 
+  Trash2, Recycle, Leaf, Box, ChevronRight, ChevronLeft, CheckCircle, Info, X, AlertCircle 
 } from "lucide-react";
 import API from "../api/api";
 import "./ReportWaste.css";
@@ -46,6 +46,15 @@ function ReportWaste() {
     photo: null,
     photoPreview: null,
   });
+  
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, show: false }));
+    }, 3000);
+  };
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -58,7 +67,7 @@ useEffect(() => {
 }, []);
   const getMyLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation not supported");
+      showToast("Geolocation not supported", "error");
       return;
     }
 
@@ -79,12 +88,12 @@ useEffect(() => {
             location: address
           }));
 
-          alert("Location Captured Successfully!");
+          showToast("Location Captured Successfully!", "success");
         } catch (error) {
-          alert("Error fetching address");
+          showToast("Error fetching address", "error");
         }
       },
-      () => alert("Please allow location access."),
+      () => showToast("Please allow location access.", "error"),
       { enableHighAccuracy: true }
     );
   };
@@ -126,12 +135,12 @@ useEffect(() => {
 
     const res = await API.post("/reports", formData);
 
-    alert("✅ " + res.data.message);
+    showToast(res.data.message || "Report submitted!", "success");
     setStep(4);
 
   } catch (err) {
     console.log(err.response?.data);
-    alert("❌ Error submitting report");
+    showToast("Error submitting report", "error");
   } finally {
     setLoading(false);
   }
@@ -139,8 +148,16 @@ useEffect(() => {
 
   return (
     <>
+      {/* Toast Notification */}
+      {toast.show && (
+        <div className={`report-toast toast-${toast.type}`}>
+          {toast.type === "success" ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+          <span>{toast.message}</span>
+        </div>
+      )}
+
       <div className="report-wrapper">
-        <div className={`report-card ${step === 2 ? "step-two-card" : ""} ${showInfo && step === 2 ? "info-open" : ""}`}>
+        <div className={`report-card ${showInfo && step === 2 ? "info-open" : ""}`}>
 
           {/* Progress Bar */}
           <div className="progress-bar-report">
@@ -207,44 +224,37 @@ useEffect(() => {
                 </div>
 
                 {/* INFO PANEL (Desktop: Side, Mobile: Bottom Drawer) */}
-                <div className={`waste-info-panel ${showInfo ? "panel-active" : "panel-placeholder"}`}>
-                  {form.wasteType ? (
-                    <>
-                      <div className="panel-header">
-                        <div className="header-left">
-                          <Info size={18} />
-                          <h3>{wasteInfo[form.wasteType].title}</h3>
-                        </div>
-                        <button className="close-panel" onClick={() => setShowInfo(false)}>
-                          <X size={20} />
-                        </button>
+                {showInfo && form.wasteType && (
+                  <div className="waste-info-panel panel-active">
+                    <div className="panel-header">
+                      <div className="header-left">
+                        <Info size={18} />
+                        <h3>{wasteInfo[form.wasteType].title}</h3>
                       </div>
-
-                      <div className="panel-body">
-                        <p className="type-desc">{wasteInfo[form.wasteType].description}</p>
-
-                        <div className="items-section">
-                          <h4>✅ Put these items here:</h4>
-                          <ul className="items-list">
-                            {wasteInfo[form.wasteType].items.map(i => <li key={i}>{i}</li>)}
-                          </ul>
-                        </div>
-
-                        <div className="items-section avoid">
-                          <h4>❌ Avoid putting:</h4>
-                          <ul className="items-list">
-                            {wasteInfo[form.wasteType].avoid.map(i => <li key={i}>{i}</li>)}
-                          </ul>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="panel-empty-state">
-                      <Recycle size={50} className="empty-icon" />
-                      <p>Select a category to see detailed guidance.</p>
+                      <button className="close-panel" onClick={() => setShowInfo(false)}>
+                        <X size={20} />
+                      </button>
                     </div>
-                  )}
-                </div>
+
+                    <div className="panel-body">
+                      <p className="type-desc">{wasteInfo[form.wasteType].description}</p>
+
+                      <div className="items-section">
+                        <h4>✅ Put these items here:</h4>
+                        <ul className="items-list">
+                          {wasteInfo[form.wasteType].items.map(i => <li key={i}>{i}</li>)}
+                        </ul>
+                      </div>
+
+                      <div className="items-section avoid">
+                        <h4>❌ Avoid putting:</h4>
+                        <ul className="items-list">
+                          {wasteInfo[form.wasteType].avoid.map(i => <li key={i}>{i}</li>)}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="nav-btns">

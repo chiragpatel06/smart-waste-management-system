@@ -115,7 +115,7 @@
 /* COLLECTOR SELECT DROPDOWN     */
 /* ============================= */
 
-.table-card td select {
+.admin-table td select {
   appearance: none;
   -webkit-appearance: none;
   padding: 7px 12px;
@@ -130,7 +130,7 @@
   transition: border-color 0.2s;
 }
 
-.table-card td select:focus {
+.admin-table td select:focus {
   outline: none;
   border-color: #3C80F3;
   box-shadow: 0 0 0 3px rgba(60, 128, 243, 0.1);
@@ -175,8 +175,15 @@
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to   { transform: scale(1);   opacity: 1; }
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* ============================= */
@@ -192,12 +199,12 @@
     font-size: 1.4rem;
   }
 
-  .table-card th {
+  .admin-table th {
     font-size: 12px;
     padding: 10px 12px;
   }
 
-  .table-card td {
+  .admin-table td {
     font-size: 13px;
     padding: 11px 12px;
   }
@@ -225,26 +232,26 @@
   }
 
   /* Card layout */
-  .table-card {
+  .admin-table-wrapper {
     background: transparent;
     box-shadow: none;
     overflow: visible;
   }
 
-  .table-card table,
-  .table-card thead,
-  .table-card tbody,
-  .table-card th,
-  .table-card td,
-  .table-card tr {
+  .admin-table,
+  .admin-table-head,
+  .admin-table-body,
+  .admin-table th,
+  .admin-table td,
+  .admin-table tr {
     display: block;
   }
 
-  .table-card thead {
+  .admin-table-head {
     display: none;
   }
 
-  .table-card tbody tr {
+  .admin-table-body tr {
     background: #ffffff;
     border-radius: 16px;
     padding: 16px;
@@ -253,11 +260,11 @@
     border: 1px solid #f1f5f9;
   }
 
-  .table-card tbody tr:hover {
+  .admin-table-body tr:hover {
     background: #f8faff;
   }
 
-  .table-card td {
+  .admin-table td {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -266,17 +273,17 @@
     font-size: 13.5px;
   }
 
-  .table-card td:last-child {
+  .admin-table td:last-child {
     border-bottom: none;
     margin-top: 6px;
   }
 
-  .table-card td:first-child {
+  .admin-table td:first-child {
     font-size: 12px;
     color: #94a3b8;
   }
 
-  .table-card td::before {
+  .admin-table td::before {
     font-weight: 600;
     font-size: 11.5px;
     color: #64748b;
@@ -284,14 +291,37 @@
     letter-spacing: 0.4px;
   }
 
-  .table-card td:nth-child(1)::before { content: "Report ID"; }
-  .table-card td:nth-child(2)::before { content: "Location"; }
-  .table-card td:nth-child(3)::before { content: "Type"; }
-  .table-card td:nth-child(4)::before { content: "Photo"; }
-  .table-card td:nth-child(5)::before { content: "Cleaned Photo"; }
-  .table-card td:nth-child(6)::before { content: "Status"; }
-  .table-card td:nth-child(7)::before { content: "Collector"; }
-  .table-card td:nth-child(8)::before { content: "Action"; }
+  .admin-table td:nth-child(1)::before {
+    content: "Report ID";
+  }
+
+  .admin-table td:nth-child(2)::before {
+    content: "Location";
+  }
+
+  .admin-table td:nth-child(3)::before {
+    content: "Type";
+  }
+
+  .admin-table td:nth-child(4)::before {
+    content: "Photo";
+  }
+
+  .admin-table td:nth-child(5)::before {
+    content: "Cleaned Photo";
+  }
+
+  .admin-table td:nth-child(6)::before {
+    content: "Status";
+  }
+
+  .admin-table td:nth-child(7)::before {
+    content: "Collector";
+  }
+
+  .admin-table td:nth-child(8)::before {
+    content: "Action";
+  }
 
   .report-image {
     width: 64px;
@@ -305,7 +335,7 @@
     justify-content: center;
   }
 
-  .table-card td select {
+  .admin-table td select {
     width: 100%;
     height: 42px;
     font-size: 14px;
@@ -338,13 +368,13 @@
     font-size: 1.3rem;
   }
 
-  .table-card td {
+  .admin-table td {
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
   }
 
-  .table-card td::before {
+  .admin-table td::before {
     font-size: 11px;
   }
 
@@ -360,37 +390,4 @@
 
 body {
   overflow-x: hidden;
-}
-
-
-/* ============================= */
-/* STATUS BADGE — SAME AS DASHBOARD */
-/* ============================= */
-
-.admin-status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 14px;
-  border-radius: 50px;
-  font-size: 13px;
-  font-weight: 600;
-  min-width: 95px;
-  white-space: nowrap;
-}
-
-/* COLORS */
-.admin-status-badge.pending {
-  background: rgba(245, 158, 11, 0.12);
-  color: #d97706;
-}
-
-.admin-status-badge.assigned {
-  background: rgba(99, 102, 241, 0.12);
-  color: #6366f1;
-}
-
-.admin-status-badge.collected {
-  background: rgba(16, 185, 129, 0.12);
-  color: #059669;
 }

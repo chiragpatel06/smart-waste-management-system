@@ -84,7 +84,7 @@ body {
   font-weight: 500;
   border-radius: 10px;
   margin: 4px 8px;
-  transition: all 0.25s cubic-bezier(.4,0,.2,1);
+  transition: all 0.25s cubic-bezier(.4, 0, .2, 1);
 }
 
 .sidebar-nav a:hover {
@@ -117,7 +117,7 @@ body {
   padding: 12px 16px;
   border-radius: 10px;
   margin: 0 8px;
-  transition: all 0.25s cubic-bezier(.4,0,.2,1);
+  transition: all 0.25s cubic-bezier(.4, 0, .2, 1);
 }
 
 .logout-btn:hover {
@@ -163,8 +163,15 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ============================= */
@@ -183,7 +190,7 @@ body {
   border: none;
   padding: 8px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   color: #2563eb;
   cursor: pointer;
 }
@@ -252,7 +259,7 @@ body {
   border-radius: 10px;
   width: 320px;
   height: 44px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   border: 1px solid #e2e8f0;
 }
 
@@ -324,13 +331,13 @@ body {
   gap: 10px;
   cursor: pointer;
   transition: 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   border: 2px solid transparent;
 }
 
 .admin-stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .admin-stat-active {
@@ -368,7 +375,7 @@ body {
   background: white;
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
 .admin-section-header {
@@ -418,7 +425,7 @@ body {
 .admin-toggle-btn.active {
   background: white;
   color: #1e293b;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* ============================= */
@@ -435,8 +442,11 @@ body {
   width: 100%;
   border-collapse: collapse;
   table-layout: auto;
-  min-width: 650px; /* prevents breakage on small screens */
+  min-width: 650px;
+  /* prevents breakage on small screens */
 }
+
+
 
 /* --- Header row --- */
 .admin-table-head {
@@ -445,14 +455,21 @@ body {
   border-bottom: 1px solid #e2e8f0;
 }
 
+.admin-table-head {
+  flex-shrink: 0;
+}
+
 .admin-table-th {
   text-align: left;
   padding: 12px 16px;
-  font-size: 13px;          /* standardized: 13–14px */
-  font-weight: 600;         /* semi-bold */
+  font-size: 13px;
+  /* standardized: 13–14px */
+  font-weight: 600;
+  /* semi-bold */
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  color: #64748b;           /* muted slate */
+  color: #64748b;
+  /* muted slate */
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -463,9 +480,7 @@ body {
   text-align: right;
 }
 
-.admin-table-body {
-  min-height: 300px;
-}
+
 
 /* --- Body rows --- */
 .admin-table-body tr.admin-table-row {
@@ -478,14 +493,19 @@ body {
 }
 
 .admin-table-body tr.admin-table-row:hover {
-  background: #f8faff; /* subtle hover */
+  background: #f8faff;
+  /* subtle hover */
 }
 
 .admin-table-td {
-  padding: 12px 16px;        /* balanced row height */
-  font-size: 13.5px;         /* standardized body: 13–14px */
-  font-weight: 400;          /* normal weight */
-  color: #334155;            /* primary body text */
+  padding: 12px 16px;
+  /* balanced row height */
+  font-size: 13.5px;
+  /* standardized body: 13–14px */
+  font-weight: 400;
+  /* normal weight */
+  color: #334155;
+  /* primary body text */
   vertical-align: middle;
   line-height: 1.45;
 }
@@ -499,13 +519,17 @@ body {
 }
 
 /* Bold name / location text inside cells */
+
+
 .admin-location-text,
 .admin-collector-name {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #1e293b;           /* darker for primary data */
-  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;   /* ✅ max 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;     /* ❌ nowrap hata diya */
   line-height: 1.4;
+  max-height: 2.8em;       /* 2 lines fix */
 }
 
 /* Category / area text */
@@ -522,44 +546,51 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 14px;
-  border-radius: 50px;
-  font-size: 12.5px;
-  font-weight: 600;
-  min-width: 90px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  letter-spacing: 0.2px;
 }
 
 .admin-status-badge.pending {
-  background: rgba(245, 158, 11, 0.12);
-  color: #d97706;
+  background: #fff8eb;
+  color: #b45309;
+  border: 1px solid #fde68a;
 }
 
 .admin-status-badge.collected {
-  background: rgba(16, 185, 129, 0.12);
-  color: #059669;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
 }
 
 .admin-status-badge.assigned {
-  background: rgba(99, 102, 241, 0.12);
-  color: #6366f1;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
 }
 
-.admin-status-badge.active {
-  background: rgba(16, 185, 129, 0.12);
-  color: #059669;
+.admin-status-badge.active,
+.admin-status-badge.available {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
 }
 
-.admin-status-badge.inactive {
-  background: rgba(100, 116, 139, 0.12);
-  color: #64748b;
+.admin-status-badge.inactive,
+.admin-status-badge.busy {
+  background: #fff8eb;
+  color: #b45309;
+  border: 1px solid #fde68a;
 }
 
-.admin-status-badge.on-leave,
 .admin-status-badge.on-leave {
-  background: rgba(239, 68, 68, 0.10);
-  color: #ef4444;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
 }
 
 /* ============================= */
@@ -578,7 +609,7 @@ body {
 
 .admin-mini-img:hover {
   transform: scale(1.08);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* Legacy alias (used in some pages) */
@@ -628,7 +659,7 @@ body {
   .sidebar-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
     z-index: 1100;
     opacity: 0;
@@ -761,14 +792,17 @@ body {
    ========================================================================== */
 
 /* 1. Global Responsiveness Fixes */
-html, body {
+html,
+body {
   max-width: 100vw;
-  overflow-x: hidden; /* Prevents side-scrolling on mobile */
+  overflow-x: hidden;
+  /* Prevents side-scrolling on mobile */
 }
 
 img {
   max-width: 100%;
-  height: auto; /* Ensure all images are responsive by default */
+  height: auto;
+  /* Ensure all images are responsive by default */
 }
 
 /* 2. Layout & Font Adjustments (Small Laptops/Desktops) */
@@ -776,7 +810,7 @@ img {
   .admin-page-title {
     font-size: clamp(20px, 4vw, 28px) !important;
   }
-  
+
   .admin-search-box {
     width: 250px;
   }
@@ -794,9 +828,10 @@ img {
   }
 
   .admin-stats-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns on tablets */
   }
-  
+
   .admin-stat-card {
     padding: 12px;
   }
@@ -804,6 +839,7 @@ img {
 
 /* 4. Mobile Layout Adjustments (max-width: 768px) */
 @media (max-width: 768px) {
+
   /* Header adjustments */
   .admin-page-header {
     flex-direction: column;
@@ -817,12 +853,15 @@ img {
   }
 
   .admin-search-box {
-    width: 100% !important; /* Full width search on mobile */
+    width: 100% !important;
+    /* Full width search on mobile */
   }
 
   .admin-primary-btn {
-    width: 100%; /* Full width button for better touch target */
-    height: 48px; /* Slightly taller for touch */
+    width: 100%;
+    /* Full width button for better touch target */
+    height: 48px;
+    /* Slightly taller for touch */
   }
 
   /* Stat Cards */
@@ -848,23 +887,25 @@ img {
   }
 
   .admin-toggle-btn {
-    flex: 1; /* Buttons share equal width on mobile */
+    flex: 1;
+    /* Buttons share equal width on mobile */
     padding: 10px;
     font-size: 0.85rem;
   }
 
   /* Table Scroll optimization */
   .admin-table-wrapper {
-    margin: 0 -16px; /* Bleed to edges for easier scrolling */
+    margin: 0 -16px;
+    /* Bleed to edges for easier scrolling */
     padding: 0 16px;
     width: calc(100% + 32px);
   }
-  
+
   /* Touch target optimization */
-  .sidebar-nav a, 
-  .logout-btn, 
+  .sidebar-nav a,
+  .logout-btn,
   .admin-toggle-btn {
-    min-height: 44px; 
+    min-height: 44px;
     display: flex;
     align-items: center;
   }
@@ -881,7 +922,8 @@ img {
   }
 
   .admin-stats-grid {
-    grid-template-columns: 1fr; /* Stack cards vertically */
+    grid-template-columns: 1fr;
+    /* Stack cards vertically */
     gap: 12px;
   }
 
@@ -890,16 +932,12 @@ img {
   }
 
   /* Table specific adjustments for small screens */
-  .admin-table-th, .admin-table-td {
+  .admin-table-th,
+  .admin-table-td {
     padding: 10px 8px;
     font-size: 12px;
   }
 
-  .admin-status-badge {
-    padding: 4px 8px;
-    min-width: 75px;
-    font-size: 11px;
-  }
 
   .admin-mini-img {
     width: 40px;
@@ -913,22 +951,28 @@ img {
 
 /* 6. Utility Classes for Touch & Accessibility */
 @media (pointer: coarse) {
+
   /* Increase click areas for mobile users */
   .admin-mini-img {
     width: 48px;
     height: 48px;
   }
-  
+
   .admin-search-input {
-    font-size: 16px; /* Prevents iOS zoom on focus */
+    font-size: 16px;
+    /* Prevents iOS zoom on focus */
   }
 }
 
 /* 7. Print Responsiveness (Bonus) */
 @media print {
-  .admin-sidebar, .mobile-header-nav, .admin-header-actions {
+
+  .admin-sidebar,
+  .mobile-header-nav,
+  .admin-header-actions {
     display: none;
   }
+
   .admin-main {
     padding: 0;
   }
@@ -939,44 +983,47 @@ img {
 /* =============================== */
 
 .admin-table-wrapper {
-  overflow-x: auto;
-  width: 100%;
-  -webkit-overflow-scrolling: touch;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
-  min-height: 480px; /* Standard height for 5 rows + header */
-  margin-bottom: 20px;
+  height: 540px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .admin-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  min-width: 800px;
+  min-width: 900px;
 }
 
 .admin-table-head {
   background: #f8fafc;
   border-bottom: 1px solid #e2e8f0;
+  /* var(--border-soft) */
 }
 
 .admin-table-th {
   text-align: left;
-  padding: 16px;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.05em;
   color: #64748b;
   white-space: nowrap;
   vertical-align: middle;
 }
 
 .admin-table-row {
-  height: 68px; /* Standard row height */
+  height: 72px;
+  max-height: 72px;
+  /* FIXED ROW HEIGHT */
   transition: background 0.15s ease;
   border-bottom: 1px solid #f1f5f9;
 }
@@ -986,88 +1033,230 @@ img {
 }
 
 .admin-table-row:hover {
-  background: #f8faff;
+  background: #fbfcfe;
 }
 
 .admin-table-td {
   padding: 12px 16px;
-  font-size: 14px;
-  font-weight: 400;
-  color: #334155;
+  font-size: 13.5px;
   vertical-align: middle;
-  line-height: normal;
+  color: #334155;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.admin-location-text,
-.admin-collector-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1e293b;
-  display: block;
-}
 
 /* Pagination Section */
 .admin-pagination {
-  margin-top: auto;
+  position: relative;
+  bottom: 0;
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #edf2f7;
   gap: 12px;
-  padding: 16px;
-  background: #ffffff;
-  border-top: 1px solid #f1f5f9;
+  margin-top: auto;
   border-radius: 0 0 12px 12px;
+  flex-shrink: 0;
+}
+.admin-table-body {
+  flex: 1;
+  overflow: hidden;   /* scroll remove */
 }
 
 .pagination-btn {
-  padding: 8px 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
   border: 1px solid #e2e8f0;
   background: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: 0.2s;
   color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
 }
 
 .pagination-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background: #f1f5f9;
 }
 
 .pagination-numbers {
   display: flex;
+  align-items: center;
   gap: 6px;
 }
 
 .pagination-number {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  border: 1px solid #e2e8f0;
-  background: white;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
+  flex-shrink: 0;
 }
 
 .pagination-number.active {
   background: #2563eb;
   color: white;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
   border-color: #2563eb;
+}
+
+.pagination-number:not(.active):hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+
+/* --- COLUMN WIDTHS FOR ALL TABLES --- */
+
+/* 1. Waste Reports Page (8 columns) */
+.admin-table:has(th:nth-child(8):last-child) th:nth-child(1),
+.admin-table:has(th:nth-child(8):last-child) td:nth-child(1) {
+  width: 8%;
+}
+
+.admin-table:has(th:nth-child(8):last-child) th:nth-child(2),
+.admin-table:has(th:nth-child(8):last-child) td:nth-child(2) {
+  width: 22%;
+}
+
+.admin-table:has(th:nth-child(8):last-child) th:nth-child(3),
+.admin-table:has(th:nth-child(8):last-child) td:nth-child(3) {
+  width: 12%;
+}
+
+.admin-table:has(th:nth-child(8):last-child) th:nth-child(4),
+.admin-table:has(th:nth-child(8):last-child) td:nth-child(4) {
+  width: 10%;
+}
+
+.admin-table:has(th:nth-child(8):last-child) th:nth-child(5),
+.admin-table:has(th:nth-child(8):last-child) td:nth-child(5) {
+  width: 12%;
+}
+
+.admin-table:has(th:nth-child(8):last-child) th:nth-child(6),
+.admin-table:has(th:nth-child(8):last-child) td:nth-child(6) {
+  width: 12%;
+}
+
+.admin-table:has(th:nth-child(8):last-child) th:nth-child(7),
+.admin-table:has(th:nth-child(8):last-child) td:nth-child(7) {
+  width: 14%;
+}
+
+.admin-table:has(th:nth-child(8):last-child) th:nth-child(8),
+.admin-table:has(th:nth-child(8):last-child) td:nth-child(8) {
+  width: 10%;
+}
+
+/* 2. Collectors Page (6 columns, directly inside page wrapper) */
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) th:nth-child(1),
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) td:nth-child(1) {
+  width: 8%;
+}
+
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) th:nth-child(2),
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) td:nth-child(2) {
+  width: 25%;
+}
+
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) th:nth-child(3),
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) td:nth-child(3) {
+  width: 15%;
+}
+
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) th:nth-child(4),
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) td:nth-child(4) {
+  width: 22%;
+}
+
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) th:nth-child(5),
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) td:nth-child(5) {
+  width: 15%;
+}
+
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) th:nth-child(6),
+.admin-page-wrapper>.admin-table-wrapper .admin-table:has(th:nth-child(6):last-child) td:nth-child(6) {
+  width: 15%;
+}
+
+/* 3. Dashboard Recent Reports (6 columns, inside dashboard section) */
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) th:nth-child(1),
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) td:nth-child(1) {
+  width: 10%;
+}
+
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) th:nth-child(2),
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) td:nth-child(2) {
+  width: 32%;
+}
+
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) th:nth-child(3),
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) td:nth-child(3) {
+  width: 15%;
+}
+
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) th:nth-child(4),
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) td:nth-child(4) {
+  width: 15%;
+}
+
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) th:nth-child(5),
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) td:nth-child(5) {
+  width: 15%;
+}
+
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) th:nth-child(6),
+.admin-dashboard-section .admin-table:has(th:nth-child(6):last-child) td:nth-child(6) {
+  width: 17%;
+}
+
+/* 4. Dashboard Collectors Widget (4 columns) */
+.admin-dashboard-section .admin-table:has(th:nth-child(4):last-child) th:nth-child(1),
+.admin-dashboard-section .admin-table:has(th:nth-child(4):last-child) td:nth-child(1) {
+  width: 15%;
+}
+
+.admin-dashboard-section .admin-table:has(th:nth-child(4):last-child) th:nth-child(2),
+.admin-dashboard-section .admin-table:has(th:nth-child(4):last-child) td:nth-child(2) {
+  width: 35%;
+}
+
+.admin-dashboard-section .admin-table:has(th:nth-child(4):last-child) th:nth-child(3),
+.admin-dashboard-section .admin-table:has(th:nth-child(4):last-child) td:nth-child(3) {
+  width: 25%;
+}
+
+.admin-dashboard-section .admin-table:has(th:nth-child(4):last-child) th:nth-child(4),
+.admin-dashboard-section .admin-table:has(th:nth-child(4):last-child) td:nth-child(4) {
+  width: 25%;
 }
 
 .placeholder-row {
@@ -1079,15 +1268,3 @@ img {
   color: transparent !important;
   pointer-events: none;
 }
-
-.admin-status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px 14px;
-  border-radius: 50px;
-  font-size: 12.5px;
-  font-weight: 600;
-  min-width: 90px;
-  white-space: nowrap;
-}
