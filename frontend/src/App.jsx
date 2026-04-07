@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -39,6 +41,7 @@ const MainLayout = () => {
 function App() {
   return (
     <BrowserRouter>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover />
       <Routes>
 
         {/* ================= PUBLIC PAGES (Wrapped in Layout) ================= */}

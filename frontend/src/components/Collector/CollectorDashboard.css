@@ -224,6 +224,36 @@
   word-break: break-word;
 }
 
+/* ============================= */
+/* CLICKABLE CITY LOCATION       */
+/* ============================= */
+
+.clickable-city {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #3c80f3;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.clickable-city:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.cell-location-icon {
+  flex-shrink: 0;
+  color: #64748b;
+  transition: color 0.2s ease;
+}
+
+.clickable-city:hover .cell-location-icon {
+  color: #1d4ed8;
+}
+
 .date-wrapper {
   display: flex;
   align-items: center;

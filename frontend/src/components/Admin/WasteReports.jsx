@@ -1,5 +1,5 @@
 import "./WasteReports.css";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
 // 👈 reusable button
 import API from "../../api/api";
@@ -13,6 +13,7 @@ function WasteReports() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const reportsPerPage = 5;
+
   // ================= LOAD DATA =================
   useEffect(() => {
 

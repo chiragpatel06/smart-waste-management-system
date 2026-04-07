@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import API from "../../api/api";
 import "./Analytics.css";
 import {
@@ -142,6 +143,7 @@ function Analytics() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    toast.success("Report downloaded successfully");
   };
 
   return (

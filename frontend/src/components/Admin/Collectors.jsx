@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import "./Collectors.css";
 import { Link } from "react-router-dom";
 import { Pencil, Trash2, Search, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import API from "../../api/api";
 
 function Collectors() {
@@ -33,7 +35,6 @@ function Collectors() {
 
     const handleUpdate = async (id) => {
         try {
-
             const res = await API.put(`/collectors/${id}`, editData);
 
             const updatedCollectors = collectors.map((c) =>
@@ -42,21 +43,42 @@ function Collectors() {
 
             setCollectors(updatedCollectors);
             setEditingId(null);
-
+            toast.success("Collector updated successfully");
         } catch (error) {
             console.log("Update error", error);
+            toast.error("Something went wrong");
         }
     };
 
     const handleDelete = async (id) => {
-        try {
-            await API.delete(`/collectors/${id}`);
+        const result = await Swal.fire({
+            title: "Are you sure you want to delete this collector?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#9ca3af",
+            confirmButtonText: "Confirm",
+            cancelButtonText: "Cancel",
+            customClass: {
+                popup: "admin-swal-popup",
+                title: "admin-swal-title",
+                actions: "admin-swal-actions",
+                confirmButton: "admin-swal-confirm-btn"
+            }
+        });
 
-            setCollectors(collectors.filter(c => c._id !== id));
-        } catch (error) {
-            console.log("Delete error");
+        if (result.isConfirmed) {
+            try {
+                await API.delete(`/collectors/${id}`);
+
+                setCollectors(collectors.filter(c => c._id !== id));
+                toast.success("Collector deleted successfully");
+            } catch (error) {
+                console.log("Delete error", error);
+                toast.error("Something went wrong");
+            }
         }
-    };;
+    };
 
 
 

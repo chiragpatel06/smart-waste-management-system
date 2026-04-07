@@ -12,6 +12,8 @@ import {
   UserCheck,
   UserX
 } from "lucide-react";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import "./UsersManagement.css";
 
 function UsersManagement() {
@@ -34,12 +36,30 @@ function UsersManagement() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    const result = await Swal.fire({
+      title: "Are you sure you want to delete this user?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#9ca3af",
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+      customClass: {
+          popup: "admin-swal-popup",
+          title: "admin-swal-title",
+          actions: "admin-swal-actions",
+          confirmButton: "admin-swal-confirm-btn"
+      }
+    });
+
+    if (result.isConfirmed) {
       try {
         await API.delete(`/users/${id}`);
         setUsers(users.filter(u => u._id !== id));
+        toast.success("User deleted successfully");
       } catch (error) {
-        alert("Failed to delete user");
+        console.error("Failed to delete user", error);
+        toast.error("Something went wrong");
       }
     }
   };

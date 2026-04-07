@@ -1,29 +1,84 @@
+/* ENTRY ANIMATION */
+@keyframes buttonFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .app-close-btn {
+  /* Positioning */
   position: absolute !important;
   top: 15px !important;
   right: 15px !important;
+  z-index: 9999 !important;
 
-  width: 45px !important;
-  height: 45px !important;
-
+  /* Dimensions & Shape */
+  width: 44px !important;
+  height: 44px !important;
   border-radius: 50% !important;
-  border: none !important;
 
-  background: #2563eb !important;
-  color: #fff !important;
-
-  font-size: 20px !important;
-  font-weight: bold !important;
-
+  /* Centering the icon */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 
+  /* Glassmorphism Design */
+  background: rgba(59, 130, 246, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  
+  /* Icon Color */
+  color: #000000 !important;
+
+  /* Interactions */
   cursor: pointer !important;
-  z-index: 9999 !important;
+  transition: all 0.3s ease !important;
+  outline: none !important;
+
+  /* Entry Animation */
+  animation: buttonFadeIn 0.3s ease forwards !important;
 }
 
+/* Accessibility Focus Ring */
+.app-close-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5), 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Icon Transition */
+.app-close-btn .close-icon {
+  transition: transform 0.3s ease !important;
+}
+
+/* Hover Effects */
 .app-close-btn:hover {
-  transform: scale(1.15) rotate(90deg);
-  background: #1d4ed8;
+  transform: scale(1.1) !important;
+  background: rgba(59, 130, 246, 0.35) !important; /* Deeper blue background */
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3) !important;
+}
+
+.app-close-btn:hover .close-icon {
+  transform: rotate(90deg) !important;
+}
+
+/* Active / Click Effect */
+.app-close-btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .app-close-btn {
+    /* Slightly larger tap area for mobile */
+    width: 48px !important;
+    height: 48px !important;
+    top: 12px !important;
+    right: 12px !important;
+  }
 }

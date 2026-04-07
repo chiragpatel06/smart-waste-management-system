@@ -118,16 +118,26 @@
 .admin-table td select {
   appearance: none;
   -webkit-appearance: none;
-  padding: 7px 12px;
+  padding: 7px 30px 7px 12px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
-  background: #ffffff;
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 10px center;
   font-size: 13px;
   font-family: 'Inter', sans-serif;
   color: #334155;
   cursor: pointer;
-  min-width: 140px;
+  width: 100%;
+  max-width: 150px;
+  box-sizing: border-box;
   transition: border-color 0.2s;
+}
+
+.admin-table th:last-child,
+.admin-table td:last-child {
+  width: 160px !important;
+  min-width: 160px !important;
+  text-align: center;
+  padding-right: 16px !important;
 }
 
 .admin-table td select:focus {

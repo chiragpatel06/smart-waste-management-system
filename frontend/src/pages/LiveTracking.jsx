@@ -310,7 +310,7 @@ function LiveTracking() {
                 <label>
                   <MapPin size={16} /> Location
                 </label>
-                <p>{selectedReport.location}</p>
+                <p className="location-value">{selectedReport.location}</p>
               </div>
 
               <div className="info-card">

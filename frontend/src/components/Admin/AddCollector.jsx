@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./AddCollector.css";
 import API from "../../api/api";
 function AddCollector() {
@@ -33,12 +34,12 @@ function AddCollector() {
     try {
       const res = await API.post("/collectors", form);
 
-      alert("Collector Added Successfully");
+      toast.success("Collector added successfully");
 
       navigate("/admin/collectors");
     } catch (error) {
       console.log(error);
-      alert("Error adding collector");
+      toast.error("Something went wrong");
     }
   };
 

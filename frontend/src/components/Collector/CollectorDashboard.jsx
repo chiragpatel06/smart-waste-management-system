@@ -3,12 +3,31 @@ import "./CollectorDashboard.css";
 import { Recycle, CheckCircle, MapPin, ClipboardList, Calendar, Layers } from "lucide-react";
 import ImagePreview from "../ImagePreview";
 import API from "../../api/api";
+import LocationModal from "../Admin/LocationModal";
 
 
 function CollectorDashboard() {
   const [reports, setReports] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [cleanedImages, setCleanedImages] = useState({});
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
+  const extractCity = (address) => {
+    if (!address) return "-";
+    const parts = address.split(",").map((p) => p.trim());
+    
+    if (parts.length >= 4 && /^\d+$/.test(parts[parts.length - 2])) {
+      return parts[parts.length - 4];
+    }
+    if (parts.length >= 3) {
+      return parts[parts.length - 3];
+    }
+    if (parts.length === 2) {
+      return parts[0]; 
+    }
+    return parts[0] || "-";
+  };
 
   const handleFileChange = (reportId, file) => {
     setCleanedImages({
@@ -157,7 +176,17 @@ function CollectorDashboard() {
                     <td className="collector-table-td fw-600">{report.collector}</td>
                     <td className="collector-table-td location-cell">
                       <div className="location-wrapper">
-                        <MapPin size={14} className="icon-sub" /> {report.location}
+                        <span 
+                          className="clickable-city" 
+                          title="Click here to view full address"
+                          onClick={() => {
+                            setSelectedLocation(report.location);
+                            setIsLocationModalOpen(true);
+                          }}
+                        >
+                          <MapPin size={14} className="cell-location-icon" />
+                          {extractCity(report.location)}
+                        </span>
                       </div>
                     </td>
                     <td className="collector-table-td type-cell">{report.wasteType}</td>
@@ -253,7 +282,17 @@ function CollectorDashboard() {
                     <td className="collector-table-td fw-600">{report.collector}</td>
                     <td className="collector-table-td location-cell">
                       <div className="location-wrapper">
-                        <MapPin size={14} className="icon-sub" /> {report.location?.replaceAll(",", ", ")}
+                        <span 
+                          className="clickable-city" 
+                          title="Click here to view full address"
+                          onClick={() => {
+                            setSelectedLocation(report.location);
+                            setIsLocationModalOpen(true);
+                          }}
+                        >
+                          <MapPin size={14} className="cell-location-icon" />
+                          {extractCity(report.location)}
+                        </span>
                       </div>
                     </td>
                     <td className="collector-table-td type-cell">{report.wasteType}</td>
@@ -297,6 +336,11 @@ function CollectorDashboard() {
       <ImagePreview
         image={selectedImage}
         onClose={() => setSelectedImage(null)}
+      />
+      <LocationModal 
+        address={selectedLocation}
+        isOpen={isLocationModalOpen}
+        onClose={() => setIsLocationModalOpen(false)}
       />
     </div>
   );

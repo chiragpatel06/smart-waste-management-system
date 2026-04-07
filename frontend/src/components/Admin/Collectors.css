@@ -165,6 +165,35 @@
   width: 90%;
 }
 
+/* ================= SWEETALERT2 STYLES ================= */
+.admin-swal-popup {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  padding: 24px !important;
+  font-family: inherit !important;
+}
+
+.admin-swal-title {
+  font-size: 20px !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.admin-swal-actions button {
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.admin-swal-confirm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.swal2-cancel:hover {
+  transform: translateY(-1px);
+}
 
 /* ========================================= */
 /* MOBILE RESPONSIVE (MAX-WIDTH: 768px)      */
