@@ -38,12 +38,13 @@
   color: #38bdf8;
 }
 
-.link-icon {
+.link-icon, .contact-icon {
   color: #38bdf8;
   transition: 0.3s ease;
 }
 
-.footer-links li:hover .link-icon {
+.footer-links li:hover .link-icon,
+.contact-item:hover .contact-icon {
   transform: translateX(3px);
 }
 
@@ -54,8 +55,14 @@
   gap: 8px;
   background: linear-gradient(135deg, #00c6ff, #2ecc71);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 15px;
+}
+
+.brand-icon {
+  color: #2563eb;
+  -webkit-text-fill-color: #2563eb;
 }
 
 /* HEADINGS */
@@ -116,7 +123,7 @@
 }
 
 .social-icons svg:hover {
-  color: #00c6ff;
+  color: #38bdf8;
   transform: translateY(-3px);
 }
 
@@ -142,7 +149,8 @@
     padding: 50px 20px;
     gap: 35px;
   }
-   .footer-col h4 {
+
+  .footer-col h4 {
     text-align: center;
     width: 100%;
   }
@@ -155,9 +163,10 @@
   .footer-col ul li {
     justify-content: center;
   }
+
   .footer-col {
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .footer-col:last-child {
@@ -178,7 +187,8 @@
   .footer-links li {
     justify-content: center;
     font-size: 15px;
-    padding: 6px 0; /* better tap area */
+    padding: 6px 0;
+    /* better tap area */
   }
 
   .footer-links li a {
@@ -212,15 +222,16 @@
 @media (max-width: 480px) {
   @media (max-width: 600px) {
 
-  .footer-col {
-    text-align: center;
+    .footer-col {
+      text-align: center;
+    }
+
+    .footer-col h4 {
+      margin-bottom: 18px;
+    }
+
   }
 
-  .footer-col h4 {
-    margin-bottom: 18px;
-  }
-
-}
   .footer-container {
     padding: 40px 16px;
   }

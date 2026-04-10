@@ -46,9 +46,9 @@
 }
 
 .header-main-title {
-  font-size: 26px;
+  font-size: 1.6rem;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: 1px;
   background: linear-gradient(90deg, #3b82f6, #10b981);
   -webkit-background-clip: text;
   background-clip: text;
@@ -108,9 +108,20 @@
   justify-content: center;
 }
 
-.stat-icon-wrapper.blue { background: var(--primary-light); color: var(--primary); }
-.stat-icon-wrapper.green { background: var(--success-light); color: var(--success); }
-.stat-icon-wrapper.yellow { background: var(--warning-light); color: #b45309; }
+.stat-icon-wrapper.blue {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.stat-icon-wrapper.green {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.stat-icon-wrapper.yellow {
+  background: var(--warning-light);
+  color: #b45309;
+}
 
 .stat-value {
   font-size: 24px;
@@ -194,7 +205,9 @@
   color: var(--slate-800);
 }
 
-.fw-600 { font-weight: 600; }
+.fw-600 {
+  font-weight: 600;
+}
 
 .id-cell {
   color: var(--primary);
@@ -265,9 +278,9 @@
   width: 200px;
 }
 
-.icon-sub { 
-  color: var(--slate-600); 
-  opacity: 0.7; 
+.icon-sub {
+  color: var(--slate-600);
+  opacity: 0.7;
   margin-top: 2px;
   flex-shrink: 0;
 }
@@ -278,11 +291,12 @@
   font-size: 13px;
   font-weight: 500;
 }
+
 .photo-cell {
   text-align: center;
 }
 
-.photo-cell > * {
+.photo-cell>* {
   display: flex;
   margin: 0 auto;
   align-items: center;
@@ -290,7 +304,9 @@
 }
 
 /* STATUS BADGES */
-.status-assigned, .status-completed, .collector-status-assigned {
+.status-assigned,
+.status-completed,
+.collector-status-assigned {
   padding: 6px 16px;
   border-radius: 50px;
   font-size: 13px;
@@ -302,14 +318,14 @@
   min-width: 90px;
 }
 
-.collector-status-assigned { 
-  background: rgba(245, 158, 11, 0.12); 
-  color: #d97706; 
+.collector-status-assigned {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
 }
 
-.status-completed { 
-  background: rgba(16, 185, 129, 0.12); 
-  color: #059669; 
+.status-completed {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
 }
 
 /* BUTTONS */
@@ -436,13 +452,25 @@
 
 /* ANIMATIONS */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes collectorZoomIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* RESPONSIVE DESIGN */
@@ -457,11 +485,11 @@
   .stats-container {
     grid-template-columns: 1fr;
   }
-  
+
   .collector-table-card {
     padding: 16px;
   }
-  
+
   .header-main-title {
     font-size: 20px;
   }
@@ -483,14 +511,9 @@
   .collector-image-box {
     padding: 8px;
   }
-  
+
   .waste-img {
     width: 44px;
     height: 44px;
   }
 }
-
-
-
-
-

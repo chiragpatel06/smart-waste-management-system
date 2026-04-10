@@ -138,13 +138,15 @@
 }
 
 .message-form-section h2 {
-  font-size: var(--fs-3xl);          /* ✅ was missing entirely */
+  font-size: var(--fs-3xl);
+  /* ✅ was missing entirely */
   font-weight: var(--fw-bold);
   margin-bottom: 8px;
 }
 
-.message-form-section > p {
-  font-size: var(--fs-md);           /* ✅ was 14px → Small text */
+.message-form-section>p {
+  font-size: var(--fs-md);
+  /* ✅ was 14px → Small text */
   font-weight: var(--fw-normal);
   color: var(--text-light);
   margin-bottom: 30px;
@@ -156,10 +158,11 @@
 
 .input-field label {
   display: block;
-  font-size: var(--fs-sm);           /* ✅ was 14px hardcoded */
+  font-size: var(--fs-sm);
+  /* ✅ was 14px hardcoded */
   font-weight: var(--fw-semibold);
   margin-bottom: 8px;
-  
+
   color: var(--text-dark);
 }
 
@@ -170,7 +173,8 @@
   border-radius: 12px;
   border: 2px solid #e2e8f0;
   background: white;
-  font-size: var(--fs-sm);           /* ✅ was 15px hardcoded */
+  font-size: var(--fs-sm);
+  /* ✅ was 15px hardcoded */
   font-weight: var(--fw-normal);
   font-family: inherit;
   outline: none;
@@ -189,9 +193,10 @@
   border: none;
   background: var(--primary-blue);
   color: white;
-  font-size: var(--fs-sm);           /* ✅ was 16px → Button → fs-sm */
+  font-size: var(--fs-sm);
+  /* ✅ was 16px → Button → fs-sm */
   font-weight: var(--fw-semibold);
-  font-family: inherit; 
+  font-family: inherit;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -223,9 +228,11 @@
 
 @media (max-width: 768px) {
   :root {
-    --fs-3xl: 2rem;      /* ✅ h1 scales down */
+    --fs-3xl: 2rem;
+    /* ✅ h1 scales down */
     --fs-2xl: 1.6rem;
-    --fs-xl: 1.3rem;     /* ✅ card strong text scales */
+    --fs-xl: 1.3rem;
+    /* ✅ card strong text scales */
   }
 }
 
@@ -243,6 +250,7 @@
   }
 
   .card-text strong {
-    font-size: var(--fs-lg);         /* ✅ slightly smaller on mobile */
+    font-size: var(--fs-lg);
+    /* ✅ slightly smaller on mobile */
   }
 }

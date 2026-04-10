@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LiveTracking.css";
 import {
   Search,
@@ -20,6 +21,16 @@ function LiveTracking() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [showImage, setShowImage] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login", { state: { from: "/services/tracking" } });
+    }
+  }, [navigate]);
+
   const getImageUrl = (path) => {
     if (!path) return "https://via.placeholder.com/300"; // fallback
 
@@ -234,7 +245,7 @@ function LiveTracking() {
               <div className="comparison-card before">
                 <div className="comparison-badge">
                   <Clock size={14} />
-                  <span>Before / पहले</span>
+                  <span>Before</span>
                 </div>
                 <div className="img-wrapper">
                   <img
@@ -242,7 +253,7 @@ function LiveTracking() {
                     alt="Before Cleaning"
                     onClick={() => setShowImage("before")}   // ✅ ADD THIS
                   />
-                  <div className="status-bar danger">⚠️ Reported / शिकायत</div>
+                  <div className="status-bar danger">⚠️ Reported</div>
                 </div>
               </div>
 
@@ -251,7 +262,7 @@ function LiveTracking() {
                 <div className="comparison-card after">
                   <div className="comparison-badge">
                     <CheckCircle size={14} />
-                    <span>After / बाद में</span>
+                    <span>After</span>
                   </div>
                   <div className="img-wrapper">
                     <img
@@ -259,19 +270,18 @@ function LiveTracking() {
                       alt="After Cleaning"
                       onClick={() => setShowImage("after")}
                     />
-                    <div className="status-bar success">✅ Cleaned / सफाई सफल</div>
+                    <div className="status-bar success">✅ Cleaned</div>
                   </div>
                 </div>
               ) : (
                 <div className="comparison-card processing">
                   <div className="comparison-badge">
                     <Clock size={14} />
-                    <span>Status / स्थिति</span>
+                    <span>Status</span>
                   </div>
                   <div className="processing-placeholder">
                     <div className="pulse-loader"></div>
                     <p>Cleaning in Progress...</p>
-                    <span>सफाई चल रही है</span>
                   </div>
                 </div>
               )}

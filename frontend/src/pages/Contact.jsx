@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Contact.css";
+import Swal from "sweetalert2";
 import { MapPin, Mail, Phone, Send, MessageCircle, PhoneCall } from "lucide-react";
 
 function Contact() {
@@ -9,7 +10,17 @@ function Contact() {
     e.preventDefault();
     setIsSending(true);
     setTimeout(() => {
-      alert("✅ Message Sent Successfully!");
+      Swal.fire({
+        title: "Message Sent Successfully!",
+        icon: "success",
+        confirmButtonColor: "#10b981",
+        customClass: {
+          popup: "admin-swal-popup",
+          title: "admin-swal-title",
+          actions: "admin-swal-actions",
+          confirmButton: "admin-swal-confirm-btn"
+        }
+      });
       setIsSending(false);
     }, 2000);
   };

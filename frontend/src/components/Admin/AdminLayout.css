@@ -1,0 +1,243 @@
+/* ============================= */
+/* LAYOUT */
+/* ============================= */
+
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================= */
+/* SIDEBAR */
+/* ============================= */
+
+.admin-sidebar {
+  width: 270px;
+  height: 100vh;
+  background: #ffffff;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 0;
+  position: sticky;
+  top: 0;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+}
+
+.logo-section {
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 50px;
+}
+
+.logo-icon {
+  color: #2563eb;
+}
+
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #3b82f6, #10b981);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-label {
+  padding: 0 24px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 700;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 10px;
+  margin: 4px 16px;
+  transition: all 0.25s cubic-bezier(.4, 0, .2, 1);
+}
+
+.sidebar-nav a:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  transform: translateX(4px);
+}
+
+.sidebar-nav a.active {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.sidebar-nav a.active svg {
+  color: #2563eb !important;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 0 0 24px 0;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ef4444;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin: 0 16px;
+  transition: all 0.25s cubic-bezier(.4, 0, .2, 1);
+}
+
+.logout-btn:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  transform: translateX(4px);
+}
+
+.logout-btn:hover svg {
+  color: #dc2626;
+}
+
+/* ============================= */
+/* MAIN CONTENT */
+/* ============================= */
+
+.admin-main {
+  flex: 1;
+  padding: 32px 40px;
+  background: #f8fafc;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ============================= */
+/* MOBILE TOGGLE HEADER */
+/* ============================= */
+
+.mobile-header-nav {
+  display: none;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.hamburger-btn {
+  background: white;
+  border: none;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.mobile-logo-text {
+  font-weight: 800;
+  font-size: 1.2rem;
+  background: linear-gradient(90deg, #3b82f6, #10b981);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.close-sidebar-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: white;
+}
+
+/* RESPONSIVE Sidebar Layout */
+@media (max-width: 1024px) {
+  .mobile-header-nav {
+    display: flex;
+  }
+
+  .admin-container {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 260px;
+    position: fixed;
+    top: 0;
+    left: -260px;
+    height: 100vh;
+    z-index: 1200;
+    transition: left 0.3s ease;
+  }
+
+  .admin-sidebar.open {
+    left: 0;
+  }
+
+  .close-sidebar-btn {
+    display: block;
+    margin-left: auto;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 1100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .admin-main {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-main {
+    padding: 15px;
+  }
+
+  .mobile-header-nav {
+    margin-bottom: 15px;
+  }
+
+  .mobile-logo-text {
+    font-size: 1.1rem;
+  }
+}
+
+@media print {
+  .admin-sidebar,
+  .mobile-header-nav {
+    display: none;
+  }
+  .admin-main {
+    padding: 0;
+  }
+}

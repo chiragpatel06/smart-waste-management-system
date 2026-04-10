@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  ClipboardList, 
-  Users, 
+import {
+  LayoutDashboard,
+  ClipboardList,
+  Users,
   UserCircle, // Added for Users Management
-  BarChart3, 
+  BarChart3,
   LogOut,
   Recycle,
-  Menu, 
-  X     
+  Menu,
+  X
 } from "lucide-react";
-import "./AdminDashboard.css";
+import "./AdminLayout.css";
 
 function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

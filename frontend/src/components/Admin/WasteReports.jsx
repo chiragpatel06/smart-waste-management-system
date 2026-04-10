@@ -12,8 +12,15 @@ function WasteReports() {
   const [collectors, setCollectors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const reportsPerPage = 5;
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const reportsPerPage = isMobile ? 3 : 5;
   // ================= LOAD DATA =================
   useEffect(() => {
 
@@ -87,7 +94,7 @@ function WasteReports() {
   }, [searchQuery, filter]);
 
   return (
-    <div className="admin-page-wrapper">
+    <div className="admin-page-wrapper waste-reports-wrapper">
 
 
       <header className="admin-page-header">
@@ -259,19 +266,30 @@ function WasteReports() {
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
-              <ChevronLeft size={16} /> Previous
+              <ChevronLeft size={16} /> {isMobile ? "Prev" : "Previous"}
             </button>
 
             <div className="pagination-numbers">
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i + 1}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`pagination-number ${currentPage === i + 1 ? "active" : ""}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
+              {(() => {
+                let pages = [];
+                if (!isMobile || totalPages <= 3) {
+                  pages = [...Array(totalPages)].map((_, i) => i + 1);
+                } else {
+                  if (currentPage === 1) pages = [1, 2, 3];
+                  else if (currentPage === totalPages) pages = [totalPages - 2, totalPages - 1, totalPages];
+                  else pages = [currentPage - 1, currentPage, currentPage + 1];
+                }
+
+                return pages.map(pageNum => (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`pagination-number ${currentPage === pageNum ? "active" : ""}`}
+                  >
+                    {pageNum}
+                  </button>
+                ));
+              })()}
             </div>
 
             <button

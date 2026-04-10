@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 import ImagePreview from "../ImagePreview";
+import "./AdminDashboard.css";
 import {
   ClipboardList,
   CheckCircle,
@@ -21,7 +22,15 @@ function AdminDashboard() {
   const [selectedImage, setSelectedImage] = useState(null);
   // Add these lines
   const [currentPage, setCurrentPage] = useState(1);
-  const reportsPerPage = 5;
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const itemsPerPage = isMobile ? 3 : 5;
   const filteredReports = reportsData
     .filter((r) => (activeCard === "All" ? true : r.status === activeCard))
     .filter((r) =>
@@ -29,11 +38,21 @@ function AdminDashboard() {
       r.wasteType?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+  const filteredCollectors = collectorsData.filter((c) =>
+    c.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    c.area?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const activeData = activeCard === "Collectors" ? filteredCollectors : filteredReports;
+
   // Pagination Calculations
-  const indexOfLastReport = currentPage * reportsPerPage;
-  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
-  const currentReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
-  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = activeData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(activeData.length / itemsPerPage);
+
+  const currentReports = activeCard !== "Collectors" ? currentItems : [];
+  const currentCollectors = activeCard === "Collectors" ? currentItems : [];
   // Reset to page 1 when search or category changes
   useEffect(() => {
     setCurrentPage(1);
@@ -207,9 +226,9 @@ function AdminDashboard() {
 
             <tbody className="admin-table-body">
               {activeCard === "Collectors"
-                ? collectorsData.map((collector, index) => (
+                ? currentCollectors.map((collector, index) => (
                   <tr className="admin-table-row" key={collector._id}>
-                    <td className="admin-table-td">#{index + 1}</td>
+                    <td className="admin-table-td">#{indexOfFirstItem + index + 1}</td>
                     <td className="admin-table-td">
                       <strong className="admin-collector-name">{collector.name}</strong>
                     </td>
@@ -226,7 +245,7 @@ function AdminDashboard() {
                     {/* Render Actual Data */}
                     {currentReports.map((report, index) => (
                       <tr className="admin-table-row" key={report._id}>
-                        <td className="admin-table-td">#{indexOfFirstReport + index + 1}</td>
+                        <td className="admin-table-td">#{indexOfFirstItem + index + 1}</td>
                         <td className="admin-table-td">
                           <strong className="admin-location-text">{report.location}</strong>
                         </td>
@@ -250,8 +269,8 @@ function AdminDashboard() {
                     ))}
 
                     {/* Render Placeholder Rows (Fills the gap to always show 5 rows) */}
-                    {currentReports.length < reportsPerPage &&
-                      Array.from({ length: reportsPerPage - currentReports.length }).map((_, index) => (
+                    {currentReports.length < itemsPerPage &&
+                      Array.from({ length: itemsPerPage - currentReports.length }).map((_, index) => (
                         <tr key={`empty-${index}`} className="admin-table-row placeholder-row">
                           <td className="admin-table-td">-</td>
                           <td className="admin-table-td"></td>
@@ -268,26 +287,37 @@ function AdminDashboard() {
             </tbody>
 
           </table>
-          {activeCard !== "Collectors" && filteredReports.length > reportsPerPage && (
+          {activeData.length > itemsPerPage && (
             <div className="admin-pagination">
               <button
                 className="pagination-btn"
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
               >
-                <ChevronLeft size={16} /> Previous
+                <ChevronLeft size={16} /> {isMobile ? "Prev" : "Previous"}
               </button>
 
               <div className="pagination-numbers">
-                {[...Array(totalPages)].map((_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className={`pagination-number ${currentPage === i + 1 ? "active" : ""}`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+                {(() => {
+                  let pages = [];
+                  if (!isMobile || totalPages <= 3) {
+                    pages = [...Array(totalPages)].map((_, i) => i + 1);
+                  } else {
+                    if (currentPage === 1) pages = [1, 2, 3];
+                    else if (currentPage === totalPages) pages = [totalPages - 2, totalPages - 1, totalPages];
+                    else pages = [currentPage - 1, currentPage, currentPage + 1];
+                  }
+                  
+                  return pages.map(pageNum => (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`pagination-number ${currentPage === pageNum ? "active" : ""}`}
+                    >
+                      {pageNum}
+                    </button>
+                  ));
+                })()}
               </div>
 
               <button

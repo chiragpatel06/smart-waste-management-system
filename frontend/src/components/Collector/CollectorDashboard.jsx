@@ -16,7 +16,7 @@ function CollectorDashboard() {
   const extractCity = (address) => {
     if (!address) return "-";
     const parts = address.split(",").map((p) => p.trim());
-    
+
     if (parts.length >= 4 && /^\d+$/.test(parts[parts.length - 2])) {
       return parts[parts.length - 4];
     }
@@ -24,7 +24,7 @@ function CollectorDashboard() {
       return parts[parts.length - 3];
     }
     if (parts.length === 2) {
-      return parts[0]; 
+      return parts[0];
     }
     return parts[0] || "-";
   };
@@ -176,8 +176,8 @@ function CollectorDashboard() {
                     <td className="collector-table-td fw-600">{report.collector}</td>
                     <td className="collector-table-td location-cell">
                       <div className="location-wrapper">
-                        <span 
-                          className="clickable-city" 
+                        <span
+                          className="clickable-city"
                           title="Click here to view full address"
                           onClick={() => {
                             setSelectedLocation(report.location);
@@ -282,8 +282,8 @@ function CollectorDashboard() {
                     <td className="collector-table-td fw-600">{report.collector}</td>
                     <td className="collector-table-td location-cell">
                       <div className="location-wrapper">
-                        <span 
-                          className="clickable-city" 
+                        <span
+                          className="clickable-city"
                           title="Click here to view full address"
                           onClick={() => {
                             setSelectedLocation(report.location);
@@ -337,7 +337,7 @@ function CollectorDashboard() {
         image={selectedImage}
         onClose={() => setSelectedImage(null)}
       />
-      <LocationModal 
+      <LocationModal
         address={selectedLocation}
         isOpen={isLocationModalOpen}
         onClose={() => setIsLocationModalOpen(false)}

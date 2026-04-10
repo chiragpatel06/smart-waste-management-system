@@ -12,7 +12,28 @@ function Navbar() {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mobileLangOpen, setMobileLangOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState('en');
   const isLoggedIn = !!user;
+
+  useEffect(() => {
+    const cookie = document.cookie;
+    if (cookie.includes("googtrans=/en/hi")) setCurrentLang('hi');
+    else if (cookie.includes("googtrans=/en/gu")) setCurrentLang('gu');
+    else setCurrentLang('en');
+  }, []);
+
+  const changeLanguage = (langCode) => {
+    document.cookie = `googtrans=/en/${langCode}; path=/`;
+    document.cookie = `googtrans=/en/${langCode}; domain=` + window.location.hostname + `; path=/`;
+    window.location.reload();
+  };
+
+  const cycleLanguage = () => {
+    if (currentLang === 'en') changeLanguage('hi');
+    else if (currentLang === 'hi') changeLanguage('gu');
+    else changeLanguage('en');
+  };
 
   useEffect(() => {
     const checkUser = () => {
@@ -57,11 +78,11 @@ function Navbar() {
   );
 
   return (
-    <nav className="navbar-main">
+    <nav className="navbar-main notranslate">
       {/* LEFT: Logo Section */}
       <div className="navbar-left">
         <Link to="/" className="navbar-logo-container">
-          <Recycle size={28} className="navbar-logo-icon" />
+          <Recycle size={32} className="navbar-logo-icon" />
           <span className="navbar-logo-text">SwachhSetu</span>
         </Link>
       </div>
@@ -82,10 +103,19 @@ function Navbar() {
       {/* RIGHT: Stats, Lang, and Auth */}
       <div className="navbar-right">
         {/* Language Toggle (Hidden on small mobile) */}
-        <button className="navbar-lang-pill navbar-desktop-only">
-          <Globe size={18} />
-          <span>हिन्दी</span>
-        </button>
+        <div className="navbar-dropdown navbar-desktop-only">
+          <button className="navbar-lang-pill">
+            <Globe size={18} />
+            <span>{currentLang === 'hi' ? 'Hin' : currentLang === 'gu' ? 'Guj' : 'Eng'}</span>
+            <ChevronDown size={16} />
+          </button>
+          
+          <ul className="navbar-dropdown-menu" style={{ minWidth: '130px', padding: '5px 0' }}>
+            <li><a style={{ cursor: 'pointer' }} onClick={() => changeLanguage('en')}>English</a></li>
+            <li><a style={{ cursor: 'pointer' }} onClick={() => changeLanguage('hi')}>हिन्दी</a></li>
+            <li><a style={{ cursor: 'pointer' }} onClick={() => changeLanguage('gu')}>ગુજરાતી</a></li>
+          </ul>
+        </div>
 
         {/* Auth Section */}
         {user ? (
@@ -189,9 +219,29 @@ function Navbar() {
 
           <div className="navbar-mobile-divider"></div>
 
-          <button className="navbar-mobile-link navbar-lang-switch">
-            <Globe size={24} /> <span>Change to हिन्दी</span>
-          </button>
+          <div className="navbar-mobile-lang-container">
+            <button 
+              className="navbar-mobile-link navbar-lang-switch" 
+              onClick={() => setMobileLangOpen(!mobileLangOpen)}
+              style={{ justifyContent: 'space-between', width: '100%', cursor: 'pointer' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <Globe size={24} style={{ color: '#2563eb' }} /> 
+                <span style={{ fontWeight: 600, fontSize: '1.1rem', color: '#1e293b' }}>
+                  {currentLang === 'en' ? 'English' : currentLang === 'hi' ? 'हिन्दी' : 'ગુજરાતી'}
+                </span>
+              </div>
+              <ChevronDown size={20} style={{ color: '#64748b', transform: mobileLangOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }} />
+            </button>
+            
+            {mobileLangOpen && (
+              <div style={{ display: 'flex', flexDirection: 'column', background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', marginTop: '8px', overflow: 'hidden' }}>
+                <button onClick={() => changeLanguage('en')} style={{ padding: '14px 20px', background: currentLang === 'en' ? '#f8fafc' : 'white', border: 'none', borderBottom: '1px solid #f1f5f9', textAlign: 'left', fontSize: '1rem', color: currentLang === 'en' ? '#2563eb' : '#1e293b', fontWeight: currentLang === 'en' ? 600 : 500, cursor: 'pointer' }}>English</button>
+                <button onClick={() => changeLanguage('hi')} style={{ padding: '14px 20px', background: currentLang === 'hi' ? '#f8fafc' : 'white', border: 'none', borderBottom: '1px solid #f1f5f9', textAlign: 'left', fontSize: '1rem', color: currentLang === 'hi' ? '#2563eb' : '#1e293b', fontWeight: currentLang === 'hi' ? 600 : 500, cursor: 'pointer' }}>हिन्दी</button>
+                <button onClick={() => changeLanguage('gu')} style={{ padding: '14px 20px', background: currentLang === 'gu' ? '#f8fafc' : 'white', border: 'none', textAlign: 'left', fontSize: '1rem', color: currentLang === 'gu' ? '#2563eb' : '#1e293b', fontWeight: currentLang === 'gu' ? 600 : 500, cursor: 'pointer' }}>ગુજરાતી</button>
+              </div>
+            )}
+          </div>
 
           {user ? (
             <div className="navbar-mobile-user-section">
@@ -228,13 +278,13 @@ function Navbar() {
                 className="navbar-mobile-link navbar-logout-mobile"
               >
                 <LogOut size={24} />
-                <span>Logout / बाहर निकलें</span>
+                <span>Logout</span>
               </button>
 
             </div>
           ) : (
             <Link to="/login" className="navbar-mobile-link navbar-login-mobile" onClick={toggleMenu}>
-              <LogIn size={24} /> <span>Login / लॉगिन</span>
+              <LogIn size={24} /> <span>Login</span>
             </Link>
           )}
         </div>

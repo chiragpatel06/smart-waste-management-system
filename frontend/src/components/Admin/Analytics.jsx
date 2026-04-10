@@ -39,7 +39,15 @@ function Analytics() {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 8;
+  const [showAllPerformers, setShowAllPerformers] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const recordsPerPage = isMobile ? 3 : 8;
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     // Reset to first page when filtering
@@ -108,18 +116,44 @@ function Analytics() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Pagination sliding window logic
+  const getPageNumbers = () => {
+    const maxPagesToShow = isMobile ? 3 : 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = startPage + maxPagesToShow - 1;
+
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  };
+
   // Collector Performance Logic
   const collectorStats = reports.reduce((acc, r) => {
     if (!r.collector) return acc;
     if (!acc[r.collector]) acc[r.collector] = { total: 0, Collected: 0, Pending: 0 };
     acc[r.collector].total++;
-    acc[r.collector][r.status]++;
+    if (r.status === "Collected") {
+      acc[r.collector].Collected++;
+    } else {
+      acc[r.collector].Pending++;
+    }
     return acc;
   }, {});
 
-  const rankedCollectors = Object.entries(collectorStats)
-    .sort((a, b) => b[1].total - a[1].total)
-    .slice(0, 5);
+  const allRankedCollectors = Object.entries(collectorStats)
+    .sort((a, b) => {
+      if (b[1].Collected !== a[1].Collected) {
+        return b[1].Collected - a[1].Collected; // Primary: Completed reports
+      }
+      const aEff = a[1].total ? (a[1].Collected / a[1].total) : 0;
+      const bEff = b[1].total ? (b[1].Collected / b[1].total) : 0;
+      return bEff - aEff; // Secondary: Efficiency
+    });
+
+  const rankedCollectors = allRankedCollectors.slice(0, 4);
 
   const getInitials = (name) => name.split(' ').map(n => n[0]).join('').toUpperCase();
 
@@ -147,7 +181,7 @@ function Analytics() {
   };
 
   return (
-    <div className="analytics-container">
+    <div className="analytics-container analytics-page-wrapper">
       {/* HEADER SECTION */}
       <header className="analytics-header">
         <div className="title-section">
@@ -282,40 +316,48 @@ function Analytics() {
             <div className="leaderboard-card">
               <div className="card-header">
                 <h3><Award size={20} color="#f59e0b" /> Top Performers</h3>
-                <button className="text-btn">View All</button>
+                <button className="text-btn" onClick={() => setShowAllPerformers(true)}>View All</button>
               </div>
               <div className="leaderboard-list">
-                {rankedCollectors.map(([name, stats], index) => (
-                  <div key={name} className="leader-item">
-                    <div className="leader-info">
-                      <div className="leader-avatar">{getInitials(name)}</div>
-                      <div>
-                        <p className="leader-name">{name}</p>
-                        <p className="leader-sub">{stats.total} assignments</p>
+                {rankedCollectors.length > 0 ? (
+                  rankedCollectors.map(([name, stats], index) => (
+                    <div key={name} className={`leader-item ${index === 0 ? 'top-performer' : ''}`}>
+                      <div className="leader-badge-wrapper">
+                        {index === 0 ? <span className="top-badge">🏆</span> : <span className="rank-badge">#{index + 1}</span>}
+                      </div>
+                      <div className="leader-content">
+                        <div className="leader-info">
+                          <div className="leader-avatar">{getInitials(name)}</div>
+                          <div>
+                            <p className="leader-name">{name}</p>
+                            <p className="leader-sub">{stats.Collected} completed / {stats.total} assigned</p>
+                          </div>
+                        </div>
+                        <div className="leader-stats">
+                          <div className="progress-mini">
+                            <div className="progress-label">
+                              <span>Efficiency</span>
+                              <span>{stats.total ? Math.round((stats.Collected / stats.total) * 100) : 0}%</span>
+                            </div>
+                            <div className="progress-track">
+                              <div className="progress-bar" style={{ width: `${stats.total ? (stats.Collected / stats.total) * 100 : 0}%` }}></div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="leader-stats">
-                      <div className="progress-mini">
-                        <div className="progress-label">
-                          <span>Efficiency</span>
-                          <span>{Math.round((stats.Collected / stats.total) * 100)}%</span>
-                        </div>
-                        <div className="progress-track">
-                          <div className="progress-bar" style={{ width: `${(stats.Collected / stats.total) * 100}%` }}></div>
-                        </div>
-                      </div>
-                      {index === 0 && <span className="top-badge">🏆</span>}
-                    </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="no-performers">No performers available</p>
+                )}
               </div>
             </div>
           </div>
         ) : (
-          <div className="table-container fade-in">
+          <div className="table-container analytics-table-wrapper fade-in">
             <div className="table-scroll-wrapper">
-              <table className="modern-table">
-                <thead>
+              <table className="modern-table admin-table">
+                <thead className="admin-table-head">
                   <tr>
                     <th>Report Info</th>
                     <th>Waste Type</th>
@@ -324,29 +366,29 @@ function Analytics() {
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="admin-table-body">
                   {loading ? (
                     Array.from({ length: recordsPerPage }).map((_, idx) => (
-                      <tr key={`skeleton-${idx}`} className="skeleton-row">
-                        <td>
+                      <tr key={`skeleton-${idx}`} className="skeleton-row admin-table-row">
+                        <td className="admin-table-td">
                           <div className="report-info-wrapper">
                             <div className="skeletonloc-icon skeleton" style={{ width: '16px', height: '16px', borderRadius: '50%' }}></div>
                             <div className="skeleton skeleton-text" style={{ width: '80%' }}></div>
                           </div>
                         </td>
-                        <td>
+                        <td className="admin-table-td">
                           <div className="skeleton skeleton-text" style={{ width: '60%' }}></div>
                         </td>
-                        <td className="collector-td">
+                        <td className="collector-td admin-table-td">
                           <div className="collector-flex-container">
                             <div className="skeleton skeleton-avatar"></div>
                             <div className="skeleton skeleton-text" style={{ width: '50%' }}></div>
                           </div>
                         </td>
-                        <td>
+                        <td className="admin-table-td">
                           <div className="skeleton skeleton-text" style={{ width: '40%' }}></div>
                         </td>
-                        <td>
+                        <td className="admin-table-td">
                           <div className="skeleton skeleton-pill"></div>
                         </td>
                       </tr>
@@ -354,29 +396,29 @@ function Analytics() {
                   ) : currentRecords.length > 0 ? (
                     <>
                       {currentRecords.map((report) => (
-                        <tr key={report._id}>
-                          <td>
+                        <tr key={report._id} className="admin-table-row">
+                          <td className="admin-table-td">
                             <div className="report-info-wrapper">
                               <MapPin size={16} className="loc-icon" />
-                              <strong className="address-text">
+                              <strong className="address-text admin-location-text">
                                 {report.location || 'Unknown'}
                               </strong>
                             </div>
                           </td>
-                          <td>
+                          <td className="admin-table-td">
                             <span className="waste-tag">
                               <Trash2 size={14} /> {report.wasteType}
                             </span>
                           </td>
-                          <td className="collector-td">
+                          <td className="collector-td admin-table-td">
                             <div className="collector-flex-container">
                               <div className="mini-avatar">{getInitials(report.collector || 'Unassigned')}</div>
                               <span className="collector-name">{report.collector || 'Unassigned'}</span>
                             </div>
                           </td>
-                          <td>{new Date(report.createdAt).toLocaleDateString()}</td>
-                          <td>
-                            <span className={`status-pill ${report.status?.toLowerCase()}`}>
+                          <td className="admin-table-td">{new Date(report.createdAt).toLocaleDateString()}</td>
+                          <td className="admin-table-td">
+                            <span className={`status-pill admin-status-badge ${report.status?.toLowerCase()}`}>
                               {report.status}
                             </span>
                           </td>
@@ -384,8 +426,8 @@ function Analytics() {
                       ))}
                     </>
                   ) : (
-                    <tr>
-                      <td colSpan="5" className="empty-state">
+                    <tr className="admin-table-row">
+                      <td colSpan="5" className="empty-state admin-table-td">
                         <div className="empty-content">
                           <div className="empty-icon-wrapper">
                             <Filter size={40} strokeWidth={2} />
@@ -399,50 +441,95 @@ function Analytics() {
                 </tbody>
               </table>
             </div>
-            <div className="table-footer">
+            <div className="table-footer admin-pagination">
               <div className="footer-left">
-                <p>Showing {indexOfFirstRecord + 1} - {Math.min(indexOfLastRecord, filteredReports.length)} of {filteredReports.length} records</p>
+                {!isMobile && <p>Showing {indexOfFirstRecord + 1} - {Math.min(indexOfLastRecord, filteredReports.length)} of {filteredReports.length} records</p>}
               </div>
 
-              <div className="pagination-controls">
+              <div className="pagination-controls pagination-numbers">
                 {totalPages > 1 && (
                   <>
                     <button
-                      className="page-btn prev"
+                      className="page-btn prev pagination-btn"
                       onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
                     >
                       <ChevronLeft size={16} />
-                      <span>Previous</span>
+                      <span>{isMobile ? "Prev" : "Previous"}</span>
                     </button>
                     <div className="page-numbers">
-                      {[...Array(totalPages)].map((_, i) => (
+                      {getPageNumbers().map(pageNum => (
                         <button
-                          key={i + 1}
-                          className={`page-num ${currentPage === i + 1 ? 'active' : ''}`}
-                          onClick={() => paginate(i + 1)}
+                          key={pageNum}
+                          className={`page-num pagination-number ${currentPage === pageNum ? 'active' : ''}`}
+                          onClick={() => paginate(pageNum)}
                         >
-                          {i + 1}
+                          {pageNum}
                         </button>
                       ))}
                     </div>
                     <button
-                      className="page-btn next"
+                      className="page-btn next pagination-btn"
                       onClick={() => paginate(currentPage + 1)}
                       disabled={currentPage === totalPages}
                     >
-                      <span>Next</span>
+                      <span>{isMobile ? "Next" : "Next"}</span>
                       <ChevronRight size={16} />
                     </button>
                   </>
                 )}
               </div>
 
-              <button className="outline-btn" onClick={handleDownload}>Download Report</button>
+              <button className="outline-btn" style={isMobile ? { width: '100%', marginTop: '10px' } : {}} onClick={handleDownload}>Download Report</button>
             </div>
           </div>
         )}
       </div>
+
+      {/* VIEW ALL PERFORMERS MODAL */}
+      {showAllPerformers && (
+        <div className="action-modal-overlay" onClick={() => setShowAllPerformers(false)}>
+          <div className="action-modal-content performers-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header-compact">
+              <h3>All Performers</h3>
+              <button className="close-btn" onClick={() => setShowAllPerformers(false)}>&times;</button>
+            </div>
+            <div className="modal-body performers-list-scroll">
+              {allRankedCollectors.length > 0 ? (
+                allRankedCollectors.map(([name, stats], index) => (
+                  <div key={name} className={`leader-item modal-item ${index === 0 ? 'top-performer' : ''}`}>
+                    <div className="leader-badge-wrapper">
+                      {index === 0 ? <span className="top-badge">🏆</span> : <span className="rank-badge">#{index + 1}</span>}
+                    </div>
+                    <div className="leader-content">
+                      <div className="leader-info">
+                        <div className="leader-avatar">{getInitials(name)}</div>
+                        <div>
+                          <p className="leader-name">{name}</p>
+                          <p className="leader-sub">{stats.Collected} completed / {stats.total} assigned</p>
+                        </div>
+                      </div>
+                      <div className="leader-stats">
+                        <div className="progress-mini">
+                          <div className="progress-label">
+                            <span>Efficiency</span>
+                            <span>{stats.total ? Math.round((stats.Collected / stats.total) * 100) : 0}%</span>
+                          </div>
+                          <div className="progress-track">
+                            <div className="progress-bar" style={{ width: `${stats.total ? (stats.Collected / stats.total) * 100 : 0}%` }}></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="no-performers">No performers available</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

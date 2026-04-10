@@ -17,7 +17,14 @@ function Collectors() {
     const [editData, setEditData] = useState({});
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const collectorsPerPage = 5;
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const collectorsPerPage = isMobile ? 3 : 5;
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchCollectors = async () => {
@@ -97,8 +104,22 @@ function Collectors() {
         setCurrentPage(1);
     }, [searchTerm]);
 
+    // Pagination sliding window logic
+    const getPageNumbers = () => {
+        const maxPagesToShow = isMobile ? 3 : 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = startPage + maxPagesToShow - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    };
+
     return (
-        <div className="admin-page-wrapper">
+        <div className="admin-page-wrapper collectors-page-wrapper">
             <header className="admin-page-header">
                 <div className="admin-page-title-group">
                     <h1 className="admin-page-title">Collectors Management</h1>
@@ -138,7 +159,7 @@ function Collectors() {
                     <tbody className="admin-table-body">
                         {currentCollectors.map((collector, index) => (
                             <tr key={collector._id} className={`admin-table-row ${editingId === collector._id ? "editing-row" : ""}`}>
-                                <td className="admin-table-td">{indexOfFirstCollector + index + 1}</td>
+                                <td className="admin-table-td">#{indexOfFirstCollector + index + 1}</td>
                                 <td className="admin-table-td">
                                     {editingId === collector._id ? (
                                         <input
@@ -224,17 +245,17 @@ function Collectors() {
                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1}
                         >
-                            <ChevronLeft size={16} /> Previous
+                            <ChevronLeft size={16} /> {isMobile ? "Prev" : "Previous"}
                         </button>
 
                         <div className="pagination-numbers">
-                            {[...Array(totalPages)].map((_, i) => (
+                            {getPageNumbers().map(pageNum => (
                                 <button
-                                    key={i + 1}
-                                    onClick={() => setCurrentPage(i + 1)}
-                                    className={`pagination-number ${currentPage === i + 1 ? "active" : ""}`}
+                                    key={pageNum}
+                                    onClick={() => setCurrentPage(pageNum)}
+                                    className={`pagination-number ${currentPage === pageNum ? "active" : ""}`}
                                 >
-                                    {i + 1}
+                                    {pageNum}
                                 </button>
                             ))}
                         </div>

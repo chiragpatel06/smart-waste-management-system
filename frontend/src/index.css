@@ -38,16 +38,36 @@ html{
 
 
 /* Hide Google Translate top banner completely */
-.goog-te-banner-frame,
 .goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
 iframe.goog-te-banner-frame {
   display: none !important;
 }
 
-/* Remove page shift caused by translate bar */
 body {
   top: 0px !important;
   position: static !important;
+}
+
+/* Hide new Google classes */
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf-ti6hGc {
+  display: none !important;
+}
+
+/* Hide Google Tooltips */
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important; 
+  box-shadow: none !important;
+  pointer-events: none !important;
 }
 
 /* Hide Google branding */

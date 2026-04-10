@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   User,
   Mail,
@@ -77,14 +78,14 @@ function Register() {
         }
       );
 
-      alert(res.data.message);
+      toast.success(res.data.message);
       navigate("/login");
 
     } catch (error) {
       if (error.response?.data?.error) {
-        alert(error.response.data.error);
+        toast.error(error.response.data.error);
       } else {
-        alert("Server Error");
+        toast.error("Server Error");
       }
     } finally {
       setLoading(false);

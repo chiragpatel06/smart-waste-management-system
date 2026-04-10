@@ -7,7 +7,7 @@ import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Services from "./pages/Services";
+
 import LiveTracking from "./pages/LiveTracking";
 import Contact from "./pages/Contact";
 import ReportWaste from "./pages/ReportWaste";
@@ -48,7 +48,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
+          
           <Route path="/services/tracking" element={<LiveTracking />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/report" element={<ReportWaste />} />

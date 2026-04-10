@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { toast } from "react-toastify";
 import "./Auth.css";
 import API from "../api/api";
 
@@ -49,15 +50,15 @@ function Login() {
       // ✅ Trigger storage event so Navbar updates instantly
       window.dispatchEvent(new Event("storage"));
 
-      
+      toast.success("Login successful!");
 
       navigate(from);
 
     } catch (error) {
       if (error.response?.data?.error) {
-        alert(error.response.data.error);
+        toast.error(error.response.data.error);
       } else {
-        alert("Server Error");
+        toast.error("Server Error");
       }
     } finally {
       setLoading(false);
