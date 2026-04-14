@@ -307,7 +307,7 @@ function AdminDashboard() {
                     else if (currentPage === totalPages) pages = [totalPages - 2, totalPages - 1, totalPages];
                     else pages = [currentPage - 1, currentPage, currentPage + 1];
                   }
-                  
+
                   return pages.map(pageNum => (
                     <button
                       key={pageNum}

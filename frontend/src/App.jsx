@@ -19,11 +19,12 @@ import ProtectedAuth from "./pages/ProtectedAuth"
 
 import AdminLayout from "./components/Admin/AdminLayout";
 import AdminDashboard from "./components/Admin/AdminDashboard";
+import AdminLogin from "./components/Admin/AdminLogin";
 import WasteReports from "./components/Admin/WasteReports";
 import Collectors from "./components/Admin/Collectors";
 import AddCollector from "./components/Admin/AddCollector";
 import Analytics from "./components/Admin/Analytics";
-import UsersManagement from "./components/Admin/UserManagement";
+import Messages from "./components/Admin/Messages";
 
 import CollectorDashboard from "./components/Collector/CollectorDashboard";
 
@@ -48,11 +49,11 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          
+
           <Route path="/services/tracking" element={<LiveTracking />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/report" element={<ReportWaste />} />
-          
+
           <Route
             path="/login"
             element={
@@ -81,14 +82,31 @@ function App() {
           />
         </Route>
 
+        {/* ================= ADMIN LOGIN ROUTE ================= */}
+        <Route 
+          path="/admin-login" 
+          element={
+            <ProtectedAuth adminAuth={true}>
+              <AdminLogin />
+            </ProtectedAuth>
+          } 
+        />
+
         {/* ================= ADMIN ROUTES ================= */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route path="waste-reports" element={<WasteReports />} />
           <Route path="collectors" element={<Collectors />} />
           <Route path="add-collector" element={<AddCollector />} />
           <Route path="analytics" element={<Analytics />} />
-          <Route path="users" element={<UsersManagement />} />
+          <Route path="messages" element={<Messages />} />
         </Route>
 
         {/* ================= COLLECTOR ROUTE ================= */}

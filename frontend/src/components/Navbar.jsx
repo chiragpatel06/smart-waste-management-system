@@ -38,7 +38,8 @@ function Navbar() {
   useEffect(() => {
     const checkUser = () => {
       const storedUser = localStorage.getItem("user");
-      setUser(storedUser ? JSON.parse(storedUser) : null);
+      const isAdmin = localStorage.getItem("isAdmin");
+      setUser(storedUser && !isAdmin ? JSON.parse(storedUser) : null);
     };
 
     checkUser();
@@ -109,7 +110,7 @@ function Navbar() {
             <span>{currentLang === 'hi' ? 'Hin' : currentLang === 'gu' ? 'Guj' : 'Eng'}</span>
             <ChevronDown size={16} />
           </button>
-          
+
           <ul className="navbar-dropdown-menu" style={{ minWidth: '130px', padding: '5px 0' }}>
             <li><a style={{ cursor: 'pointer' }} onClick={() => changeLanguage('en')}>English</a></li>
             <li><a style={{ cursor: 'pointer' }} onClick={() => changeLanguage('hi')}>हिन्दी</a></li>
@@ -220,20 +221,20 @@ function Navbar() {
           <div className="navbar-mobile-divider"></div>
 
           <div className="navbar-mobile-lang-container">
-            <button 
-              className="navbar-mobile-link navbar-lang-switch" 
+            <button
+              className="navbar-mobile-link navbar-lang-switch"
               onClick={() => setMobileLangOpen(!mobileLangOpen)}
               style={{ justifyContent: 'space-between', width: '100%', cursor: 'pointer' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <Globe size={24} style={{ color: '#2563eb' }} /> 
+                <Globe size={24} style={{ color: '#2563eb' }} />
                 <span style={{ fontWeight: 600, fontSize: '1.1rem', color: '#1e293b' }}>
                   {currentLang === 'en' ? 'English' : currentLang === 'hi' ? 'हिन्दी' : 'ગુજરાતી'}
                 </span>
               </div>
               <ChevronDown size={20} style={{ color: '#64748b', transform: mobileLangOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }} />
             </button>
-            
+
             {mobileLangOpen && (
               <div style={{ display: 'flex', flexDirection: 'column', background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', marginTop: '8px', overflow: 'hidden' }}>
                 <button onClick={() => changeLanguage('en')} style={{ padding: '14px 20px', background: currentLang === 'en' ? '#f8fafc' : 'white', border: 'none', borderBottom: '1px solid #f1f5f9', textAlign: 'left', fontSize: '1rem', color: currentLang === 'en' ? '#2563eb' : '#1e293b', fontWeight: currentLang === 'en' ? 600 : 500, cursor: 'pointer' }}>English</button>

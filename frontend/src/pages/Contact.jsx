@@ -6,23 +6,49 @@ import { MapPin, Mail, Phone, Send, MessageCircle, PhoneCall } from "lucide-reac
 function Contact() {
   const [isSending, setIsSending] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSending(true);
-    setTimeout(() => {
-      Swal.fire({
-        title: "Message Sent Successfully!",
-        icon: "success",
-        confirmButtonColor: "#10b981",
-        customClass: {
-          popup: "admin-swal-popup",
-          title: "admin-swal-title",
-          actions: "admin-swal-actions",
-          confirmButton: "admin-swal-confirm-btn"
-        }
+    
+    try {
+      const response = await fetch("http://localhost:5000/api/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
+
+      const data = await response.json();
+
+      if (data.success) {
+        Swal.fire({
+          title: "Message Sent Successfully!",
+          text: "We will get back to you soon.",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+          customClass: {
+            popup: "admin-swal-popup",
+            title: "admin-swal-title",
+            actions: "admin-swal-actions",
+            confirmButton: "admin-swal-confirm-btn"
+          }
+        });
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        Swal.fire("Error!", data.message || "Failed to send message.", "error");
+      }
+    } catch (error) {
+      Swal.fire("Error!", "Something went wrong. Please try again later.", "error");
+    } finally {
       setIsSending(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -79,21 +105,21 @@ function Contact() {
             <div className="input-field">
               <label>Full Name</label>
               <div className="input-wrapper">
-                <input type="text" placeholder="Enter your name" required />
+                <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter your name" required />
               </div>
             </div>
 
             <div className="input-field">
               <label>Email Address</label>
               <div className="input-wrapper">
-                <input type="email" placeholder="example@mail.com" required />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@mail.com" required />
               </div>
             </div>
 
             <div className="input-field">
               <label>How can we help you?</label>
               <div className="input-wrapper">
-                <textarea placeholder="Write your message here..." rows="4" required></textarea>
+                <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Write your message here..." rows="4" required></textarea>
               </div>
             </div>
 

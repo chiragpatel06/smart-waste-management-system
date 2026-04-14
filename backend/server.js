@@ -5,6 +5,9 @@ import connectDB from "./config/db.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import userRoutes from "./routes/userRoutes.js"; // ✅ ADD THIS
 import collectorRoutes from "./routes/collectorRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 
 
 dotenv.config();
@@ -26,6 +29,9 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/reports", reportRoutes);
 app.use("/api/users", userRoutes); // ✅ ADD THIS
 app.use("/api/collectors", collectorRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running ✅");
