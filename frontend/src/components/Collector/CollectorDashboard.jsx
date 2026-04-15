@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./CollectorDashboard.css";
-import { Recycle, CheckCircle, MapPin, ClipboardList, Calendar, Layers } from "lucide-react";
+import { Recycle, CheckCircle, MapPin, ClipboardList, Calendar, Layers, ChevronLeft, ChevronRight } from "lucide-react";
 import ImagePreview from "../ImagePreview";
 import API from "../../api/api";
 import LocationModal from "../Admin/LocationModal";
@@ -12,6 +12,17 @@ function CollectorDashboard() {
   const [cleanedImages, setCleanedImages] = useState({});
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [currentAssignedPage, setCurrentAssignedPage] = useState(1);
+  const [currentCompletedPage, setCurrentCompletedPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const reportsPerPage = isMobile ? 3 : 4;
 
   const extractCity = (address) => {
     if (!address) return "-";
@@ -88,6 +99,18 @@ function CollectorDashboard() {
   const totalReports = assignedReports.length + completedReports.length;
   const completionRate = totalReports === 0 ? 0 : Math.round((completedReports.length / totalReports) * 100);
 
+  // Pagination for Assigned
+  const indexOfLastAssigned = currentAssignedPage * reportsPerPage;
+  const indexOfFirstAssigned = indexOfLastAssigned - reportsPerPage;
+  const currentAssigned = assignedReports.slice(indexOfFirstAssigned, indexOfLastAssigned);
+  const totalAssignedPages = Math.ceil(assignedReports.length / reportsPerPage);
+
+  // Pagination for Completed
+  const indexOfLastCompleted = currentCompletedPage * reportsPerPage;
+  const indexOfFirstCompleted = indexOfLastCompleted - reportsPerPage;
+  const currentCompleted = completedReports.slice(indexOfFirstCompleted, indexOfLastCompleted);
+  const totalCompletedPages = Math.ceil(completedReports.length / reportsPerPage);
+
   return (
     <div className="collector-page">
       <div className="collectordas-header">
@@ -158,7 +181,7 @@ function CollectorDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {assignedReports.map((report, index) => (
+                {currentAssigned.map((report, index) => (
                   <tr key={report._id} className="collector-table-row">
                     <td className="collector-table-td id-cell">#{index + 1}</td>
                     <td className="collector-table-td photo-cell">
@@ -253,8 +276,67 @@ function CollectorDashboard() {
                     </td>
                   </tr>
                 ))}
+                
+                {currentAssigned.length < reportsPerPage &&
+                  Array.from({ length: reportsPerPage - currentAssigned.length }).map((_, index) => (
+                    <tr key={`empty-assigned-${index}`} className="collector-table-row placeholder-row">
+                      <td className="collector-table-td id-cell">-</td>
+                      <td className="collector-table-td photo-cell"></td>
+                      <td className="collector-table-td"></td>
+                      <td className="collector-table-td location-cell"></td>
+                      <td className="collector-table-td type-cell"></td>
+                      <td className="collector-table-td date-cell"></td>
+                      <td className="collector-table-td"></td>
+                      <td className="collector-table-td photo-cell"></td>
+                      <td className="collector-table-td action-cell"></td>
+                    </tr>
+                  ))
+                }
               </tbody>
             </table>
+          </div>
+        )}
+        
+        {assignedReports.length > reportsPerPage && (
+          <div className="admin-pagination">
+            <button
+              className="pagination-btn"
+              onClick={() => setCurrentAssignedPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentAssignedPage === 1}
+            >
+              <ChevronLeft size={16} /> {isMobile ? "Prev" : "Previous"}
+            </button>
+
+            <div className="pagination-numbers">
+              {(() => {
+                let pages = [];
+                if (!isMobile || totalAssignedPages <= 3) {
+                  pages = [...Array(totalAssignedPages)].map((_, i) => i + 1);
+                } else {
+                  if (currentAssignedPage === 1) pages = [1, 2, 3];
+                  else if (currentAssignedPage === totalAssignedPages) pages = [totalAssignedPages - 2, totalAssignedPages - 1, totalAssignedPages];
+                  else pages = [currentAssignedPage - 1, currentAssignedPage, currentAssignedPage + 1];
+                }
+
+                return pages.map(pageNum => (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentAssignedPage(pageNum)}
+                    className={`pagination-number ${currentAssignedPage === pageNum ? "active" : ""}`}
+                  >
+                    {pageNum}
+                  </button>
+                ));
+              })()}
+            </div>
+
+            <button
+              className="pagination-btn"
+              onClick={() => setCurrentAssignedPage(prev => Math.min(prev + 1, totalAssignedPages))}
+              disabled={currentAssignedPage === totalAssignedPages}
+            >
+              Next <ChevronRight size={16} />
+            </button>
           </div>
         )}
       </div>
@@ -276,7 +358,7 @@ function CollectorDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {completedReports.map((report, index) => (
+                {currentCompleted.map((report, index) => (
                   <tr key={report._id} className="collector-table-row">
                     <td className="collector-table-td id-cell">#{index + 1}</td>
                     <td className="collector-table-td fw-600">{report.collector}</td>
@@ -327,9 +409,66 @@ function CollectorDashboard() {
                     </td>
                   </tr>
                 ))}
+                
+                {currentCompleted.length < reportsPerPage &&
+                  Array.from({ length: reportsPerPage - currentCompleted.length }).map((_, index) => (
+                    <tr key={`empty-completed-${index}`} className="collector-table-row placeholder-row">
+                      <td className="collector-table-td id-cell">-</td>
+                      <td className="collector-table-td"></td>
+                      <td className="collector-table-td location-cell"></td>
+                      <td className="collector-table-td type-cell"></td>
+                      <td className="collector-table-td date-cell"></td>
+                      <td className="collector-table-td photo-cell"></td>
+                      <td className="collector-table-td"></td>
+                    </tr>
+                  ))
+                }
               </tbody>
             </table>
           </div>
+          
+          {completedReports.length > reportsPerPage && (
+            <div className="admin-pagination">
+              <button
+                className="pagination-btn"
+                onClick={() => setCurrentCompletedPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentCompletedPage === 1}
+              >
+                <ChevronLeft size={16} /> {isMobile ? "Prev" : "Previous"}
+              </button>
+
+              <div className="pagination-numbers">
+                {(() => {
+                  let pages = [];
+                  if (!isMobile || totalCompletedPages <= 3) {
+                    pages = [...Array(totalCompletedPages)].map((_, i) => i + 1);
+                  } else {
+                    if (currentCompletedPage === 1) pages = [1, 2, 3];
+                    else if (currentCompletedPage === totalCompletedPages) pages = [totalCompletedPages - 2, totalCompletedPages - 1, totalCompletedPages];
+                    else pages = [currentCompletedPage - 1, currentCompletedPage, currentCompletedPage + 1];
+                  }
+
+                  return pages.map(pageNum => (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentCompletedPage(pageNum)}
+                      className={`pagination-number ${currentCompletedPage === pageNum ? "active" : ""}`}
+                    >
+                      {pageNum}
+                    </button>
+                  ));
+                })()}
+              </div>
+
+              <button
+                className="pagination-btn"
+                onClick={() => setCurrentCompletedPage(prev => Math.min(prev + 1, totalCompletedPages))}
+                disabled={currentCompletedPage === totalCompletedPages}
+              >
+                Next <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
         </div>
       )}
 

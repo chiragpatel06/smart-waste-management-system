@@ -110,10 +110,7 @@ function AdminDashboard() {
             />
           </div>
 
-          <button className="admin-primary-btn">
-            <Plus size={18} />
-            <span className="admin-btn-text">New Report</span>
-          </button>
+          
         </div>
       </header>
 

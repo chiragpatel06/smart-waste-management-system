@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -111,7 +111,8 @@ function App() {
 
         {/* ================= COLLECTOR ROUTE ================= */}
         <Route path="/collector" element={<CollectorDashboard />} />
-
+        <Route path="/collectors" element={<Navigate to="/admin/collectors" replace />} />
+        
       </Routes>
     </BrowserRouter>
   );

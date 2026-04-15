@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Mail, CheckCircle, Search, User, Calendar, Trash2, X, MessageSquare, ExternalLink } from "lucide-react";
+import { Mail, CheckCircle, Search, User, Calendar, Trash2, X, MessageSquare, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "react-toastify";
 import "./Messages.css";
 
@@ -11,6 +11,16 @@ function Messages() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMsg, setSelectedMsg] = useState(null);
   const [replyText, setReplyText] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const messagesPerPage = 5;
 
   const fetchMessages = async () => {
     try {
@@ -105,6 +115,15 @@ function Messages() {
     return matchesFilter && matchesSearch;
   });
 
+  const indexOfLastMessage = currentPage * messagesPerPage;
+  const indexOfFirstMessage = indexOfLastMessage - messagesPerPage;
+  const currentMessages = filteredMessages.slice(indexOfFirstMessage, indexOfLastMessage);
+  const totalPages = Math.ceil(filteredMessages.length / messagesPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filter]);
+
   const getCount = (type) => {
     if (type === "All") return messages.length;
     if (type === "Pending") return messages.filter(m => m.status === "unread").length;
@@ -152,7 +171,7 @@ function Messages() {
         {filteredMessages.length === 0 ? (
           <div style={{textAlign: 'center', padding: '40px', color: '#64748b'}}>No queries found.</div>
         ) : (
-          filteredMessages.map((msg) => (
+          currentMessages.map((msg) => (
             <div key={msg._id} className="query-row" onClick={() => openModal(msg)}>
               <div className="query-icon-box">
                 <CheckCircle size={22} color="#3b82f6" />
@@ -179,6 +198,49 @@ function Messages() {
           ))
         )}
       </div>
+
+      {filteredMessages.length > messagesPerPage && (
+        <div className="admin-pagination messages-pagination">
+          <button
+            className="pagination-btn"
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft size={16} /> {isMobile ? "Prev" : "Previous"}
+          </button>
+
+          <div className="pagination-numbers">
+            {(() => {
+              let pages = [];
+              if (!isMobile || totalPages <= 3) {
+                pages = [...Array(totalPages)].map((_, i) => i + 1);
+              } else {
+                if (currentPage === 1) pages = [1, 2, 3];
+                else if (currentPage === totalPages) pages = [totalPages - 2, totalPages - 1, totalPages];
+                else pages = [currentPage - 1, currentPage, currentPage + 1];
+              }
+
+              return pages.map(pageNum => (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`pagination-number ${currentPage === pageNum ? "active" : ""}`}
+                >
+                  {pageNum}
+                </button>
+              ));
+            })()}
+          </div>
+
+          <button
+            className="pagination-btn"
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Modal */}
       {selectedMsg && (

@@ -70,6 +70,14 @@ function WasteReports() {
 
       setReports(updatedReports);
 
+      // Update local collector status to Busy so they disappear from available list immediately
+      const updatedCollectors = collectors.map(col =>
+        col.name === collectorName
+          ? { ...col, status: "Busy" }
+          : col
+      );
+      setCollectors(updatedCollectors);
+
     } catch (error) {
       console.log("Assign error");
     }
