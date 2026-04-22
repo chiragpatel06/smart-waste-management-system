@@ -1,6 +1,7 @@
 import "./WasteReports.css";
 import { Search, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
+import Select from "react-select";
 // 👈 reusable button
 import API from "../../api/api";
 import ImagePreview from "../ImagePreview";
@@ -8,6 +9,7 @@ function WasteReports() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [filter, setFilter] = useState("All");
   const [assigningId, setAssigningId] = useState(null);
+  const [selectedCollector, setSelectedCollector] = useState(null);
   const [reports, setReports] = useState([]);
   const [collectors, setCollectors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -197,39 +199,110 @@ function WasteReports() {
                 <td className="admin-table-td">
                   {report.status === "Pending" ? (
                     assigningId === report._id ? (
-                      <select
-                        onChange={(e) =>
-                          handleAssign(
-                            report._id,
-                            e.target.value
-                          )
-                        }
-                        defaultValue=""
-                      >
-                        <option value="" disabled>
-                          Select Collector
-                        </option>
-
-                        {collectors
-                          .filter(
-                            (col) =>
-                              col.status === "Available"
-                          )
-                          .map((col) => (
-                            <option
-                              key={col._id}
-                              value={col.name}
-                            >
-                              {col.name}
-                            </option>
-                          ))}
-                      </select>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', width: '100%', minWidth: '160px', textAlign: 'left' }}>
+                        <div style={{ flex: 1 }}>
+                          <Select
+                            options={collectors
+                              .filter((col) => col.status === "Available")
+                              .map((col) => ({ value: col.name, label: col.name }))}
+                            onChange={(selectedOption) => {
+                              if (!selectedOption) {
+                                setAssigningId(null);
+                                setSelectedCollector(null);
+                              } else {
+                                setSelectedCollector(selectedOption);
+                              }
+                            }}
+                            value={selectedCollector}
+                            isClearable={true}
+                            placeholder="Select"
+                            menuPlacement="auto"
+                            menuPosition="fixed"
+                            styles={{
+                              control: (base, state) => ({
+                                ...base,
+                                padding: '2px',
+                                borderRadius: '10px',
+                                borderColor: state.isFocused ? '#3C80F3' : '#e2e8f0',
+                                backgroundColor: '#ffffff',
+                                boxShadow: state.isFocused ? '0 0 0 3px rgba(60, 128, 243, 0.1)' : '0 1px 3px rgba(0,0,0,0.04)',
+                                '&:hover': { borderColor: '#cbd5e1' },
+                                fontSize: '13.5px',
+                                fontWeight: '500',
+                                cursor: 'pointer',
+                                minHeight: '42px'
+                              }),
+                              option: (base, state) => ({
+                                ...base,
+                                backgroundColor: state.isSelected ? '#eff6ff' : state.isFocused ? '#f8fafc' : '#ffffff',
+                                color: state.isSelected ? '#2563eb' : '#334155',
+                                fontWeight: state.isSelected ? '600' : '500',
+                                padding: '10px 14px',
+                                cursor: 'pointer',
+                                fontSize: '13.5px',
+                                borderRadius: '6px',
+                                margin: '2px 0'
+                              }),
+                              singleValue: (base) => ({
+                                ...base,
+                                color: '#1e293b',
+                              }),
+                              menu: (base) => ({
+                                ...base,
+                                borderRadius: '10px',
+                                boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                                overflow: 'hidden',
+                                zIndex: 9999
+                              }),
+                              menuList: (base) => ({
+                                ...base,
+                                padding: '4px'
+                              }),
+                              placeholder: (base) => ({
+                                ...base,
+                                color: '#94a3b8'
+                              })
+                            }}
+                          />
+                        </div>
+                        {selectedCollector && (
+                          <button
+                            onClick={() => {
+                              handleAssign(report._id, selectedCollector.value);
+                              setAssigningId(null);
+                              setSelectedCollector(null);
+                            }}
+                            title="Confirm Assignment"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '42px',
+                              height: '42px',
+                              borderRadius: '10px',
+                              backgroundColor: '#10b981',
+                              color: 'white',
+                              border: 'none',
+                              cursor: 'pointer',
+                              boxShadow: '0 2px 4px rgba(16, 185, 129, 0.2)',
+                              fontSize: '18px',
+                              transition: 'transform 0.2s',
+                              flexShrink: 0
+                            }}
+                            onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                          >
+                            ✓
+                          </button>
+                        )}
+                      </div>
                     ) : (
                       <button
                         className="assign-btn"
-                        onClick={() =>
-                          setAssigningId(report._id)
-                        }
+                        onClick={() => {
+                          setAssigningId(report._id);
+                          setSelectedCollector(null);
+                        }}
                       >
                         Assign
                       </button>

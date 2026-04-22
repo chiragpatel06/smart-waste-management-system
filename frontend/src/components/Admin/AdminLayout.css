@@ -233,10 +233,12 @@
 }
 
 @media print {
+
   .admin-sidebar,
   .mobile-header-nav {
     display: none;
   }
+
   .admin-main {
     padding: 0;
   }

@@ -50,9 +50,23 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
 
-          <Route path="/services/tracking" element={<LiveTracking />} />
+          <Route
+            path="/services/tracking"
+            element={
+              <ProtectedRoute>
+                <LiveTracking />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/report" element={<ReportWaste />} />
+          <Route
+            path="/report"
+            element={
+              <ProtectedRoute>
+                <ReportWaste />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/login"

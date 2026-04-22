@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Mail, CheckCircle, Search, User, Calendar, Trash2, X, MessageSquare, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import "./Messages.css";
 
 function Messages() {
@@ -13,6 +14,7 @@ function Messages() {
   const [replyText, setReplyText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -84,7 +86,24 @@ function Messages() {
 
   const deleteMessageLocal = async (id, e) => {
     e.stopPropagation();
-    if(window.confirm("Are you sure you want to delete this query?")) {
+    
+    const result = await Swal.fire({
+      title: "Are you sure you want to delete this query?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#9ca3af",
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+      customClass: {
+          popup: "admin-swal-popup",
+          title: "admin-swal-title",
+          actions: "admin-swal-actions",
+          confirmButton: "admin-swal-confirm-btn"
+      }
+    });
+
+    if (result.isConfirmed) {
       // Try hitting delete if the endpoint exists. Even if it fails (not defined in backend), 
       // we remove it from UI locally to maintain the visual consistency as requested.
       try {
@@ -97,9 +116,10 @@ function Messages() {
     }
   };
 
-  const openWhatsApp = () => {
-    const defaultText = encodeURIComponent(`Hello ${selectedMsg.name}, regarding your query: ${replyText}`);
-    window.open(`https://wa.me/?text=${defaultText}`, '_blank');
+  const openEmail = () => {
+    const subject = encodeURIComponent("Response to your query");
+    const body = encodeURIComponent(`Hello ${selectedMsg.name},\n\nRegarding your query:\n\n${replyText}\n\nThank you.`);
+    window.location.href = `mailto:${selectedMsg.email}?subject=${subject}&body=${body}`;
   };
 
   const filteredMessages = messages.filter((msg) => {
@@ -154,17 +174,42 @@ function Messages() {
           />
         </div>
 
-        <div className="status-filters">
-          {["All", "Pending", "Reviewed", "Resolved"].map(tab => (
-            <button 
-              key={tab} 
-              className={`filter-tab ${filter === tab ? 'active' : ''}`}
-              onClick={() => setFilter(tab)}
-            >
-              {tab} <span className="filter-count">{getCount(tab)}</span>
-            </button>
-          ))}
-        </div>
+        {isMobile ? (
+          <div className="mobile-custom-dropdown">
+            <div className="dropdown-trigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
+              <span>{filter} <span className="filter-count">{getCount(filter)}</span></span>
+              <ChevronRight size={16} style={{ transform: dropdownOpen ? 'rotate(90deg)' : 'rotate(0deg)', transition: '0.2s' }} />
+            </div>
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                {["All", "Pending", "Reviewed", "Resolved"].map(tab => (
+                  <div 
+                    key={tab} 
+                    className={`dropdown-option ${filter === tab ? 'active' : ''}`}
+                    onClick={() => {
+                      setFilter(tab);
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    {tab} <span className="filter-count">{getCount(tab)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="status-filters">
+            {["All", "Pending", "Reviewed", "Resolved"].map(tab => (
+              <button 
+                key={tab} 
+                className={`filter-tab ${filter === tab ? 'active' : ''}`}
+                onClick={() => setFilter(tab)}
+              >
+                {tab} <span className="filter-count">{getCount(tab)}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="messages-list">
@@ -289,8 +334,8 @@ function Messages() {
 
             <div className="modal-footer">
               <button className="btn-close" onClick={closeModal}>Close</button>
-              <button className="btn-whatsapp" onClick={openWhatsApp}>
-                <ExternalLink size={16} /> Message on WhatsApp
+              <button className="btn-email" onClick={openEmail}>
+                <Mail size={16} /> Message on Email
               </button>
               {selectedMsg.status !== 'replied' && (
                 <button 

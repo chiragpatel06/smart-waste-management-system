@@ -352,12 +352,12 @@
   background: #e2e8f0;
 }
 
-.btn-whatsapp {
-  background: #22c55e;
+.btn-email {
+  background: #3b82f6;
   color: white;
 }
-.btn-whatsapp:hover {
-  background: #16a34a;
+.btn-email:hover {
+  background: #2563eb;
 }
 
 .btn-resolve {
@@ -390,15 +390,70 @@
     width: 100%;
   }
 
-  .status-filters {
-    overflow-x: auto;
-    white-space: nowrap;
-    padding-bottom: 4px;
-    justify-content: flex-start;
+  .mobile-custom-dropdown {
+    position: relative;
+    width: 100%;
+  }
+  
+  .dropdown-trigger {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    font-size: 0.95rem;
+    color: #1e293b;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   }
 
-  .filter-tab {
-    flex-shrink: 0;
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    z-index: 50;
+    overflow: hidden;
+    animation: fadeInDown 0.2s ease;
+  }
+
+  .dropdown-option {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: #475569;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .dropdown-option:last-child {
+    border-bottom: none;
+  }
+
+  .dropdown-option:hover {
+    background: #f8fafc;
+  }
+
+  .dropdown-option.active {
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .query-row {

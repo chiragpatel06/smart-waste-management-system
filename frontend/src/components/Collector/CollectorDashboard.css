@@ -580,6 +580,9 @@
 
   .collector-table-card {
     padding: 16px;
+    background: transparent;
+    box-shadow: none;
+    border: none;
   }
 
   .header-main-title {
@@ -588,6 +591,220 @@
 
   .stat-card {
     padding: 16px;
+  }
+
+  /* MOBILE TABS UI */
+  .mobile-tabs-container {
+    display: flex;
+    background: #e2e8f0;
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 20px;
+    gap: 4px;
+  }
+
+  .mobile-tab-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--slate-600);
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .mobile-tab-btn.active {
+    background: #fff;
+    color: var(--primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .section-title {
+    display: none; /* Hide standard title as tabs replace it */
+  }
+
+  /* CARD FORMAT FOR TABLES ON MOBILE */
+  
+  /* CRITICAL: Properly hide table header entirely */
+  .collector-table thead {
+    display: none !important;
+  }
+
+  .table-responsive-wrapper {
+    overflow: visible;
+  }
+
+  .collector-table, .collector-table tbody, .collector-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  /* Premium Card Design */
+  .collector-table-row {
+    margin-bottom: 24px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    padding: 24px 20px;
+    display: flex !important;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+  }
+  
+  .collector-table-row.placeholder-row {
+    display: none !important;
+  }
+
+  .collector-table-td {
+    border: none !important;
+    padding: 0 !important;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* ID at Top Left */
+  .id-cell {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary);
+    width: 100%;
+    padding-bottom: 12px !important;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--slate-100) !important;
+  }
+
+  /* Safely pop Status Badge to top-right if browser supports :has */
+  .collector-status-assigned, .status-completed {
+    margin-bottom: 12px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  @supports selector(:has(*)) {
+    .collector-table-td:has(.collector-status-assigned),
+    .collector-table-td:has(.status-completed) {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: auto;
+      margin: 0;
+    }
+    .collector-table-td:has(.collector-status-assigned) .collector-status-assigned,
+    .collector-table-td:has(.status-completed) .status-completed {
+      margin-bottom: 0;
+    }
+  }
+
+  /* Photo processing */
+  .photo-cell {
+    width: auto;
+    margin-bottom: 10px;
+  }
+  .photo-cell > * { margin: 0 !important; }
+  .photo-cell img {
+    width: 64px;
+    height: 64px;
+    max-width: 64px;
+    max-height: 64px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Floaty image */
+    border: 2px solid white;
+  }
+
+  .no-image-text {
+    background: var(--slate-50);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    color: var(--slate-400);
+    border: 1px dashed var(--slate-200);
+  }
+
+  /* Main Card Details & Perfect 2-Column Key/Value Layout */
+  .fw-600, .location-cell, .type-cell, .date-cell, .photo-cell {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    color: var(--slate-800);
+    font-weight: 500;
+    width: 100%;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .photo-cell {
+    align-items: center;
+  }
+
+  .fw-600 {
+    font-weight: 600; /* Give name slightly more weight */
+  }
+
+  .fw-600::before, 
+  .location-cell::before, 
+  .type-cell::before, 
+  .date-cell::before, 
+  .photo-cell::before {
+    color: #64748b !important; /* Explicit slate/grey */
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 80px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    margin-right: 8px;
+  }
+
+  .fw-600::before { content: "Collector:"; }
+  .location-cell::before { content: "Location:"; }
+  .type-cell::before { content: "Type:"; margin-top: 1px; }
+  .date-cell::before { content: "Date:"; margin-top: 1px; }
+  .photo-cell::before { content: "Photo:"; margin-top: 0; }
+  
+  /* Reset wrappers inside cells so they flow properly beside labels */
+  .location-wrapper, .date-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Actions Area */
+  .action-cell {
+    width: 100%;
+    margin-top: 16px;
+    padding-top: 20px !important;
+    border-top: 1px dashed var(--slate-200) !important;
+  }
+
+  .collector-action-box {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .upload-clean-btn, .complete-btn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
   }
 }
 

@@ -16,10 +16,7 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
     return <Navigate to="/" replace />;
   }
 
-  // Agar regular user page hai par user admin hai → redirect to admin dashboard
-  if (!adminOnly && isAdmin) {
-    return <Navigate to="/admin" replace />;
-  }
+
 
   return children;
 };

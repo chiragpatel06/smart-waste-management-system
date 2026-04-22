@@ -83,7 +83,7 @@ const Profile = () => {
       const updatedUser = { ...user, profileImage: res.data.url };
       setUser(updatedUser);
       setEditData({ ...editData, profileImage: res.data.url });
-      
+
       localStorage.setItem("user", JSON.stringify(updatedUser)); // FIXED: updatedUser was undefined
       window.dispatchEvent(new Event("userUpdated"));
       showToast("Photo updated successfully");

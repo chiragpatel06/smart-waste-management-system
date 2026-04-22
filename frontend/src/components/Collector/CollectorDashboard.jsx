@@ -15,6 +15,7 @@ function CollectorDashboard() {
   const [currentAssignedPage, setCurrentAssignedPage] = useState(1);
   const [currentCompletedPage, setCurrentCompletedPage] = useState(1);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [activeTab, setActiveTab] = useState("Assigned");
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -154,8 +155,26 @@ function CollectorDashboard() {
         </div>
       </div>
 
-      <div className="collector-table-card">
-        <h3 className="section-title">Assigned Reports</h3>
+      {isMobile && (
+        <div className="mobile-tabs-container">
+          <button 
+            className={`mobile-tab-btn ${activeTab === "Assigned" ? "active" : ""}`}
+            onClick={() => setActiveTab("Assigned")}
+          >
+            Assigned
+          </button>
+          <button 
+            className={`mobile-tab-btn ${activeTab === "Completed" ? "active" : ""}`}
+            onClick={() => setActiveTab("Completed")}
+          >
+            Completed
+          </button>
+        </div>
+      )}
+
+      {(!isMobile || activeTab === "Assigned") && (
+        <div className="collector-table-card">
+          <h3 className="section-title">Assigned Reports</h3>
 
         {assignedReports.length === 0 ? (
           <div className="empty-state">
@@ -340,8 +359,9 @@ function CollectorDashboard() {
           </div>
         )}
       </div>
+      )}
 
-      {completedReports.length > 0 && (
+      {(!isMobile || activeTab === "Completed") && completedReports.length > 0 && (
         <div className="collector-table-card">
           <h3 className="section-title">Completed Reports</h3>
           <div className="table-responsive-wrapper">
